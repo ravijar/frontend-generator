@@ -1,0 +1,159 @@
+openapi: 3.1.0
+info:
+  title: GitHub API
+  description: API for GitHub
+  version: 1.0.0
+  contact:
+    name: GitHub Support
+    url: https://support.github.com
+    email: support@github.com
+
+servers:
+  - url: https://api.github.com
+    description: Main (production) server
+
+paths:
+  /users/{username}:
+    get:
+      summary: Get a user
+      description: Get information about a GitHub user.
+      operationId: getUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: The GitHub username
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+                  id:
+                    type: integer
+                  avatar_url:
+                    type: string
+                    format: uri
+                  html_url:
+                    type: string
+                    format: uri
+                  name:
+                    type: string
+                  company:
+                    type: string
+                  blog:
+                    type: string
+                    format: uri
+                  location:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  bio:
+                    type: string
+                  public_repos:
+                    type: integer
+                  followers:
+                    type: integer
+                  following:
+                    type: integer
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  documentation_url:
+                    type: string
+                    format: uri
+
+  /repos/{owner}/{repo}:
+    get:
+      summary: Get a repository
+      description: Get information about a GitHub repository.
+      operationId: getRepository
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The owner of the repository
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          description: The name of the repository
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  full_name:
+                    type: string
+                  owner:
+                    type: object
+                    properties:
+                      login:
+                        type: string
+                      id:
+                        type: integer
+                      avatar_url:
+                        type: string
+                        format: uri
+                      html_url:
+                        type: string
+                        format: uri
+                  private:
+                    type: boolean
+                  html_url:
+                    type: string
+                    format: uri
+                  description:
+                    type: string
+                  fork:
+                    type: boolean
+                  url:
+                    type: string
+                    format: uri
+                  forks_count:
+                    type: integer
+                  stargazers_count:
+                    type: integer
+                  watchers_count:
+                    type: integer
+                  language:
+                    type: string
+                  open_issues_count:
+                    type: integer
+                  default_branch:
+                    type: string
+        '404':
+          description: Repository not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  documentation_url:
+                    type: string
+                    format: uri

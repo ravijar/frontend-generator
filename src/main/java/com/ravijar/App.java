@@ -29,6 +29,10 @@ public class App {
                         logger.info("Project will be named as 'Untitled'.");
                     }
                     break;
+                case "run":
+                    logger.info("Starting application...");
+                    projectManager.runProject();
+                    break;
                 default:
                     logger.error("Invalid Command. Use 'help' to list supported commands.");
                     break;

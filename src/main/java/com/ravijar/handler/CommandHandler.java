@@ -11,22 +11,7 @@ import java.io.InputStreamReader;
 public class CommandHandler {
     private static final Logger logger = LogManager.getLogger(CommandHandler.class);
 
-    public void createReactApp(String baseDir) {
-
-        File dir = new File(baseDir);
-        if (!dir.exists()) {
-            if (dir.mkdirs()) {
-                logger.info("Directory {} created.", baseDir);
-            } else {
-                logger.error("Failed to create directory {}.", baseDir);
-                return;
-            }
-        }
-
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("npx.cmd", "create-react-app", "build");
-        processBuilder.directory(dir);
-
+    private void runProcessBuilder(ProcessBuilder processBuilder) {
         try {
             Process process = processBuilder.start();
 
@@ -44,5 +29,36 @@ public class CommandHandler {
         } catch (IOException | InterruptedException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void createReactApp(String baseDir) {
+
+        File dir = new File(baseDir);
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                logger.info("Directory {} created.", baseDir);
+            } else {
+                logger.error("Failed to create directory {}.", baseDir);
+                return;
+            }
+        }
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("npx.cmd", "create-react-app", "build");
+        processBuilder.directory(dir);
+        runProcessBuilder(processBuilder);
+    }
+
+    public void runReactApp(String baseDir) {
+        File dir = new File(baseDir, "build");
+        if (!dir.exists()) {
+            logger.error("The directory {} does not exist. Ensure the React app is created before running it.", dir.getAbsolutePath());
+            return;
+        }
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("npm.cmd", "start");
+        processBuilder.directory(dir);
+        runProcessBuilder(processBuilder);
     }
 }

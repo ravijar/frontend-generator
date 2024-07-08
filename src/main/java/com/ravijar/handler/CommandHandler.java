@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 public class CommandHandler {
     private static final Logger logger = LogManager.getLogger(CommandHandler.class);
 
-    private final String npx = "C:\\Program Files\\nodejs\\npx.cmd";
-
     public void createReactApp(String baseDir) {
 
         File dir = new File(baseDir);
@@ -26,7 +24,7 @@ public class CommandHandler {
         }
 
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(npx, "create-react-app", "build");
+        processBuilder.command("npx.cmd", "create-react-app", "build");
         processBuilder.directory(dir);
 
         try {

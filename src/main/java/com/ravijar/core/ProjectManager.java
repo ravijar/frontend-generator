@@ -2,11 +2,14 @@ package com.ravijar.core;
 
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ProjectManager {
+    private static final Logger logger = LogManager.getLogger(ProjectManager.class);
 
     private String projectName = "Untitled";
 
@@ -22,13 +25,13 @@ public class ProjectManager {
         File projectDir = new File(projectName);
         if (!projectDir.exists()) {
             if (projectDir.mkdirs()) {
-                System.out.println("Project directory " + projectName + " created.");
+                logger.info("Project directory {} created.", projectName);
             } else {
-                System.out.println("Failed to create project directory " + projectName + ".");
+                logger.error("Failed to create project directory {}." ,projectName);
                 return;
             }
         } else {
-            System.out.println("Project directory " + projectName + " already exists.");
+            logger.warn("Project directory {} already exists.", projectName);
         }
 
         try {
@@ -37,9 +40,9 @@ public class ProjectManager {
             fileHandler.createDirectory(projectDir, "css");
             fileHandler.createDirectory(projectDir, "js");
             commandHandler.createReactApp(this.projectName);
-            System.out.println("Project initialized successfully.");
+            logger.info("Project initialized successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

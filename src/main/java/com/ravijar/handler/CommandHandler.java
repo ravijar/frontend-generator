@@ -1,11 +1,15 @@
 package com.ravijar.handler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class CommandHandler {
+    private static final Logger logger = LogManager.getLogger(CommandHandler.class);
 
     private final String npx = "C:\\Program Files\\nodejs\\npx.cmd";
 
@@ -14,9 +18,9 @@ public class CommandHandler {
         File dir = new File(baseDir);
         if (!dir.exists()) {
             if (dir.mkdirs()) {
-                System.out.println("Directory " + baseDir + " created.");
+                logger.info("Directory {} created.", baseDir);
             } else {
-                System.out.println("Failed to create directory " + baseDir + ".");
+                logger.error("Failed to create directory {}.", baseDir);
                 return;
             }
         }
@@ -33,16 +37,14 @@ public class CommandHandler {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                logger.info(line);
             }
 
             int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
+            logger.info("Exited with error code : {}" ,exitCode);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            logger.error(e.getMessage());
         }
     }
 }

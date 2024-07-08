@@ -1,6 +1,7 @@
 package com.ravijar.handler;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -8,9 +9,21 @@ public class CommandHandler {
 
     private final String npx = "C:\\Program Files\\nodejs\\npx.cmd";
 
-    public void createReactApp() {
+    public void createReactApp(String baseDir) {
+
+        File dir = new File(baseDir);
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                System.out.println("Directory " + baseDir + " created.");
+            } else {
+                System.out.println("Failed to create directory " + baseDir + ".");
+                return;
+            }
+        }
+
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(npx, "create-react-app", "output");
+        processBuilder.command(npx, "create-react-app", "build");
+        processBuilder.directory(dir);
 
         try {
             Process process = processBuilder.start();

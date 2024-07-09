@@ -31,6 +31,15 @@ public class CommandHandler {
         }
     }
 
+    private File checkBuildDirectory(String baseDir) {
+        File dir = new File(baseDir, "build");
+        if (!dir.exists()) {
+            logger.error("The directory {} does not exist. Ensure the React app is created before running it.", dir.getAbsolutePath());
+            return null;
+        }
+        return dir;
+    }
+
     public void createReactApp(String baseDir) {
 
         File dir = new File(baseDir);
@@ -50,15 +59,23 @@ public class CommandHandler {
     }
 
     public void runReactApp(String baseDir) {
-        File dir = new File(baseDir, "build");
-        if (!dir.exists()) {
-            logger.error("The directory {} does not exist. Ensure the React app is created before running it.", dir.getAbsolutePath());
-            return;
+        File dir = checkBuildDirectory(baseDir);
+        if (dir != null){
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("npm.cmd", "start");
+            processBuilder.directory(dir);
+            runProcessBuilder(processBuilder);
         }
 
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("npm.cmd", "start");
-        processBuilder.directory(dir);
-        runProcessBuilder(processBuilder);
+    }
+
+    public void installNpmPackage(String baseDir, String packageName) {
+        File dir = checkBuildDirectory(baseDir);
+        if (dir != null){
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("npm.cmd", "install", packageName);
+            processBuilder.directory(dir);
+            runProcessBuilder(processBuilder);
+        }
     }
 }

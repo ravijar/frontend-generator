@@ -43,6 +43,7 @@ public class ProjectManager {
             this.fileHandler.createDirectory(projectDir, "css");
             this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(this.projectName);
+            this.commandHandler.installNpmPackage(this.projectName, "react-router-dom");
             logger.info("Project initialized successfully.");
         } catch (IOException e) {
             logger.error(e.getMessage());

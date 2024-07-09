@@ -3,6 +3,8 @@ package com.ravijar.core;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
 import com.ravijar.handler.OpenapiFileHandler;
+import com.ravijar.handler.PagesFileHandler;
+import com.ravijar.model.Page;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
@@ -83,6 +85,14 @@ public class ProjectManager {
             System.out.println("Response schema: " + responseSchema);
         } else {
             System.out.println("No response schema found or an error occurred.");
+        }
+
+        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
+
+        List<Page> pages = pagesFileHandler.getPages();
+
+        for (Page page : pages) {
+            System.out.println(page);
         }
     }
 }

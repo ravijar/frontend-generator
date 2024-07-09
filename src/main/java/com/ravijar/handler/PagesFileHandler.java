@@ -1,0 +1,58 @@
+package com.ravijar.handler;
+
+import com.ravijar.model.Page;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PagesFileHandler {
+    private static final Logger logger = LogManager.getLogger(PagesFileHandler.class);
+
+    private final String pagesFilePath;
+
+    public PagesFileHandler(String baseDir) {
+        this.pagesFilePath = baseDir + "\\pages.xml";
+    }
+
+    public List<Page> getPages() {
+        List<Page> pages = new ArrayList<>();
+        try {
+            File pagesFile = new File(pagesFilePath);
+            if (!pagesFile.exists() || !pagesFile.canRead()) {
+                logger.error("File not found or not readable: {}", pagesFile.getAbsolutePath());
+                return pages;
+            }
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(pagesFile);
+            doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getElementsByTagName("page");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                Node nNode = nList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
+                    String resourceUrl = eElement.getAttribute("resource-url");
+                    String resourceMethod = eElement.getAttribute("resource-method");
+                    String pageName = eElement.getTextContent();
+                    pages.add(new Page(pageName,resourceUrl,resourceMethod));
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return pages;
+    }
+}
+

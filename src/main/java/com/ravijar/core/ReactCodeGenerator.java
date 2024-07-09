@@ -17,15 +17,12 @@ public class ReactCodeGenerator {
         this.cfg = cfg;
     }
 
-    public void generateReactComponent(String outputDir) throws IOException, TemplateException {
-
-        String componentName = "Test";
-
+    public void updateAppPage(String outputDir, String pageName) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("componentName", componentName);
+        dataModel.put("pageName", pageName);
 
-        Template template = cfg.getTemplate("ComponentTemplate.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + componentName + ".js")) {
+        Template template = cfg.getTemplate("App.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/App.js")) {
             template.process(dataModel, fileWriter);
         }
     }

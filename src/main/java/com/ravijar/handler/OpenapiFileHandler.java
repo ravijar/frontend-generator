@@ -1,22 +1,33 @@
 package com.ravijar.handler;
 
+import com.ravijar.core.ProjectManager;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class OpenapiFileHandler {
     private static final Logger logger = LogManager.getLogger(OpenapiFileHandler.class);
 
+    private final String openapiFilePath = ProjectManager.getProjectName() + "\\openapi.yaml";
+    private final OpenAPI openAPIData;
 
-    String openapiFilePath = "input\\openapi.yaml";
-    File openapiFile = new File(openapiFilePath);
+    public OpenapiFileHandler() {
+        this.openAPIData = getSpecData();
+    }
 
-    public OpenAPI getSpecData() {
-
+    private OpenAPI getSpecData() {
+        File openapiFile = new File(openapiFilePath);
         if (!openapiFile.exists() || !openapiFile.canRead()) {
             logger.error("File not found or not readable: {}", openapiFile.getAbsolutePath());
             return null;
@@ -35,6 +46,60 @@ public class OpenapiFileHandler {
             return null;
 
         }
+    }
+
+    private Operation getOperation(String path, PathItem.HttpMethod method) {
+        if (openAPIData == null) {
+            logger.error("OpenAPI data is not initialized.");
+            return null;
+        }
+
+        Map<String, PathItem> paths = openAPIData.getPaths();
+        if (paths == null || !paths.containsKey(path)) {
+            logger.error("Path not found in OpenAPI specification: {}", path);
+            return null;
+        }
+
+        PathItem pathItem = paths.get(path);
+        Operation operation = pathItem.readOperationsMap().get(method);
+        if (operation == null) {
+            logger.error("HTTP method not found for path in OpenAPI specification: {} {}", method, path);
+            return null;
+        }
+
+        return operation;
+    }
+
+    public List<Parameter> getParameters(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            return null;
+        }
+
+        return operation.getParameters();
+    }
+
+    public Schema<?> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            return null;
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+        if (responses == null || !responses.containsKey(responseType)) {
+            logger.error("Response type not found for path and method in OpenAPI specification: {} {} {}", responseType, method, path);
+            return null;
+        }
+
+        ApiResponse apiResponse = responses.get(responseType);
+        if (apiResponse.getContent() == null || apiResponse.getContent().isEmpty()) {
+            logger.error("No content found for response type: {} {} {}", responseType, method, path);
+            return null;
+        }
+
+        return apiResponse.getContent().values().iterator().next().getSchema();
     }
 
 }

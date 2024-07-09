@@ -2,16 +2,21 @@ package com.ravijar.core;
 
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
+import com.ravijar.handler.OpenapiFileHandler;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class ProjectManager {
     private static final Logger logger = LogManager.getLogger(ProjectManager.class);
 
-    private String projectName = "Untitled";
+    private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
 
@@ -20,8 +25,12 @@ public class ProjectManager {
         this.commandHandler = new CommandHandler();
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public static void setProjectName(String projectName) {
+        ProjectManager.projectName = projectName;
+    }
+
+    public static String getProjectName() {
+        return ProjectManager.projectName;
     }
 
     public void initializeProject() {
@@ -42,8 +51,8 @@ public class ProjectManager {
             this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
             this.fileHandler.createDirectory(projectDir, "css");
             this.fileHandler.createDirectory(projectDir, "js");
-            this.commandHandler.createReactApp(this.projectName);
-            this.commandHandler.installNpmPackage(this.projectName, "react-router-dom");
+            this.commandHandler.createReactApp(ProjectManager.projectName);
+            this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
             logger.info("Project initialized successfully.");
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -51,6 +60,29 @@ public class ProjectManager {
     }
 
     public void runProject() {
-        this.commandHandler.runReactApp(this.projectName);
+        this.commandHandler.runReactApp(ProjectManager.projectName);
+    }
+
+    public void test() {
+        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
+
+        List<Parameter> parameters = openapiFileHandler.getParameters("/users/{username}", PathItem.HttpMethod.GET);
+
+        if (parameters != null) {
+            for (Parameter parameter : parameters) {
+                System.out.println("Parameter name: " + parameter.getName());
+                System.out.println("Parameter in: " + parameter.getIn());
+                System.out.println("Parameter description: " + parameter.getDescription());
+            }
+        } else {
+            System.out.println("No parameters found or an error occurred.");
+        }
+
+        Schema<?> responseSchema = openapiFileHandler.getResponseSchema("/users/{username}", PathItem.HttpMethod.GET, "200");
+        if (responseSchema != null) {
+            System.out.println("Response schema: " + responseSchema);
+        } else {
+            System.out.println("No response schema found or an error occurred.");
+        }
     }
 }

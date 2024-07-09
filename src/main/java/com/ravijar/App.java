@@ -33,6 +33,10 @@ public class App {
                     logger.info("Starting application...");
                     projectManager.runProject();
                     break;
+                case "test":
+                    logger.info("Running test...");
+                    projectManager.test();
+                    break;
                 default:
                     logger.error("Invalid Command. Use 'help' to list supported commands.");
                     break;

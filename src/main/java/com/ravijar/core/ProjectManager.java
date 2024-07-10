@@ -35,6 +35,24 @@ public class ProjectManager {
         return ProjectManager.projectName;
     }
 
+    private void copyTemplateFiles() {
+        String templatesDir = "src\\main\\resources\\templates\\";
+        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
+
+        String[] reactTemplates = {"InputField"};
+
+        for (String reactTemplate : reactTemplates) {
+            File sourceFile = new File(templatesDir + "react\\components\\" + reactTemplate + ".js");
+            File destFile = new File(buildSrcDir + "components\\" + reactTemplate + ".js");
+
+            try {
+                fileHandler.copyFile(sourceFile,destFile);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+
     public void initializeProject() {
         File projectDir = new File(projectName);
         if (!projectDir.exists()) {
@@ -55,6 +73,9 @@ public class ProjectManager {
             this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(ProjectManager.projectName);
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
+            this.fileHandler.createDirectory(projectDir, "build/src/components");
+            this.fileHandler.createDirectory(projectDir, "build/src/pages");
+            copyTemplateFiles();
             logger.info("Project initialized successfully.");
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -93,15 +114,6 @@ public class ProjectManager {
 
         for (Page page : pages) {
             System.out.println(page);
-        }
-
-        File sourceFile = new File("src\\main\\resources\\templates\\react\\components\\InputField.js");
-        File destFile = new File(ProjectManager.projectName + "\\build\\src\\InputField.js");
-
-        try {
-            fileHandler.copyFile(sourceFile,destFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }

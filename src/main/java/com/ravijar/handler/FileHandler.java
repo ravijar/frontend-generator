@@ -42,10 +42,12 @@ public class FileHandler {
 
     public void createDirectory(File baseDir, String directoryName) {
         File directory = new File(baseDir, directoryName);
-        if (directory.mkdir()) {
+        if (directory.mkdirs()) {
             logger.info("{} directory created in {}.", directoryName, baseDir.getName());
-        } else {
+        } else if (directory.exists()) {
             logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
+        } else {
+            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
         }
     }
 }

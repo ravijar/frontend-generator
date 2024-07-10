@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function InputField ({ label, type = 'text', value, onChange, placeholder = '', required = false, error }) {
     const handleInputChange = (event) => {
         const { value } = event.target;

@@ -1,5 +1,6 @@
 package com.ravijar.model;
 
+import io.swagger.v3.oas.models.PathItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +13,5 @@ import lombok.ToString;
 public class Page {
     private String pageName;
     private String resourceUrl;
-    private String resourceMethod;
+    private PathItem.HttpMethod resourceMethod;
 }

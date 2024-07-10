@@ -1,6 +1,7 @@
 package com.ravijar.handler;
 
 import com.ravijar.model.Page;
+import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -21,6 +22,15 @@ public class PagesFileHandler {
 
     public PagesFileHandler(String baseDir) {
         this.pagesFilePath = baseDir + "\\pages.xml";
+    }
+
+    private HttpMethod getHttpMethod(String method) {
+        for (HttpMethod httpMethod : HttpMethod.values()) {
+            if (httpMethod.name().equalsIgnoreCase(method)) {
+                return httpMethod;
+            }
+        }
+        return null;
     }
 
     public List<Page> getPages() {
@@ -44,8 +54,12 @@ public class PagesFileHandler {
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
                     String resourceUrl = eElement.getAttribute("resource-url");
-                    String resourceMethod = eElement.getAttribute("resource-method");
                     String pageName = eElement.getTextContent();
+                    HttpMethod resourceMethod = getHttpMethod(eElement.getAttribute("resource-method"));
+                    if (resourceMethod == null) {
+                        logger.error("Invalid HTTP method '{}' in page '{}'.", eElement.getAttribute("resource-method"), pageName);
+                        continue;
+                    }
                     pages.add(new Page(pageName,resourceUrl,resourceMethod));
                 }
             }

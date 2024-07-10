@@ -1,10 +1,13 @@
 package com.ravijar.core;
 
+import com.ravijar.config.FreeMarkerConfig;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
 import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.handler.PagesFileHandler;
 import com.ravijar.model.Page;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
@@ -87,33 +90,30 @@ public class ProjectManager {
     }
 
     public void test() {
-        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
-
-        List<Parameter> parameters = openapiFileHandler.getParameters("/users/{username}", PathItem.HttpMethod.GET);
-
-        if (parameters != null) {
-            for (Parameter parameter : parameters) {
-                System.out.println("Parameter name: " + parameter.getName());
-                System.out.println("Parameter in: " + parameter.getIn());
-                System.out.println("Parameter description: " + parameter.getDescription());
-            }
-        } else {
-            System.out.println("No parameters found or an error occurred.");
-        }
-
-        Schema<?> responseSchema = openapiFileHandler.getResponseSchema("/users/{username}", PathItem.HttpMethod.GET, "200");
-        if (responseSchema != null) {
-            System.out.println("Response schema: " + responseSchema);
-        } else {
-            System.out.println("No response schema found or an error occurred.");
-        }
-
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-
         List<Page> pages = pagesFileHandler.getPages();
 
-        for (Page page : pages) {
-            System.out.println(page);
+        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        if (!pageOutputDir.exists()) {
+            pageOutputDir.mkdirs();
+        }
+
+        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        if (!appOutputDir.exists()) {
+            appOutputDir.mkdirs();
+        }
+
+        try {
+
+            Configuration cfg = freeMarkerConfig.getConfiguration();
+            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+
+            codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pages.getFirst());
+            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages.getFirst().getPageName());
+
+        } catch (IOException | TemplateException e) {
+            logger.error(e.getMessage());
         }
     }
 }

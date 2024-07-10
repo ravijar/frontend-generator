@@ -94,5 +94,14 @@ public class ProjectManager {
         for (Page page : pages) {
             System.out.println(page);
         }
+
+        File sourceFile = new File("src\\main\\resources\\templates\\react\\components\\InputField.js");
+        File destFile = new File(ProjectManager.projectName + "\\build\\src\\InputField.js");
+
+        try {
+            fileHandler.copyFile(sourceFile,destFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -7,6 +7,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class FileHandler {
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
@@ -22,6 +24,20 @@ public class FileHandler {
         } else {
             logger.warn("{} already exists in {}." ,fileName, fileDir.getName());
         }
+    }
+
+    public void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!sourceFile.exists()) {
+            logger.error("Source file {} does not exist.", sourceFile.getAbsolutePath());
+            return;
+        }
+        if (sourceFile.isDirectory()) {
+            logger.error("Source file {} is a directory, not a file.", sourceFile.getAbsolutePath());
+            return;
+        }
+
+        Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        logger.info("File {} copied to {}.", sourceFile.getAbsolutePath(), destFile.getAbsolutePath());
     }
 
     public void createDirectory(File baseDir, String directoryName) {

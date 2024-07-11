@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +38,19 @@ public class ReactCodeGenerator {
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
-        dataModel.put("fieldName", parameters.get(0).getName());
+
+        List<Map<String, String>> fields = new ArrayList<>();
+        for (Parameter parameter : parameters) {
+            Map<String, String> field = new HashMap<>();
+            field.put("name", parameter.getName());
+            fields.add(field);
+        }
+        dataModel.put("fields", fields);
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getPageName() + ".js")) {
             template.process(dataModel, fileWriter);
         }
     }
+
 }

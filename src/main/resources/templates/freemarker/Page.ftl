@@ -2,28 +2,34 @@ import InputField from "../components/InputField";
 import {useState} from "react";
 
 export default function ${pageName?cap_first}() {
-    const [${fieldName}, set${fieldName?cap_first}] = useState("");
-    const [${fieldName}Error, set${fieldName?cap_first}Error] = useState("")
+<#list fields as field>
+    const [${field.name}, set${field.name?cap_first}] = useState("");
+    const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
+</#list>
 
-    const handle${fieldName?cap_first}Change = (value) => {
-        set${fieldName?cap_first}(value);
+<#list fields as field>
+    const handle${field.name?cap_first}Change = (value) => {
+        set${field.name?cap_first}(value);
         if (value.trim() === '') {
-            set${fieldName?cap_first}Error('This field is required');
+            set${field.name?cap_first}Error('This field is required');
         } else {
-            set${fieldName?cap_first}Error('');
+            set${field.name?cap_first}Error('');
         }
     };
+</#list>
 
     return (
         <div>
+        <#list fields as field>
             <InputField
-                label={"${fieldName?cap_first}"}
-                value={${fieldName}}
-                onChange={handle${fieldName?cap_first}Change}
-                placeholder={"Enter ${fieldName?cap_first}"}
+                label={"${field.name?cap_first}"}
+                value={${field.name}}
+                onChange={handle${field.name?cap_first}Change}
+                placeholder={"Enter ${field.name?cap_first}"}
                 required={true}
-                error={${fieldName}Error}
+                error={${field.name}Error}
             />
+        </#list>
         </div>
     );
 }

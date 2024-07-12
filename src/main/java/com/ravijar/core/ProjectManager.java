@@ -76,6 +76,7 @@ public class ProjectManager {
             this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(ProjectManager.projectName);
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
+            this.commandHandler.installNpmPackage(ProjectManager.projectName,"axios");
             this.fileHandler.createDirectory(projectDir, "build/src/components");
             this.fileHandler.createDirectory(projectDir, "build/src/pages");
             copyTemplateFiles();

@@ -38,6 +38,7 @@ public class ReactCodeGenerator {
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
+        dataModel.put("endpointUrl", openapiFileHandler.getUrlEndpoint(page.getResourceUrl()));
 
         List<Map<String, String>> fields = new ArrayList<>();
         for (Parameter parameter : parameters) {

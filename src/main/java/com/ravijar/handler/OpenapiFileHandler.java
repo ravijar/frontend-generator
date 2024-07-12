@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.apache.logging.log4j.LogManager;
@@ -70,6 +71,16 @@ public class OpenapiFileHandler {
         return operation;
     }
 
+    private String getBaseUrl() {
+        List<Server> servers = openAPIData.getServers();
+        if (servers != null && !servers.isEmpty()) {
+            return servers.get(0).getUrl();
+        } else {
+            logger.error("No servers found in OpenAPI specification.");
+            return "";
+        }
+    }
+
     public List<Parameter> getParameters(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
 
@@ -101,5 +112,31 @@ public class OpenapiFileHandler {
 
         return apiResponse.getContent().values().iterator().next().getSchema();
     }
+
+    public String getUrlEndpoint(String resourceUrl) {
+        if (openAPIData == null) {
+            logger.error("OpenAPI data is not initialized.");
+            return null;
+        }
+
+        Map<String, PathItem> paths = openAPIData.getPaths();
+        if (paths == null) {
+            logger.error("No paths found in OpenAPI specification.");
+            return null;
+        }
+
+        for (String path : paths.keySet()) {
+            if (path.startsWith(resourceUrl)) {
+                int paramIndex = path.indexOf("{");
+                String basePath = paramIndex == -1 ? path : path.substring(0, paramIndex);
+                String baseUrl = getBaseUrl();
+                return baseUrl + basePath;
+            }
+        }
+
+        logger.error("Resource URL not found in OpenAPI specification: {}", resourceUrl);
+        return null;
+    }
+
 
 }

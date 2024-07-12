@@ -1,5 +1,6 @@
+import { useState } from "react";
+import axios from "axios";
 import InputField from "../components/InputField";
-import {useState} from "react";
 
 export default function ${pageName?cap_first}() {
 <#list fields as field>
@@ -18,8 +19,20 @@ export default function ${pageName?cap_first}() {
     };
 </#list>
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const url = `${endpointUrl}<#list fields as field>${"${" + field.name + "}"}<#if field_has_next>/</#if></#list>`;
+
+        try {
+            const response = await axios.get(url);
+            console.log('Response:', response.data);
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
+    };
+
     return (
-        <div>
+        <form onSubmit={handleSubmit}>
         <#list fields as field>
             <InputField
                 label={"${field.name?cap_first}"}
@@ -30,6 +43,7 @@ export default function ${pageName?cap_first}() {
                 error={${field.name}Error}
             />
         </#list>
-        </div>
+            <button type="submit">Submit</button>
+        </form>
     );
 }

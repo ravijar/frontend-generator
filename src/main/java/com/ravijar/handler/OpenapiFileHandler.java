@@ -14,8 +14,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class OpenapiFileHandler {
     private static final Logger logger = LogManager.getLogger(OpenapiFileHandler.class);
@@ -81,6 +83,18 @@ public class OpenapiFileHandler {
         }
     }
 
+    private Map<String, String> extractProperties(Map<String, Schema> openApiData) {
+        Map<String, String> properties = new HashMap<>();
+
+        Set<String> keys = openApiData.keySet();
+        for (String key: keys) {
+            Schema value = openApiData.get(key);
+            properties.put(key, value.getTypes().iterator().next().toString());
+        }
+
+        return properties;
+    }
+
     public List<Parameter> getParameters(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
 
@@ -91,7 +105,7 @@ public class OpenapiFileHandler {
         return operation.getParameters();
     }
 
-    public Schema<?> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
+    public Map<String, String> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {
@@ -110,7 +124,7 @@ public class OpenapiFileHandler {
             return null;
         }
 
-        return apiResponse.getContent().values().iterator().next().getSchema();
+        return extractProperties(apiResponse.getContent().values().iterator().next().getSchema().getProperties());
     }
 
     public String getUrlEndpoint(String resourceUrl) {

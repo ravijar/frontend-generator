@@ -116,5 +116,9 @@ public class ProjectManager {
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
+
+        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
+        System.out.println(openapiFileHandler.getResponseSchema(pages.getFirst().getResourceUrl(), PathItem.HttpMethod.GET, "200"));
+
     }
 }

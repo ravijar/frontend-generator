@@ -42,7 +42,7 @@ public class ProjectManager {
         String templatesDir = "src\\main\\resources\\templates\\";
         String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
 
-        String[] reactTemplates = {"InputField"};
+        String[] reactTemplates = {"InputField", "KeyValuePair"};
 
         for (String reactTemplate : reactTemplates) {
             File sourceFile = new File(templatesDir + "react\\components\\" + reactTemplate + ".js");

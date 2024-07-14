@@ -1,6 +1,7 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
+import com.ravijar.model.ResponseProperty;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -14,10 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class OpenapiFileHandler {
     private static final Logger logger = LogManager.getLogger(OpenapiFileHandler.class);
@@ -83,13 +81,14 @@ public class OpenapiFileHandler {
         }
     }
 
-    private Map<String, String> extractProperties(Map<String, Schema> openApiData) {
-        Map<String, String> properties = new HashMap<>();
+    private List<ResponseProperty> extractProperties(Map<String, Schema> openApiData) {
+        List<ResponseProperty> properties = new ArrayList<>();
 
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
-            properties.put(key, value.getTypes().iterator().next().toString());
+            ResponseProperty responseProperty = new ResponseProperty(key, value.getTypes().iterator().next().toString());
+            properties.add(responseProperty);
         }
 
         return properties;
@@ -105,7 +104,7 @@ public class OpenapiFileHandler {
         return operation.getParameters();
     }
 
-    public Map<String, String> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
+    public List<ResponseProperty> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {

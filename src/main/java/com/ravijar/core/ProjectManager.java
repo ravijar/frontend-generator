@@ -42,17 +42,27 @@ public class ProjectManager {
         String templatesDir = "src\\main\\resources\\templates\\";
         String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
 
-        String[] reactTemplates = {"InputField", "KeyValuePair"};
+        String[] reactComponentTemplates = {"InputField", "KeyValuePair"};
+        String[] cssComponentTemplates = {"InputField", "KeyValuePair"};
+        String[] cssPageTemplates = {"Page"};
 
-        for (String reactTemplate : reactTemplates) {
+
+        for (String reactTemplate : reactComponentTemplates) {
             File sourceFile = new File(templatesDir + "react\\components\\" + reactTemplate + ".js");
             File destFile = new File(buildSrcDir + "components\\" + reactTemplate + ".js");
+            fileHandler.copyFile(sourceFile,destFile);
+        }
 
-            try {
-                fileHandler.copyFile(sourceFile,destFile);
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
+        for (String cssTemplate : cssComponentTemplates) {
+            File sourceFile = new File(templatesDir + "css\\components\\" + cssTemplate + ".css");
+            File destFile = new File(buildSrcDir + "components\\" + cssTemplate + ".css");
+            fileHandler.copyFile(sourceFile,destFile);
+        }
+
+        for (String cssTemplate : cssPageTemplates) {
+            File sourceFile = new File(templatesDir + "css\\pages\\" + cssTemplate + ".css");
+            File destFile = new File(buildSrcDir + "pages\\" + cssTemplate + ".css");
+            fileHandler.copyFile(sourceFile,destFile);
         }
     }
 
@@ -116,9 +126,5 @@ public class ProjectManager {
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
-
-        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
-        System.out.println(openapiFileHandler.getResponseSchema(pages.getFirst().getResourceUrl(), PathItem.HttpMethod.GET, "200"));
-
     }
 }

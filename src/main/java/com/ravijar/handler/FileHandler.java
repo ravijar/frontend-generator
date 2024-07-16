@@ -26,7 +26,7 @@ public class FileHandler {
         }
     }
 
-    public void copyFile(File sourceFile, File destFile) throws IOException {
+    public void copyFile(File sourceFile, File destFile) {
         if (!sourceFile.exists()) {
             logger.error("Source file {} does not exist.", sourceFile.getAbsolutePath());
             return;
@@ -36,8 +36,12 @@ public class FileHandler {
             return;
         }
 
-        Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        logger.info("File {} copied to {}.", sourceFile.getAbsolutePath(), destFile.getAbsolutePath());
+        try {
+            Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            logger.info("File {} copied to {}.", sourceFile.getAbsolutePath(), destFile.getAbsolutePath());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
     public void createDirectory(File baseDir, String directoryName) {

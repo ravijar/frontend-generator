@@ -1,0 +1,19 @@
+.key-value-pair-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.key {
+    font-weight: bold;
+    margin-right: 8px;
+    color: #333;
+}
+
+.value {
+    flex: 1;
+    color: #555;
+}

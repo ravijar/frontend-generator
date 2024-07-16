@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import InputField from "../components/InputField";
 import KeyValuePair from "../components/KeyValuePair";
+import "./Page.css";
 
 export default function ${pageName?cap_first}() {
 <#list fields as field>
@@ -40,22 +41,23 @@ export default function ${pageName?cap_first}() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-            <#list fields as field>
-                <InputField
-                    label={"${field.name?cap_first}"}
-                    value={${field.name}}
-                    onChange={handle${field.name?cap_first}Change}
-                    placeholder={"Enter ${field.name?cap_first}"}
-                    required={true}
-                    error={${field.name}Error}
-                />
-            </#list>
-                <button type="submit">Submit</button>
+        <div className="page-container">
+            <form onSubmit={handleSubmit} className="form-container">
+                <div className="form-inputs">
+                <#list fields as field>
+                    <InputField
+                        label={"${field.name?cap_first}"}
+                        value={${field.name}}
+                        onChange={handle${field.name?cap_first}Change}
+                        placeholder={"Enter ${field.name?cap_first}"}
+                        error={${field.name}Error}
+                    />
+                </#list>
+                </div>
+                <button type="submit" className="form-submit">Submit</button>
             </form>
 
-            <div>
+            <div className="key-value-pairs-container">
             <#list data as datum>
                 <KeyValuePair
                     keyName="${datum.property?cap_first}"

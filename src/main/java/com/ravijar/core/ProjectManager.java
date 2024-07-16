@@ -24,6 +24,10 @@ public class ProjectManager {
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
+    private final String templatesDir = "src\\main\\resources\\templates\\";
+    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair"};
+    private final String[] cssPageTemplates = {"Page"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -39,13 +43,8 @@ public class ProjectManager {
     }
 
     private void copyTemplateFiles() {
-        String templatesDir = "src\\main\\resources\\templates\\";
         String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
-
-        String[] reactComponentTemplates = {"InputField", "KeyValuePair"};
-        String[] cssComponentTemplates = {"InputField", "KeyValuePair"};
-        String[] cssPageTemplates = {"Page"};
-
+        String cssDir = ProjectManager.projectName + "\\css\\";
 
         for (String reactTemplate : reactComponentTemplates) {
             File sourceFile = new File(templatesDir + "react\\components\\" + reactTemplate + ".js");
@@ -55,14 +54,14 @@ public class ProjectManager {
 
         for (String cssTemplate : cssComponentTemplates) {
             File sourceFile = new File(templatesDir + "css\\components\\" + cssTemplate + ".css");
-            File destFile = new File(buildSrcDir + "components\\" + cssTemplate + ".css");
-            fileHandler.copyFile(sourceFile,destFile);
+            fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
+            fileHandler.copyFile(sourceFile, new File( cssDir + "components\\" + cssTemplate + ".css"));
         }
 
         for (String cssTemplate : cssPageTemplates) {
             File sourceFile = new File(templatesDir + "css\\pages\\" + cssTemplate + ".css");
-            File destFile = new File(buildSrcDir + "pages\\" + cssTemplate + ".css");
-            fileHandler.copyFile(sourceFile,destFile);
+            fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
+            fileHandler.copyFile(sourceFile, new File(cssDir + "pages\\" + cssTemplate + ".css"));
         }
     }
 
@@ -82,7 +81,8 @@ public class ProjectManager {
         try {
             this.fileHandler.createFile(projectDir, "openapi.yaml", "# OpenAPI specification\nopenapi: \"3.0.0\"\ninfo:\n  title: \"Sample API\"\n  version: \"1.0.0\"\npaths: {}");
             this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
-            this.fileHandler.createDirectory(projectDir, "css");
+            this.fileHandler.createDirectory(projectDir, "css/components");
+            this.fileHandler.createDirectory(projectDir, "css/pages");
             this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(ProjectManager.projectName);
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
@@ -101,6 +101,8 @@ public class ProjectManager {
     }
 
     public void test() {
+        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
+        String cssDir = ProjectManager.projectName + "\\css\\";
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
         List<Page> pages = pagesFileHandler.getPages();
@@ -125,6 +127,20 @@ public class ProjectManager {
 
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
+        }
+
+        for (String cssTemplate : cssComponentTemplates) {
+            fileHandler.copyFile(
+                    new File(cssDir + "components\\" + cssTemplate + ".css"),
+                    new File(buildSrcDir + "components\\" + cssTemplate + ".css")
+            );
+        }
+
+        for (String cssTemplate : cssPageTemplates) {
+            fileHandler.copyFile(
+                    new File(cssDir + "pages\\" + cssTemplate + ".css"),
+                    new File(buildSrcDir + "pages\\" + cssTemplate + ".css")
+            );
         }
     }
 }

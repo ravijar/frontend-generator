@@ -1,6 +1,7 @@
 package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
+import com.ravijar.handler.PagesFileHandler;
 import com.ravijar.model.Page;
 import com.ravijar.model.ResponseProperty;
 import freemarker.template.Configuration;
@@ -24,9 +25,16 @@ public class ReactCodeGenerator {
         this.cfg = cfg;
     }
 
-    public void updateAppPage(String outputDir, String pageName) throws IOException, TemplateException {
+    public void updateAppPage(String outputDir, List<Page> pageList) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("pageName", pageName);
+
+        List<Map<String, String>> pages = new ArrayList<>();
+        for (Page page : pageList) {
+            Map<String, String> pageData = new HashMap<>();
+            pageData.put("name", page.getPageName());
+            pages.add(pageData);
+        }
+        dataModel.put("pages", pages);
 
         Template template = cfg.getTemplate("App.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/App.js")) {

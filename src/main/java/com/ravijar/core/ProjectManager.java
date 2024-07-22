@@ -123,7 +123,7 @@ public class ProjectManager {
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
 
             codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pages.getFirst());
-            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages.getFirst().getPageName());
+            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages);
 
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());

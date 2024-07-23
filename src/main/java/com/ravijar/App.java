@@ -33,6 +33,9 @@ public class App {
                     logger.info("Starting application...");
                     projectManager.runProject();
                     break;
+                case "build":
+                    projectManager.buildProject();
+                    break;
                 case "test":
                     logger.info("Running test...");
                     projectManager.test();

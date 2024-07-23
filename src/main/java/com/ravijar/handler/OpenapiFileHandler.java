@@ -87,8 +87,14 @@ public class OpenapiFileHandler {
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
-            ResponseProperty responseProperty = new ResponseProperty(key, value.getTypes().iterator().next().toString());
-            properties.add(responseProperty);
+            if (value.getTypes() != null) {
+                properties.add(new ResponseProperty(key, value.getTypes().iterator().next().toString()));
+            } else if (value.get$ref() != null) {
+                String ref = value.get$ref();
+                properties.add(new ResponseProperty(key, ref.substring(ref.lastIndexOf('/') + 1)));
+            } else {
+                logger.error("Type not defined properly for the property {}.", key);
+            }
         }
 
         return properties;
@@ -151,5 +157,25 @@ public class OpenapiFileHandler {
         return null;
     }
 
+    public Map<String, List<ResponseProperty>> getSchemas() {
+        if (openAPIData == null) {
+            logger.error("OpenAPI data is not initialized.");
+            return null;
+        }
 
+        Map<String, Schema> result = openAPIData.getComponents().getSchemas();
+        Map<String, List<ResponseProperty>> schemas = new HashMap<>();
+
+        for (String key : result.keySet()) {
+            List<ResponseProperty> schema = extractProperties(result.get(key).getProperties());
+            schemas.put(key, schema);
+        }
+
+        if (schemas == null || schemas.isEmpty()) {
+            logger.error("No schemas found in OpenAPI specification.");
+            return null;
+        }
+
+        return schemas;
+    }
 }

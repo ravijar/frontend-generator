@@ -12,4 +12,23 @@ import lombok.ToString;
 public class ResponseProperty {
     private String property;
     private String type;
+
+    public String getTypeScriptType() {
+        switch (type) {
+            case "integer":
+                return "number";
+            case "number":
+                return "number";
+            case "string":
+                return "string";
+            case "boolean":
+                return "boolean";
+            case "object":
+                return "{}";
+            case "array":
+                return "any[]";
+            default:
+                return "any";
+        }
+    }
 }

@@ -89,6 +89,7 @@ public class ProjectManager {
             this.commandHandler.installNpmPackage(ProjectManager.projectName,"axios");
             this.fileHandler.createDirectory(projectDir, "build/src/components");
             this.fileHandler.createDirectory(projectDir, "build/src/pages");
+            this.fileHandler.createDirectory(projectDir, "build/src/models");
             copyTemplateFiles();
             logger.info("Project initialized successfully.");
         } catch (IOException e) {
@@ -100,11 +101,12 @@ public class ProjectManager {
         this.commandHandler.runReactApp(ProjectManager.projectName);
     }
 
-    public void test() {
+    public void buildProject() {
         String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
         String cssDir = ProjectManager.projectName + "\\css\\";
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
+        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         List<Page> pages = pagesFileHandler.getPages();
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
@@ -117,13 +119,19 @@ public class ProjectManager {
             appOutputDir.mkdirs();
         }
 
+        File modelsDir = new File(ProjectManager.projectName + "\\build\\src\\models");
+        if (!modelsDir.exists()) {
+            modelsDir.mkdirs();
+        }
+
         try {
 
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
 
-            codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pages.getFirst());
+            //codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pages.getFirst());
             codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages);
+            codeGenerator.generateModels(modelsDir.getAbsolutePath(), openapiFileHandler.getSchemas());
 
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
@@ -142,5 +150,8 @@ public class ProjectManager {
                     new File(buildSrcDir + "pages\\" + cssTemplate + ".css")
             );
         }
+    }
+
+    public void test() {
     }
 }

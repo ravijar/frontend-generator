@@ -73,4 +73,37 @@ public class ReactCodeGenerator {
         }
     }
 
+    public void generateModels(String outputDir, Map<String, List<ResponseProperty>> schemas) throws IOException, TemplateException {
+        for (Map.Entry<String, List<ResponseProperty>> entry : schemas.entrySet()) {
+            String modelName = entry.getKey();
+            List<ResponseProperty> responseProperties = entry.getValue();
+
+            Map<String, Object> dataModel = new HashMap<>();
+            dataModel.put("modelName", modelName);
+
+            List<Map<String, String>> properties = new ArrayList<>();
+            List<Map<String, String>> otherTypes = new ArrayList<>();
+            for (ResponseProperty responseProperty : responseProperties) {
+                Map<String, String> property = new HashMap<>();
+                Map<String, String> otherType = new HashMap<>();
+
+                property.put("name", responseProperty.getProperty());
+                if (responseProperty.getTypeScriptType().equals("any")) {
+                    property.put("type", responseProperty.getType());
+                    otherType.put("name", responseProperty.getType());
+                    otherTypes.add(otherType);
+                } else {
+                    property.put("type", responseProperty.getTypeScriptType());
+                }
+                properties.add(property);
+            }
+            dataModel.put("properties", properties);
+            dataModel.put("otherTypes", otherTypes);
+
+            Template template = cfg.getTemplate("Model.ftl");
+            try (Writer fileWriter = new FileWriter(outputDir + "/" + modelName + ".ts")) {
+                template.process(dataModel, fileWriter);
+            }
+        }
+    }
 }

@@ -81,6 +81,10 @@ public class OpenapiFileHandler {
         }
     }
 
+    private String getSchemaFromRef(String ref) {
+        return ref.substring(ref.lastIndexOf('/') + 1);
+    }
+
     private List<ResponseProperty> extractProperties(Map<String, Schema> openApiData) {
         List<ResponseProperty> properties = new ArrayList<>();
 
@@ -90,8 +94,7 @@ public class OpenapiFileHandler {
             if (value.getTypes() != null) {
                 properties.add(new ResponseProperty(key, value.getTypes().iterator().next().toString()));
             } else if (value.get$ref() != null) {
-                String ref = value.get$ref();
-                properties.add(new ResponseProperty(key, ref.substring(ref.lastIndexOf('/') + 1)));
+                properties.add(new ResponseProperty(key, getSchemaFromRef(value.get$ref())));
             } else {
                 logger.error("Type not defined properly for the property {}.", key);
             }
@@ -110,7 +113,7 @@ public class OpenapiFileHandler {
         return operation.getParameters();
     }
 
-    public List<ResponseProperty> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
+    public String getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {
@@ -129,7 +132,7 @@ public class OpenapiFileHandler {
             return null;
         }
 
-        return extractProperties(apiResponse.getContent().values().iterator().next().getSchema().getProperties());
+        return getSchemaFromRef(apiResponse.getContent().values().iterator().next().getSchema().get$ref());
     }
 
     public String getUrlEndpoint(String resourceUrl) {

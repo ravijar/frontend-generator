@@ -25,8 +25,8 @@ public class ProjectManager {
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
     private final String templatesDir = "src\\main\\resources\\templates\\";
-    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair"};
+    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair"};
     private final String[] cssPageTemplates = {"Page"};
 
     public ProjectManager() {
@@ -129,7 +129,10 @@ public class ProjectManager {
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
 
-            //codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pages.getFirst());
+            for (Page page: pages) {
+                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), page);
+            }
+
             codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages);
             codeGenerator.generateModels(modelsDir.getAbsolutePath(), openapiFileHandler.getSchemas());
 
@@ -153,5 +156,8 @@ public class ProjectManager {
     }
 
     public void test() {
+        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
+        System.out.println("###########################");
+        System.out.println(openapiFileHandler.getResponseSchema("/users/{username}", PathItem.HttpMethod.GET, "200"));
     }
 }

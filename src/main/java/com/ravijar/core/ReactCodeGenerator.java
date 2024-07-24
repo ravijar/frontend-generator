@@ -45,7 +45,6 @@ public class ReactCodeGenerator {
     public void createPage(String outputDir, Page page) throws IOException, TemplateException {
         OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
-        List<ResponseProperty> responseProperties = openapiFileHandler.getResponseSchema(page.getResourceUrl(), PathItem.HttpMethod.GET, "200");
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
@@ -58,14 +57,6 @@ public class ReactCodeGenerator {
             fields.add(field);
         }
         dataModel.put("fields", fields);
-
-        List<Map<String, String>> data = new ArrayList<>();
-        for (ResponseProperty responseProperty : responseProperties) {
-            Map<String, String> datum = new HashMap<>();
-            datum.put("property", responseProperty.getProperty());
-            data.add(datum);
-        }
-        dataModel.put("data", data);
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getPageName() + ".js")) {

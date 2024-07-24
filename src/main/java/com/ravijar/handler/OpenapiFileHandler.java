@@ -81,14 +81,23 @@ public class OpenapiFileHandler {
         }
     }
 
+    private String getSchemaFromRef(String ref) {
+        return ref.substring(ref.lastIndexOf('/') + 1);
+    }
+
     private List<ResponseProperty> extractProperties(Map<String, Schema> openApiData) {
         List<ResponseProperty> properties = new ArrayList<>();
 
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
-            ResponseProperty responseProperty = new ResponseProperty(key, value.getTypes().iterator().next().toString());
-            properties.add(responseProperty);
+            if (value.getTypes() != null) {
+                properties.add(new ResponseProperty(key, value.getTypes().iterator().next().toString()));
+            } else if (value.get$ref() != null) {
+                properties.add(new ResponseProperty(key, getSchemaFromRef(value.get$ref())));
+            } else {
+                logger.error("Type not defined properly for the property {}.", key);
+            }
         }
 
         return properties;
@@ -104,7 +113,7 @@ public class OpenapiFileHandler {
         return operation.getParameters();
     }
 
-    public List<ResponseProperty> getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
+    public String getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {
@@ -123,7 +132,7 @@ public class OpenapiFileHandler {
             return null;
         }
 
-        return extractProperties(apiResponse.getContent().values().iterator().next().getSchema().getProperties());
+        return getSchemaFromRef(apiResponse.getContent().values().iterator().next().getSchema().get$ref());
     }
 
     public String getUrlEndpoint(String resourceUrl) {
@@ -151,5 +160,25 @@ public class OpenapiFileHandler {
         return null;
     }
 
+    public Map<String, List<ResponseProperty>> getSchemas() {
+        if (openAPIData == null) {
+            logger.error("OpenAPI data is not initialized.");
+            return null;
+        }
 
+        Map<String, Schema> result = openAPIData.getComponents().getSchemas();
+        Map<String, List<ResponseProperty>> schemas = new HashMap<>();
+
+        for (String key : result.keySet()) {
+            List<ResponseProperty> schema = extractProperties(result.get(key).getProperties());
+            schemas.put(key, schema);
+        }
+
+        if (schemas == null || schemas.isEmpty()) {
+            logger.error("No schemas found in OpenAPI specification.");
+            return null;
+        }
+
+        return schemas;
+    }
 }

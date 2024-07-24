@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import InputField from "../components/InputField";
-import KeyValuePair from "../components/KeyValuePair";
+import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
+import ${responseSchema} from "../models/${responseSchema}";
 import "./Page.css";
 
 export default function ${pageName?cap_first}() {
@@ -10,9 +11,7 @@ export default function ${pageName?cap_first}() {
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
 </#list>
 
-<#list data as datum>
-    const [${datum.property}Output, set${datum.property?cap_first}Output] = useState("");
-</#list>
+    const [responseData, setResponseData] = useState(new ${responseSchema}());
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {
@@ -32,9 +31,7 @@ export default function ${pageName?cap_first}() {
         try {
             const response = await axios.get(url);
             console.log('Response:', response.data);
-        <#list data as datum>
-            set${datum.property?cap_first}Output(response.data.${datum.property});
-        </#list>
+            setResponseData(response.data);
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -58,12 +55,7 @@ export default function ${pageName?cap_first}() {
             </form>
 
             <div className="key-value-pairs-container">
-            <#list data as datum>
-                <KeyValuePair
-                    keyName="${datum.property?cap_first}"
-                    value={${datum.property}Output}
-                />
-            </#list>
+                <RecursiveKeyValuePair data={responseData} />
             </div>
         </div>
     );

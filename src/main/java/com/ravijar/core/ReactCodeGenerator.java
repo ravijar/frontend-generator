@@ -4,6 +4,7 @@ import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.handler.PagesFileHandler;
 import com.ravijar.model.Page;
 import com.ravijar.model.ResponseProperty;
+import com.ravijar.model.TypeScriptDefaultValue;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -45,10 +46,12 @@ public class ReactCodeGenerator {
     public void createPage(String outputDir, Page page) throws IOException, TemplateException {
         OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
+        String responseSchema = openapiFileHandler.getResponseSchema(page.getResourceUrl(), PathItem.HttpMethod.GET,"200");
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
         dataModel.put("endpointUrl", openapiFileHandler.getUrlEndpoint(page.getResourceUrl()));
+        dataModel.put("responseSchema", responseSchema);
 
         List<Map<String, String>> fields = new ArrayList<>();
         for (Parameter parameter : parameters) {
@@ -80,11 +83,12 @@ public class ReactCodeGenerator {
 
                 property.put("name", responseProperty.getProperty());
                 if (responseProperty.getTypeScriptType().equals("any")) {
-                    property.put("type", responseProperty.getType());
-                    otherType.put("name", responseProperty.getType());
+                    String type = responseProperty.getType();
+                    property.put("default", "new "+type+"()");
+                    otherType.put("name", type);
                     otherTypes.add(otherType);
                 } else {
-                    property.put("type", responseProperty.getTypeScriptType());
+                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(responseProperty.getTypeScriptType()));
                 }
                 properties.add(property);
             }
@@ -92,7 +96,7 @@ public class ReactCodeGenerator {
             dataModel.put("otherTypes", otherTypes);
 
             Template template = cfg.getTemplate("Model.ftl");
-            try (Writer fileWriter = new FileWriter(outputDir + "/" + modelName + ".ts")) {
+            try (Writer fileWriter = new FileWriter(outputDir + "/" + modelName + ".js")) {
                 template.process(dataModel, fileWriter);
             }
         }

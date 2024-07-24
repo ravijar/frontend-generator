@@ -1,9 +1,9 @@
 <#list otherTypes as otherType>
-import {${otherType.name}} from "./${otherType.name}";
+import ${otherType.name} from "./${otherType.name}";
 </#list>
 
-export interface ${modelName} {
+export default class ${modelName} {
 <#list properties as property>
-    ${property.name}: ${property.type};
+    ${property.name} = ${property.default};
 </#list>
 }

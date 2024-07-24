@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
+import ${responseSchema} from "../models/${responseSchema}";
 import "./Page.css";
 
 export default function ${pageName?cap_first}() {
@@ -10,7 +11,7 @@ export default function ${pageName?cap_first}() {
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
 </#list>
 
-    const [responseData, setResponseData] = useState({});
+    const [responseData, setResponseData] = useState(new ${responseSchema}());
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {

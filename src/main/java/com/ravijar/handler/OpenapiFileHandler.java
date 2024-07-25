@@ -181,4 +181,41 @@ public class OpenapiFileHandler {
 
         return schemas;
     }
+
+    public List<String> getNextPages(String path, PathItem.HttpMethod method, String responseType) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            return Collections.emptyList();
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+        if (responses == null || !responses.containsKey(responseType)) {
+            logger.error("Response type not found for path and method in OpenAPI specification: {} {} {}", responseType, method, path);
+            return Collections.emptyList();
+        }
+
+        ApiResponse apiResponse = responses.get(responseType);
+        Map<String, Object> extensions = apiResponse.getExtensions();
+
+        if (extensions == null || !extensions.containsKey("x-nextPages")) {
+            logger.info("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
+            return Collections.emptyList();
+        }
+
+        Object nextPagesObject = extensions.get("x-nextPages");
+        if (nextPagesObject instanceof List) {
+            List<?> nextPagesList = (List<?>) nextPagesObject;
+            List<String> nextPages = new ArrayList<>();
+            for (Object nextPage : nextPagesList) {
+                if (nextPage instanceof String) {
+                    nextPages.add((String) nextPage);
+                }
+            }
+            return nextPages;
+        }
+
+        return Collections.emptyList();
+    }
+
 }

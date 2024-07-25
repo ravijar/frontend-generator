@@ -47,6 +47,7 @@ public class ReactCodeGenerator {
         OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
         String responseSchema = openapiFileHandler.getResponseSchema(page.getResourceUrl(), PathItem.HttpMethod.GET,"200");
+        List<String> nextPageList = openapiFileHandler.getNextPages(page.getResourceUrl(), PathItem.HttpMethod.GET, "200");
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
@@ -60,6 +61,14 @@ public class ReactCodeGenerator {
             fields.add(field);
         }
         dataModel.put("fields", fields);
+
+        List<Map<String,String>> nextPages = new ArrayList<>();
+        for (String nextPage : nextPageList) {
+            Map<String, String> nextPageData = new HashMap<>();
+            nextPageData.put("name", nextPage);
+            nextPages.add(nextPageData);
+        }
+        dataModel.put("nextPages", nextPages);
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getPageName() + ".js")) {

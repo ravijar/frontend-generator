@@ -158,6 +158,6 @@ public class ProjectManager {
     public void test() {
         OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         System.out.println("###########################");
-        System.out.println(openapiFileHandler.getResponseSchema("/users/{username}", PathItem.HttpMethod.GET, "200"));
+        System.out.println(openapiFileHandler.getNextPages("/users/{username}", PathItem.HttpMethod.GET, "200"));
     }
 }

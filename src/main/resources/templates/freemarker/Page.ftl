@@ -1,11 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
 import ${responseSchema} from "../models/${responseSchema}";
 import "./Page.css";
 
 export default function ${pageName?cap_first}() {
+    const navigate = useNavigate();
+
 <#list fields as field>
     const [${field.name}, set${field.name?cap_first}] = useState("");
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
@@ -22,8 +25,14 @@ export default function ${pageName?cap_first}() {
             set${field.name?cap_first}Error('');
         }
     };
-</#list>
 
+</#list>
+<#list nextPages as nextPage>
+    const onClick${nextPage.name} = () => {
+        navigate("/${nextPage.name?uncap_first}");
+    }
+
+</#list>
     const handleSubmit = async (event) => {
         event.preventDefault();
         const url = `${endpointUrl}<#list fields as field>${"${" + field.name + "}"}<#if field_has_next>/</#if></#list>`;
@@ -56,6 +65,12 @@ export default function ${pageName?cap_first}() {
 
             <div className="key-value-pairs-container">
                 <RecursiveKeyValuePair data={responseData} />
+            </div>
+
+            <div className="navigation-buttons-container">
+            <#list nextPages as nextPage>
+                <button className="navigation-button" onClick={onClick${nextPage.name}}>${nextPage.name}</button>
+            </#list>
             </div>
         </div>
     );

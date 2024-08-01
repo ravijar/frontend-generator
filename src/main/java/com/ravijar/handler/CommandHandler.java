@@ -78,4 +78,11 @@ public class CommandHandler {
             runProcessBuilder(processBuilder);
         }
     }
+
+    public void npmInstall(File dir) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("npm.cmd", "install");
+        processBuilder.directory(dir);
+        runProcessBuilder(processBuilder);
+    }
 }

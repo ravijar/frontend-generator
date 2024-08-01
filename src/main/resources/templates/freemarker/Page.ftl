@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { DefaultApi } from "../client_api"
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
 import ${responseSchema} from "../models/${responseSchema}";
@@ -8,6 +8,7 @@ import "./Page.css";
 
 export default function ${pageName?cap_first}() {
     const navigate = useNavigate();
+    const clientApi = new DefaultApi();
 
 <#list fields as field>
     const [${field.name}, set${field.name?cap_first}] = useState("");
@@ -33,17 +34,16 @@ export default function ${pageName?cap_first}() {
     }
 
 </#list>
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        const url = `${endpointUrl}<#list fields as field>${"${" + field.name + "}"}<#if field_has_next>/</#if></#list>`;
 
-        try {
-            const response = await axios.get(url);
-            console.log('Response:', response.data);
-            setResponseData(response.data);
-        } catch (error) {
-            console.error('Error submitting form:', error);
-        }
+        clientApi.${apiMethod}(<#list fields as field>${field.name}, </#list>(error, data, response) => {
+            if (error) {
+                console.log(error);
+            } else {
+                setResponseData(data);
+            }
+        });
     };
 
     return (

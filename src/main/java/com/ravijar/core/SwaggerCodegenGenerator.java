@@ -1,10 +1,14 @@
 package com.ravijar.core;
 
+import com.ravijar.handler.CommandHandler;
 import io.swagger.codegen.v3.cli.SwaggerCodegen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
 public class SwaggerCodegenGenerator {
+    private static final Logger logger = LogManager.getLogger(SwaggerCodegenGenerator.class);
 
     public void generateClientApi(File specDir, File outputDir, String language) {
         if (!outputDir.exists()) {
@@ -19,5 +23,18 @@ public class SwaggerCodegenGenerator {
         };
 
         SwaggerCodegen.main(codegenArgs);
+
+        File packageJson = new File(outputDir, "package.json");
+
+        while (!packageJson.exists()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        CommandHandler commandHandler = new CommandHandler();
+        commandHandler.npmInstall(outputDir);
     }
 }

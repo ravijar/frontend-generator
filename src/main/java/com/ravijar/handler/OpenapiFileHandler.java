@@ -218,4 +218,12 @@ public class OpenapiFileHandler {
         return Collections.emptyList();
     }
 
+    public String getOperationId(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+        if (operation == null) {
+            return null;
+        }
+        return operation.getOperationId();
+    }
+
 }

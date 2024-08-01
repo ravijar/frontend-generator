@@ -60,6 +60,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen-cli -->
+    <dependency>
+      <groupId>io.swagger.codegen.v3</groupId>
+      <artifactId>swagger-codegen-cli</artifactId>
+      <version>3.0.59</version>
+    </dependency>
 
   </dependencies>
 

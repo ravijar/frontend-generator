@@ -46,8 +46,8 @@ public class ReactCodeGenerator {
     public void createPage(String outputDir, Page page) throws IOException, TemplateException {
         OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
-        String responseSchema = openapiFileHandler.getResponseSchema(page.getResourceUrl(), PathItem.HttpMethod.GET,"200");
-        List<String> nextPageList = openapiFileHandler.getNextPages(page.getResourceUrl(), PathItem.HttpMethod.GET, "200");
+        String responseSchema = openapiFileHandler.getResponseSchema(page.getResourceUrl(), page.getResourceMethod(),"200");
+        List<String> nextPageList = openapiFileHandler.getNextPages(page.getResourceUrl(), page.getResourceMethod(), "200");
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());

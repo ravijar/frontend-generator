@@ -65,6 +65,13 @@ public class ProjectManager {
         }
     }
 
+    private void createClientApi() {
+        SwaggerCodegenGenerator swaggerCodegenGenerator = new SwaggerCodegenGenerator();
+        File specDir = new File(projectName + "\\openapi.yaml");
+        File outputDir = new File(projectName + "\\build\\client_api");
+        swaggerCodegenGenerator.generateClientApi(specDir, outputDir, "javascript");
+    }
+
     public void initializeProject() {
         File projectDir = new File(projectName);
         if (!projectDir.exists()) {
@@ -153,11 +160,11 @@ public class ProjectManager {
                     new File(buildSrcDir + "pages\\" + cssTemplate + ".css")
             );
         }
+
+        createClientApi();
     }
 
     public void test() {
-        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
-        System.out.println("###########################");
-        System.out.println(openapiFileHandler.getNextPages("/users/{username}", PathItem.HttpMethod.GET, "200"));
+
     }
 }

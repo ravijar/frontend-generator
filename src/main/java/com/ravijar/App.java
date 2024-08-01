@@ -8,7 +8,7 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
 
     public static void main(String[] args) {
-        String[] commands = {"init"};
+        String[] commands = {"help", "init", "build", "run", "test"};
 
         ProjectManager projectManager = new ProjectManager();
 
@@ -22,7 +22,7 @@ public class App {
                     break;
                 case "init":
                     if (args.length == 2) {
-                        projectManager.setProjectName(args[1]);
+                        ProjectManager.setProjectName(args[1]);
                         projectManager.initializeProject();
                     } else {
                         projectManager.initializeProject();
@@ -34,6 +34,7 @@ public class App {
                     projectManager.runProject();
                     break;
                 case "build":
+                    logger.info("Building application...");
                     projectManager.buildProject();
                     break;
                 case "test":

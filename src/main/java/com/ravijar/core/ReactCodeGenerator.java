@@ -1,14 +1,12 @@
 package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
-import com.ravijar.handler.PagesFileHandler;
 import com.ravijar.model.Page;
-import com.ravijar.model.ResponseProperty;
+import com.ravijar.model.SchemaProperty;
 import com.ravijar.model.TypeScriptDefaultValue;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.parameters.Parameter;
 
 import java.io.FileWriter;
@@ -21,9 +19,13 @@ import java.util.Map;
 
 public class ReactCodeGenerator {
     private final Configuration cfg;
+    private final OpenapiFileHandler openapiFileHandler;
+    private final Map<String, List<SchemaProperty>> schemas;
 
     public ReactCodeGenerator(Configuration cfg) {
         this.cfg = cfg;
+        this.openapiFileHandler = new OpenapiFileHandler();
+        this.schemas = openapiFileHandler.getSchemas();
     }
 
     public void updateAppPage(String outputDir, List<Page> pageList) throws IOException, TemplateException {
@@ -44,21 +46,29 @@ public class ReactCodeGenerator {
     }
 
     public void createPage(String outputDir, Page page) throws IOException, TemplateException {
-        OpenapiFileHandler openapiFileHandler = new OpenapiFileHandler();
         List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
         String responseSchema = openapiFileHandler.getResponseSchema(page.getResourceUrl(), page.getResourceMethod(),"200");
+        String requestSchema = openapiFileHandler.getRequestSchema(page.getResourceUrl(), page.getResourceMethod());
         List<String> nextPageList = openapiFileHandler.getNextPages(page.getResourceUrl(), page.getResourceMethod(), "200");
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
         dataModel.put("apiMethod", openapiFileHandler.getOperationId(page.getResourceUrl(), page.getResourceMethod()));
         dataModel.put("responseSchema", responseSchema);
+        dataModel.put("requestSchema", requestSchema);
 
         List<Map<String, String>> fields = new ArrayList<>();
         for (Parameter parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
             fields.add(field);
+        }
+        if (requestSchema != null) {
+            for (SchemaProperty schemaProperty : schemas.get(requestSchema)) {
+                Map<String, String> field = new HashMap<>();
+                field.put("name", schemaProperty.getProperty());
+                fields.add(field);
+            }
         }
         dataModel.put("fields", fields);
 
@@ -76,28 +86,28 @@ public class ReactCodeGenerator {
         }
     }
 
-    public void generateModels(String outputDir, Map<String, List<ResponseProperty>> schemas) throws IOException, TemplateException {
-        for (Map.Entry<String, List<ResponseProperty>> entry : schemas.entrySet()) {
+    public void generateModels(String outputDir) throws IOException, TemplateException {
+        for (Map.Entry<String, List<SchemaProperty>> entry : schemas.entrySet()) {
             String modelName = entry.getKey();
-            List<ResponseProperty> responseProperties = entry.getValue();
+            List<SchemaProperty> responseProperties = entry.getValue();
 
             Map<String, Object> dataModel = new HashMap<>();
             dataModel.put("modelName", modelName);
 
             List<Map<String, String>> properties = new ArrayList<>();
             List<Map<String, String>> otherTypes = new ArrayList<>();
-            for (ResponseProperty responseProperty : responseProperties) {
+            for (SchemaProperty schemaProperty : responseProperties) {
                 Map<String, String> property = new HashMap<>();
                 Map<String, String> otherType = new HashMap<>();
 
-                property.put("name", responseProperty.getProperty());
-                if (responseProperty.getTypeScriptType().equals("any")) {
-                    String type = responseProperty.getType();
+                property.put("name", schemaProperty.getProperty());
+                if (schemaProperty.getTypeScriptType().equals("any")) {
+                    String type = schemaProperty.getType();
                     property.put("default", "new "+type+"()");
                     otherType.put("name", type);
                     otherTypes.add(otherType);
                 } else {
-                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(responseProperty.getTypeScriptType()));
+                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(schemaProperty.getTypeScriptType()));
                 }
                 properties.add(property);
             }

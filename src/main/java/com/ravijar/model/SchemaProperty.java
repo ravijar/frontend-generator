@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ResponseProperty {
+public class SchemaProperty {
     private String property;
     private String type;
 

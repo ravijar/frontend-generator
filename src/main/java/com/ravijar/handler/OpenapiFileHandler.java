@@ -1,10 +1,11 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
-import com.ravijar.model.ResponseProperty;
+import com.ravijar.model.SchemaProperty;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
@@ -85,16 +86,16 @@ public class OpenapiFileHandler {
         return ref.substring(ref.lastIndexOf('/') + 1);
     }
 
-    private List<ResponseProperty> extractProperties(Map<String, Schema> openApiData) {
-        List<ResponseProperty> properties = new ArrayList<>();
+    private List<SchemaProperty> extractProperties(Map<String, Schema> openApiData) {
+        List<SchemaProperty> properties = new ArrayList<>();
 
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
             if (value.getTypes() != null) {
-                properties.add(new ResponseProperty(key, value.getTypes().iterator().next().toString()));
+                properties.add(new SchemaProperty(key, value.getTypes().iterator().next().toString()));
             } else if (value.get$ref() != null) {
-                properties.add(new ResponseProperty(key, getSchemaFromRef(value.get$ref())));
+                properties.add(new SchemaProperty(key, getSchemaFromRef(value.get$ref())));
             } else {
                 logger.error("Type not defined properly for the property {}.", key);
             }
@@ -112,6 +113,28 @@ public class OpenapiFileHandler {
 
         return operation.getParameters();
     }
+
+    public String getRequestSchema(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            return null;
+        }
+
+        if (operation.getRequestBody() == null) {
+            logger.error("No request body found for path and method: {} {}", method, path);
+            return null;
+        }
+
+        Map<String, MediaType> content = operation.getRequestBody().getContent();
+        if (content == null || content.isEmpty()) {
+            logger.error("No content found for request body: {} {}", method, path);
+            return null;
+        }
+
+        return getSchemaFromRef(content.values().iterator().next().getSchema().get$ref());
+    }
+
 
     public String getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
         Operation operation = getOperation(path, method);
@@ -160,17 +183,18 @@ public class OpenapiFileHandler {
         return null;
     }
 
-    public Map<String, List<ResponseProperty>> getSchemas() {
+
+    public Map<String, List<SchemaProperty>> getSchemas() {
         if (openAPIData == null) {
             logger.error("OpenAPI data is not initialized.");
             return null;
         }
 
         Map<String, Schema> result = openAPIData.getComponents().getSchemas();
-        Map<String, List<ResponseProperty>> schemas = new HashMap<>();
+        Map<String, List<SchemaProperty>> schemas = new HashMap<>();
 
         for (String key : result.keySet()) {
-            List<ResponseProperty> schema = extractProperties(result.get(key).getProperties());
+            List<SchemaProperty> schema = extractProperties(result.get(key).getProperties());
             schemas.put(key, schema);
         }
 

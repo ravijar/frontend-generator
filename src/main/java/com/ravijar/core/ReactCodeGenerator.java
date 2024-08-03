@@ -56,8 +56,10 @@ public class ReactCodeGenerator {
         dataModel.put("apiMethod", openapiFileHandler.getOperationId(page.getResourceUrl(), page.getResourceMethod()));
         dataModel.put("responseSchema", responseSchema);
         dataModel.put("requestSchema", requestSchema);
+        dataModel.put("httpMethod", page.getResourceMethod().toString());
 
         List<Map<String, String>> fields = new ArrayList<>();
+        List<Map<String, String>> requestParams = new ArrayList<>();
         for (Parameter parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
@@ -68,9 +70,11 @@ public class ReactCodeGenerator {
                 Map<String, String> field = new HashMap<>();
                 field.put("name", schemaProperty.getProperty());
                 fields.add(field);
+                requestParams.add(field);
             }
         }
         dataModel.put("fields", fields);
+        dataModel.put("requestParams", requestParams);
 
         List<Map<String,String>> nextPages = new ArrayList<>();
         for (String nextPage : nextPageList) {

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DefaultApi } from "../client_api"
+import { DefaultApi } from "../client_api";
+<#if httpMethod == "POST">
+import ${requestSchema} from "../client_api/src/model/${requestSchema}";
+</#if>
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
-import ${responseSchema} from "../models/${responseSchema}";
 import "./Page.css";
 
 export default function ${pageName?cap_first}() {
@@ -15,7 +17,7 @@ export default function ${pageName?cap_first}() {
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
 </#list>
 
-    const [responseData, setResponseData] = useState(new ${responseSchema}());
+    const [responseData, setResponseData] = useState({});
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {
@@ -37,13 +39,28 @@ export default function ${pageName?cap_first}() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+    <#if httpMethod == "GET">
         clientApi.${apiMethod}(<#list fields as field>${field.name}, </#list>(error, data, response) => {
             if (error) {
                 console.log(error);
-            } else {
-                setResponseData(data);
             }
+            setResponseData(response.body);
         });
+    <#elseif httpMethod == "POST">
+        const body = new ${requestSchema}({
+        <#list requestParams as param>
+            ${param.name} : ${param.name},
+        </#list>
+        });
+
+        clientApi.${apiMethod}(body, (error, data, response) => {
+            if (error) {
+                console.log(error);
+            }
+            setResponseData(response.body);
+        });
+    </#if>
+
     };
 
     return (

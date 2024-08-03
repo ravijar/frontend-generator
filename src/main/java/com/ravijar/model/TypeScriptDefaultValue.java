@@ -1,5 +1,6 @@
 package com.ravijar.model;
 
+@Deprecated
 public enum TypeScriptDefaultValue {
     NUMBER("0"),
     STRING("\"\""),

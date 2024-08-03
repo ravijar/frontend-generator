@@ -29,6 +29,22 @@
     background-color: #0056b3;
 }
 
+.array-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.array-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.array-item:last-child {
+    border-bottom: none;
+}
+
 .key-value-pairs-container {
     background-color: #ffffff;
     padding: 20px;

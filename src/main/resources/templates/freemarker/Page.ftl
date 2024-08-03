@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DefaultApi } from "../client_api";
-<#if httpMethod == "POST">
+<#if httpMethod == "POST" || httpMethod == "PUT">
 import ${requestSchema} from "../client_api/src/model/${requestSchema}";
 </#if>
 import InputField from "../components/InputField";
@@ -17,7 +17,11 @@ export default function ${pageName?cap_first}() {
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
 </#list>
 
+<#if responseSchema.type == "null">
     const [responseData, setResponseData] = useState({});
+<#elseif responseSchema.type == "array">
+    const [responseData, setResponseData] = useState([]);
+</#if>
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {
@@ -38,6 +42,13 @@ export default function ${pageName?cap_first}() {
 </#list>
     const handleSubmit = (event) => {
         event.preventDefault();
+    <#if httpMethod == "POST" || httpMethod == "PUT">
+        const body = new ${requestSchema}({
+        <#list requestParams as param>
+            ${param.name} : ${param.name},
+        </#list>
+        });
+    </#if>
 
     <#if httpMethod == "GET">
         clientApi.${apiMethod}(<#list fields as field>${field.name}, </#list>(error, data, response) => {
@@ -47,13 +58,21 @@ export default function ${pageName?cap_first}() {
             setResponseData(response.body);
         });
     <#elseif httpMethod == "POST">
-        const body = new ${requestSchema}({
-        <#list requestParams as param>
-            ${param.name} : ${param.name},
-        </#list>
-        });
-
         clientApi.${apiMethod}(body, (error, data, response) => {
+            if (error) {
+                console.log(error);
+            }
+            setResponseData(response.body);
+        });
+    <#elseif httpMethod == "DELETE">
+        clientApi.${apiMethod}(${fields[0].name}, (error, data, response) => {
+            if (error) {
+                console.log(error);
+            }
+            setResponseData(response.body);
+        });
+    <#elseif httpMethod == "PUT">
+        clientApi.${apiMethod}(body, ${fields[0].name}, (error, data, response) => {
             if (error) {
                 console.log(error);
             }
@@ -80,9 +99,19 @@ export default function ${pageName?cap_first}() {
                 <button type="submit" className="form-submit">Submit</button>
             </form>
 
+        <#if responseSchema.type == "null">
             <div className="key-value-pairs-container">
                 <RecursiveKeyValuePair data={responseData} />
             </div>
+        <#elseif responseSchema.type == "array">
+            <div className="array-container">
+                {responseData.map((item, index) => (
+                    <div key={index} className="array-item">
+                        <RecursiveKeyValuePair data={item} />
+                    </div>
+                ))}
+            </div>
+        </#if>
 
             <div className="navigation-buttons-container">
             <#list nextPages as nextPage>

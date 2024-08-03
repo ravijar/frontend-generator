@@ -47,16 +47,21 @@ public class ReactCodeGenerator {
 
     public void createPage(String outputDir, Page page) throws IOException, TemplateException {
         List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
-        String responseSchema = openapiFileHandler.getResponseSchema(page.getResourceUrl(), page.getResourceMethod(),"200");
+        String responseSchemaName = openapiFileHandler.getResponseSchemaName(page.getResourceUrl(), page.getResourceMethod(),"200");
+        String responseSchemaType = openapiFileHandler.getResponseSchemaType(page.getResourceUrl(), page.getResourceMethod(),"200");
         String requestSchema = openapiFileHandler.getRequestSchema(page.getResourceUrl(), page.getResourceMethod());
         List<String> nextPageList = openapiFileHandler.getNextPages(page.getResourceUrl(), page.getResourceMethod(), "200");
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", page.getPageName());
         dataModel.put("apiMethod", openapiFileHandler.getOperationId(page.getResourceUrl(), page.getResourceMethod()));
-        dataModel.put("responseSchema", responseSchema);
         dataModel.put("requestSchema", requestSchema);
         dataModel.put("httpMethod", page.getResourceMethod().toString());
+
+        Map<String, String> responseSchema = new HashMap<>();
+        responseSchema.put("name", responseSchemaName);
+        responseSchema.put("type", responseSchemaType);
+        dataModel.put("responseSchema", responseSchema);
 
         List<Map<String, String>> fields = new ArrayList<>();
         List<Map<String, String>> requestParams = new ArrayList<>();

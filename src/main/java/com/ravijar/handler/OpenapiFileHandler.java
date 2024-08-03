@@ -87,6 +87,26 @@ public class OpenapiFileHandler {
         return ref.substring(ref.lastIndexOf('/') + 1);
     }
 
+    private Schema getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            return null;
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+        if (responses == null || !responses.containsKey(responseType)) {
+            return null;
+        }
+
+        ApiResponse apiResponse = responses.get(responseType);
+        if (apiResponse.getContent() == null || apiResponse.getContent().isEmpty()) {
+            return null;
+        }
+
+        return apiResponse.getContent().values().iterator().next().getSchema();
+    }
+
     private List<SchemaProperty> extractProperties(Map<String, Schema> openApiData) {
         List<SchemaProperty> properties = new ArrayList<>();
 
@@ -137,26 +157,37 @@ public class OpenapiFileHandler {
     }
 
 
-    public String getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
-        Operation operation = getOperation(path, method);
-
-        if (operation == null) {
+    public String getResponseSchemaName(String path, PathItem.HttpMethod method, String responseType) {
+        Schema schema = getResponseSchema(path, method, responseType);
+        if(schema == null) {
+            logger.error("No Content found for response type: {} {} {}", responseType, method, path);
             return null;
         }
-
-        Map<String, ApiResponse> responses = operation.getResponses();
-        if (responses == null || !responses.containsKey(responseType)) {
-            logger.error("Response type not found for path and method in OpenAPI specification: {} {} {}", responseType, method, path);
+        String ref = schema.get$ref();
+        if(ref == null) {
+            Schema itemSchema = schema.getItems();
+            if(itemSchema != null) {
+                ref = itemSchema.get$ref();
+                if(ref != null) {
+                    return getSchemaFromRef(ref);
+                }
+            }
+            logger.error("No Ref found for response type: {} {} {}", responseType, method, path);
             return null;
         }
+        return getSchemaFromRef(ref);
+    }
 
-        ApiResponse apiResponse = responses.get(responseType);
-        if (apiResponse.getContent() == null || apiResponse.getContent().isEmpty()) {
+    public String getResponseSchemaType(String path, PathItem.HttpMethod method, String responseType) {
+        Schema schema = getResponseSchema(path, method, responseType);
+        if(schema == null) {
             logger.error("No content found for response type: {} {} {}", responseType, method, path);
             return null;
         }
-
-        return getSchemaFromRef(apiResponse.getContent().values().iterator().next().getSchema().get$ref());
+        if(schema.getTypes() == null) {
+            return "null";
+        }
+        return schema.getTypes().iterator().next().toString();
     }
 
     @Deprecated

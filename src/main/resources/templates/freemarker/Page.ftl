@@ -17,7 +17,11 @@ export default function ${pageName?cap_first}() {
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
 </#list>
 
+<#if responseSchema.type == "null">
     const [responseData, setResponseData] = useState({});
+<#elseif responseSchema.type == "array">
+    const [responseData, setResponseData] = useState([]);
+</#if>
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {
@@ -80,9 +84,19 @@ export default function ${pageName?cap_first}() {
                 <button type="submit" className="form-submit">Submit</button>
             </form>
 
+        <#if responseSchema.type == "null">
             <div className="key-value-pairs-container">
                 <RecursiveKeyValuePair data={responseData} />
             </div>
+        <#elseif responseSchema.type == "array">
+            <div className="array-container">
+                {responseData.map((item, index) => (
+                    <div key={index} className="array-item">
+                        <RecursiveKeyValuePair data={item} />
+                    </div>
+                ))}
+            </div>
+        </#if>
 
             <div className="navigation-buttons-container">
             <#list nextPages as nextPage>

@@ -72,6 +72,7 @@ public class OpenapiFileHandler {
         return operation;
     }
 
+    @Deprecated
     private String getBaseUrl() {
         List<Server> servers = openAPIData.getServers();
         if (servers != null && !servers.isEmpty()) {
@@ -158,6 +159,7 @@ public class OpenapiFileHandler {
         return getSchemaFromRef(apiResponse.getContent().values().iterator().next().getSchema().get$ref());
     }
 
+    @Deprecated
     public String getUrlEndpoint(String resourceUrl) {
         if (openAPIData == null) {
             logger.error("OpenAPI data is not initialized.");

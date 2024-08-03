@@ -90,6 +90,7 @@ public class ReactCodeGenerator {
         }
     }
 
+    @Deprecated
     public void generateModels(String outputDir) throws IOException, TemplateException {
         for (Map.Entry<String, List<SchemaProperty>> entry : schemas.entrySet()) {
             String modelName = entry.getKey();

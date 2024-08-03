@@ -68,13 +68,18 @@ public class ReactCodeGenerator {
         for (Parameter parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
-            fields.add(field);
+            if (!fields.contains(field)) {
+                fields.add(field);
+            }
+
         }
         if (requestSchema != null) {
             for (SchemaProperty schemaProperty : schemas.get(requestSchema)) {
                 Map<String, String> field = new HashMap<>();
                 field.put("name", schemaProperty.getProperty());
-                fields.add(field);
+                if (!fields.contains(field)) {
+                    fields.add(field);
+                }
                 requestParams.add(field);
             }
         }

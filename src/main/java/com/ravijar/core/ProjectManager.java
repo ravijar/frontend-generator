@@ -140,7 +140,7 @@ public class ProjectManager {
             }
 
             codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages);
-            codeGenerator.generateModels(modelsDir.getAbsolutePath(), openapiFileHandler.getSchemas());
+            codeGenerator.generateModels(modelsDir.getAbsolutePath());
 
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());

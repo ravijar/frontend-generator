@@ -24,7 +24,6 @@ public class ProjectManager {
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
-    private final String templatesDir = "src\\main\\resources\\templates\\";
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair"};
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair"};
     private final String[] cssPageTemplates = {"Page"};
@@ -47,21 +46,19 @@ public class ProjectManager {
         String cssDir = ProjectManager.projectName + "\\css\\";
 
         for (String reactTemplate : reactComponentTemplates) {
-            File sourceFile = new File(templatesDir + "react\\components\\" + reactTemplate + ".js");
-            File destFile = new File(buildSrcDir + "components\\" + reactTemplate + ".js");
-            fileHandler.copyFile(sourceFile,destFile);
+            fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".js", new File(buildSrcDir + "components\\" + reactTemplate + ".js"));
         }
 
         for (String cssTemplate : cssComponentTemplates) {
-            File sourceFile = new File(templatesDir + "css\\components\\" + cssTemplate + ".css");
-            fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
-            fileHandler.copyFile(sourceFile, new File( cssDir + "components\\" + cssTemplate + ".css"));
+            String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
+            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
+            fileHandler.copyResource(resourcePath, new File(cssDir + "components\\" + cssTemplate + ".css"));
         }
 
         for (String cssTemplate : cssPageTemplates) {
-            File sourceFile = new File(templatesDir + "css\\pages\\" + cssTemplate + ".css");
-            fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
-            fileHandler.copyFile(sourceFile, new File(cssDir + "pages\\" + cssTemplate + ".css"));
+            String resourcePath = "/templates/css/pages/" + cssTemplate + ".css";
+            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
+            fileHandler.copyResource(resourcePath, new File(cssDir + "pages\\" + cssTemplate + ".css"));
         }
     }
 

@@ -3,10 +3,7 @@ package com.ravijar.handler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -54,4 +51,28 @@ public class FileHandler {
             logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
         }
     }
+
+    public void copyResource(String resourcePath, File destFile) {
+        try (InputStream in = getClass().getResourceAsStream(resourcePath);
+             BufferedInputStream bufferedIn = new BufferedInputStream(in);
+             FileOutputStream fileOut = new FileOutputStream(destFile);
+             BufferedOutputStream bufferedOut = new BufferedOutputStream(fileOut)) {
+
+            if (in == null) {
+                throw new FileNotFoundException("Resource not found: " + resourcePath);
+            }
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = bufferedIn.read(buffer)) != -1) {
+                bufferedOut.write(buffer, 0, bytesRead);
+            }
+
+            logger.info("Resource copied successfully from {} to {}", resourcePath, destFile.getAbsolutePath());
+
+        } catch (IOException e) {
+            logger.error("Error copying resource: {}", resourcePath, e);
+        }
+    }
+
 }

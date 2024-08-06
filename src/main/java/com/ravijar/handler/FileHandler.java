@@ -75,4 +75,29 @@ public class FileHandler {
         }
     }
 
+    public void copyAllFilesFromDirectory(File inputDir, File outputDir) {
+        if (!inputDir.isDirectory()) {
+            logger.error("{} is not a directory.", inputDir.getAbsolutePath());
+            return;
+        }
+
+        if (!outputDir.exists() && !outputDir.mkdirs()) {
+            logger.error("Failed to create output directory {}.", outputDir.getAbsolutePath());
+            return;
+        }
+
+        File[] files = inputDir.listFiles();
+        if (files == null) {
+            logger.error("Error reading files from directory {}.", inputDir.getAbsolutePath());
+            return;
+        }
+
+        for (File file : files) {
+            if (file.isFile()) {
+                File destFile = new File(outputDir, file.getName());
+                copyFile(file, destFile);
+            }
+        }
+    }
+
 }

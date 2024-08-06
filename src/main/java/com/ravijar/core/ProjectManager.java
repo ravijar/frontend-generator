@@ -25,6 +25,7 @@ public class ProjectManager {
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair"};
+    private final String[] reactCommonTemplates = {"Utils"};
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page"};
 
     public ProjectManager() {
@@ -48,6 +49,10 @@ public class ProjectManager {
             fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".js", new File(buildSrcDir + "components\\" + reactTemplate + ".js"));
         }
 
+        for (String reactTemplate : reactCommonTemplates) {
+            fileHandler.copyResource("/templates/react/common/" + reactTemplate + ".js", new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
+        }
+
         for (String cssTemplate : cssComponentTemplates) {
             String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
             if (cssTemplate.equals("Page")) {
@@ -64,6 +69,15 @@ public class ProjectManager {
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
         swaggerCodegenGenerator.generateClientApi(specDir, outputDir, "javascript");
+    }
+
+    private void checkCustomStyleFiles(List<Page> pages) {
+        for (Page page : pages) {
+            File customStyleFile = new File(projectName + "\\styles\\pages\\" + page.getPageName() + "Styles.js");
+            if (customStyleFile.exists()) {
+                page.setCustomStyled(true);
+            }
+        }
     }
 
     public void initializeProject() {
@@ -89,6 +103,8 @@ public class ProjectManager {
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
             this.fileHandler.createDirectory(projectDir, "build/src/components");
             this.fileHandler.createDirectory(projectDir, "build/src/pages");
+            this.fileHandler.createDirectory(projectDir, "build/src/customStyles");
+            this.fileHandler.createDirectory(projectDir, "build/src/common");
             copyTemplateFiles();
             logger.info("Project initialized successfully.");
         } catch (IOException e) {
@@ -106,6 +122,8 @@ public class ProjectManager {
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
         List<Page> pages = pagesFileHandler.getPages();
+
+        checkCustomStyleFiles(pages);
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
@@ -140,6 +158,8 @@ public class ProjectManager {
                 fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
             }
         }
+
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "customStyles"));
 
         createClientApi();
     }

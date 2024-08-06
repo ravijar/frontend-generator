@@ -57,6 +57,7 @@ public class ReactCodeGenerator {
         dataModel.put("apiMethod", openapiFileHandler.getOperationId(page.getResourceUrl(), page.getResourceMethod()));
         dataModel.put("requestSchema", requestSchema);
         dataModel.put("httpMethod", page.getResourceMethod().toString());
+        dataModel.put("customStyled", page.isCustomStyled());
 
         Map<String, String> responseSchema = new HashMap<>();
         responseSchema.put("name", responseSchemaName);

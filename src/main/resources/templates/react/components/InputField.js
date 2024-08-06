@@ -7,17 +7,17 @@ export default function InputField ({ label, type = 'text', value, onChange, pla
     };
 
     return (
-        <div className="input-field-container" style={styles.container}>
-            {label && <label className="input-field-label" style={styles.label}>{label}</label>}
+        <div className="container" style={styles.container}>
+            {label && <label className="label" style={styles.label}>{label}</label>}
             <input
                 type={type}
                 value={value}
                 onChange={handleInputChange}
                 placeholder={placeholder}
-                className="input-field"
+                className="input"
                 style={styles.input}
             />
-            {error && <span className="input-field-error" style={styles.error}>{error}</span>}
+            {error && <span className="error" style={styles.error}>{error}</span>}
         </div>
     );
 };

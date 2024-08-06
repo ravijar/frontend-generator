@@ -1,15 +1,15 @@
-.input-field-container {
+.container {
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
 }
 
-.input-field-label {
+.label {
     margin-bottom: 8px;
     font-weight: bold;
 }
 
-.input-field {
+.input {
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -17,12 +17,7 @@
     transition: border-color 0.3s;
 }
 
-.input-field:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-.input-field-error {
+.error {
     margin-top: 8px;
     color: #d9534f;
     font-size: 14px;

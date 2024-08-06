@@ -1,4 +1,18 @@
-.key-value-pair-container {
+.parent-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.parent-key {
+    font-weight: bold;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.child-container {
     display: flex;
     flex-direction: row;
     margin-bottom: 16px;
@@ -7,13 +21,13 @@
     border-radius: 4px;
 }
 
-.key {
+.child-key {
     font-weight: bold;
     margin-right: 8px;
     color: #333;
 }
 
-.value {
+.child-value {
     flex: 1;
     color: #555;
 }

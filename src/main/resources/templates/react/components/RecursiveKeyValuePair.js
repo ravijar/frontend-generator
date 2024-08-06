@@ -1,16 +1,16 @@
 import KeyValuePair from "../components/KeyValuePair";
-import "./RecursiveKeyValuePair.css";
+import "./KeyValuePair.css";
 
-export default function RecursiveKeyValuePair ({ data, parentKey = '' }) {
+export default function RecursiveKeyValuePair ({ data, parentKey = '', styles = {} }) {
     return (
         <>
             {Object.entries(data).map(([key, value]) => {
                 const newKey = parentKey ? `${parentKey}.${key}` : key;
                 if (value && typeof value === 'object' && !Array.isArray(value)) {
                     return (
-                        <div key={newKey} className="nested-container">
-                            <div className="nested-key">{newKey}</div>
-                            <RecursiveKeyValuePair data={value} parentKey={newKey} />
+                        <div key={newKey} className="parent-container" style={styles.parentContainer}>
+                            <div className="parent-key" style={styles.parentKey}>{newKey}</div>
+                            <RecursiveKeyValuePair data={value} parentKey={newKey} styles={styles}/>
                         </div>
                     );
                 } else {
@@ -19,6 +19,7 @@ export default function RecursiveKeyValuePair ({ data, parentKey = '' }) {
                             key={newKey}
                             keyName={newKey}
                             value={value}
+                            styles={styles.keyValuePair}
                         />
                     );
                 }

@@ -19,7 +19,7 @@ export default function RecursiveKeyValuePair ({ data, parentKey = '', styles = 
                             key={newKey}
                             keyName={newKey}
                             value={value}
-                            styles={styles.keyValuePair}
+                            styles={styles}
                         />
                     );
                 }

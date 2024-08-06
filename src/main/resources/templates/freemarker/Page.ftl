@@ -6,11 +6,19 @@ import ${requestSchema} from "../client_api/src/model/${requestSchema}";
 </#if>
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
+import { getStyle } from "../common/Utils"
+<#if customStyled>
+import styles from "../customStyles/${pageName?cap_first}Styles";
+</#if>
 import "./Page.css";
 
 export default function ${pageName?cap_first}() {
     const navigate = useNavigate();
     const clientApi = new DefaultApi();
+    let customStyles = {};
+<#if customStyled>
+    customStyles = styles;
+</#if>
 
 <#list fields as field>
     const [${field.name}, set${field.name?cap_first}] = useState("");
@@ -83,9 +91,9 @@ export default function ${pageName?cap_first}() {
     };
 
     return (
-        <div className="page-container">
-            <form onSubmit={handleSubmit} className="form-container">
-                <div className="form-inputs">
+        <div className="page-container" style={getStyle(customStyles,"pageContainer")}>
+            <form onSubmit={handleSubmit} className="form-container" style={getStyle(customStyles,"formContainer")}>
+                <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>
                     <InputField
                         label={"${field.name?cap_first}"}
@@ -93,29 +101,33 @@ export default function ${pageName?cap_first}() {
                         onChange={handle${field.name?cap_first}Change}
                         placeholder={"Enter ${field.name?cap_first}"}
                         error={${field.name}Error}
+                        styles={getStyle(customStyles,"inputField")}
                     />
                 </#list>
                 </div>
-                <button type="submit" className="form-submit">Submit</button>
+                <button type="submit" className="form-submit" style={getStyle(customStyles,"formSubmit")}>Submit</button>
             </form>
 
         <#if responseSchema.type == "null">
-            <div className="key-value-pairs-container">
-                <RecursiveKeyValuePair data={responseData} />
+            <div className="key-value-pairs-container" style={getStyle(customStyles,"keyValuePairsContainer")}>
+                <RecursiveKeyValuePair data={responseData} styles={getStyle(customStyles,"keyValuePair")}/>
             </div>
         <#elseif responseSchema.type == "array">
-            <div className="array-container">
+            <div className="array-container" style={getStyle(customStyles,"arrayContainer")}>
                 {responseData.map((item, index) => (
-                    <div key={index} className="array-item">
-                        <RecursiveKeyValuePair data={item} />
+                    <div key={index} className="array-item" style={getStyle(customStyles,"arrayItem")}>
+                        <RecursiveKeyValuePair data={item} styles={getStyle(customStyles,"keyValuePair")}/>
                     </div>
                 ))}
             </div>
         </#if>
 
-            <div className="navigation-buttons-container">
+            <div className="navigation-buttons-container" style={getStyle(customStyles,"navigationButtonsContainer")}>
             <#list nextPages as nextPage>
-                <button className="navigation-button" onClick={onClick${nextPage.name}}>${nextPage.name}</button>
+                <button className="navigation-button"
+                        style={getStyle(customStyles,"navigationButton")}
+                        onClick={onClick${nextPage.name}}
+                >${nextPage.name}</button>
             </#list>
             </div>
         </div>

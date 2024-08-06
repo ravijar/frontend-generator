@@ -14,4 +14,5 @@ public class Page {
     private String pageName;
     private String resourceUrl;
     private PathItem.HttpMethod resourceMethod;
+    private boolean customStyled;
 }

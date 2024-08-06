@@ -25,10 +25,6 @@
     cursor: pointer;
 }
 
-.form-submit:hover {
-    background-color: #0056b3;
-}
-
 .array-container {
     background-color: #ffffff;
     padding: 20px;
@@ -39,10 +35,6 @@
 .array-item {
     padding: 10px;
     border-bottom: 1px solid #ccc;
-}
-
-.array-item:last-child {
-    border-bottom: none;
 }
 
 .key-value-pairs-container {
@@ -72,13 +64,4 @@
     border-radius: 5px;
     transition: background-color 0.3s ease;
     cursor: pointer;
-}
-
-.navigation-button:hover {
-    background-color: #0056b3;
-}
-
-.navigation-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }

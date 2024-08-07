@@ -1,6 +1,7 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
+import com.ravijar.model.ParameterDTO;
 import com.ravijar.model.SchemaPropertyDTO;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -138,14 +139,19 @@ public class OpenapiFileHandler {
         return null;
     }
 
-    public List<Parameter> getParameters(String path, PathItem.HttpMethod method) {
+    public List<ParameterDTO> getParameters(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {
             return null;
         }
 
-        return operation.getParameters();
+        List<ParameterDTO> parameters = new ArrayList<>();
+        for (Parameter parameter : operation.getParameters()) {
+            parameters.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+        }
+
+        return parameters;
     }
 
     public String getRequestSchema(String path, PathItem.HttpMethod method) {

@@ -6,7 +6,7 @@ import ${requestSchema} from "../client_api/src/model/${requestSchema}";
 </#if>
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
-import { getStyle } from "../common/Utils"
+import { getStyle, getDisplayName } from "../common/Utils"
 <#if customStyled>
 import styles from "../customStyles/${pageName?cap_first}Styles";
 </#if>
@@ -104,10 +104,10 @@ export default function ${pageName?cap_first}() {
                 <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>
                     <InputField
-                        label={"${field.displayName?default(field.name)}"}
+                        label={getDisplayName(displayNames, "${field.name}")}
                         value={${field.name}}
                         onChange={handle${field.name?cap_first}Change}
-                        placeholder={"Enter ${field.displayName?default(field.name)}"}
+                        placeholder={"Enter " + getDisplayName(displayNames, "${field.name}")}
                         error={${field.name}Error}
                         styles={getStyle(customStyles,"inputField")}
                     />

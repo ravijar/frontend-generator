@@ -2,12 +2,12 @@ package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.model.PageDTO;
+import com.ravijar.model.ParameterDTO;
 import com.ravijar.model.SchemaPropertyDTO;
 import com.ravijar.model.TypeScriptDefaultValue;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.parameters.Parameter;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class ReactCodeGenerator {
     }
 
     public void createPage(String outputDir, PageDTO pageDTO) throws IOException, TemplateException {
-        List<Parameter> parameters = openapiFileHandler.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        List<ParameterDTO> parameters = openapiFileHandler.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
         String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
         String requestSchema = openapiFileHandler.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
@@ -70,7 +70,6 @@ public class ReactCodeGenerator {
                 }
             }
         }
-        dataModel.put("displayNames", displayNames);
 
         Map<String, String> responseSchema = new HashMap<>();
         responseSchema.put("name", responseSchemaName);
@@ -79,28 +78,44 @@ public class ReactCodeGenerator {
 
         List<Map<String, String>> fields = new ArrayList<>();
         List<Map<String, String>> requestParams = new ArrayList<>();
-        for (Parameter parameter : parameters) {
+        for (ParameterDTO parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
-            field.put("displayName", openapiFileHandler.getExtentionString(parameter.getExtensions(),"x-displayName") );
             if (!fields.contains(field)) {
                 fields.add(field);
             }
 
+            if (parameter.getDisplayName() != null) {
+                Map<String, String> displayName = new HashMap<>();
+                displayName.put(parameter.getName(), parameter.getDisplayName());
+                if (!displayNames.contains(displayName)) {
+                    displayNames.add(displayName);
+                }
+            }
         }
+
         if (requestSchema != null) {
             for (SchemaPropertyDTO schemaPropertyDTO : schemas.get(requestSchema)) {
                 Map<String, String> field = new HashMap<>();
                 field.put("name", schemaPropertyDTO.getName());
-                field.put("displayName", schemaPropertyDTO.getDisplayName());
                 if (!fields.contains(field)) {
                     fields.add(field);
                 }
+
+                if (schemaPropertyDTO.getDisplayName() != null) {
+                    Map<String, String> displayName = new HashMap<>();
+                    displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
+                    if (!displayNames.contains(displayName)) {
+                        displayNames.add(displayName);
+                    }
+                }
+
                 requestParams.add(field);
             }
         }
         dataModel.put("fields", fields);
         dataModel.put("requestParams", requestParams);
+        dataModel.put("displayNames", displayNames);
 
         List<Map<String,String>> nextPages = new ArrayList<>();
         for (String nextPage : nextPageList) {

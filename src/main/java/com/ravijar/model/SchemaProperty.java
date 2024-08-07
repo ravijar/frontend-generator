@@ -10,8 +10,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SchemaProperty {
-    private String property;
+    private String name;
     private String type;
+    private String displayName;
 
     public String getTypeScriptType() {
         switch (type) {

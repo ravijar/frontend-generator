@@ -113,16 +113,29 @@ public class OpenapiFileHandler {
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
+            String displayName = getExtentionString(value.getExtensions(), "x-displayName");
             if (value.getTypes() != null) {
-                properties.add(new SchemaProperty(key, value.getTypes().iterator().next().toString()));
+                properties.add(new SchemaProperty(key, value.getTypes().iterator().next().toString(), displayName));
             } else if (value.get$ref() != null) {
-                properties.add(new SchemaProperty(key, getSchemaFromRef(value.get$ref())));
+                properties.add(new SchemaProperty(key, getSchemaFromRef(value.get$ref()), displayName));
             } else {
                 logger.error("Type not defined properly for the property {}.", key);
             }
         }
 
         return properties;
+    }
+
+    public String getExtentionString(Map<String, Object> extensions, String extensionName) {
+        if (extensions != null) {
+            Object result = extensions.get(extensionName);
+            if (result instanceof String) {
+                return result.toString();
+            }
+            logger.warn("Extension {} is not a string.", extensionName);
+        }
+        logger.warn("No extensions provided.");
+        return null;
     }
 
     public List<Parameter> getParameters(String path, PathItem.HttpMethod method) {
@@ -281,6 +294,24 @@ public class OpenapiFileHandler {
             return null;
         }
         return operation.getOperationId();
+    }
+
+    public Set<String> getResponseCodes(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            logger.error("Operation not found for path: {} and method: {}", path, method);
+            return Collections.emptySet();
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+
+        if (responses == null || responses.isEmpty()) {
+            logger.error("No responses found for path: {} and method: {}", path, method);
+            return Collections.emptySet();
+        }
+
+        return responses.keySet();
     }
 
 }

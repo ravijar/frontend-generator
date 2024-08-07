@@ -12,10 +12,7 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ReactCodeGenerator {
     private final Configuration cfg;
@@ -59,6 +56,22 @@ public class ReactCodeGenerator {
         dataModel.put("httpMethod", page.getResourceMethod().toString());
         dataModel.put("customStyled", page.isCustomStyled());
 
+        Set<String> responseCodes = openapiFileHandler.getResponseCodes(page.getResourceUrl(), page.getResourceMethod());
+        List<Map<String, String>> displayNames = new ArrayList<>();
+        for (String code : responseCodes) {
+            List<SchemaProperty> responseSchema = schemas.get(openapiFileHandler.getResponseSchemaName(page.getResourceUrl(), page.getResourceMethod(), code));
+            for (SchemaProperty schemaProperty : responseSchema) {
+                Map<String, String> displayName = new HashMap<>();
+                if (schemaProperty.getDisplayName() != null) {
+                    displayName.put(schemaProperty.getName(), schemaProperty.getDisplayName());
+                    if (!displayNames.contains(displayName)) {
+                        displayNames.add(displayName);
+                    }
+                }
+            }
+        }
+        dataModel.put("displayNames", displayNames);
+
         Map<String, String> responseSchema = new HashMap<>();
         responseSchema.put("name", responseSchemaName);
         responseSchema.put("type", responseSchemaType);
@@ -69,6 +82,7 @@ public class ReactCodeGenerator {
         for (Parameter parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
+            field.put("displayName", openapiFileHandler.getExtentionString(parameter.getExtensions(),"x-displayName") );
             if (!fields.contains(field)) {
                 fields.add(field);
             }
@@ -77,7 +91,8 @@ public class ReactCodeGenerator {
         if (requestSchema != null) {
             for (SchemaProperty schemaProperty : schemas.get(requestSchema)) {
                 Map<String, String> field = new HashMap<>();
-                field.put("name", schemaProperty.getProperty());
+                field.put("name", schemaProperty.getName());
+                field.put("displayName", schemaProperty.getDisplayName());
                 if (!fields.contains(field)) {
                     fields.add(field);
                 }
@@ -116,7 +131,7 @@ public class ReactCodeGenerator {
                 Map<String, String> property = new HashMap<>();
                 Map<String, String> otherType = new HashMap<>();
 
-                property.put("name", schemaProperty.getProperty());
+                property.put("name", schemaProperty.getName());
                 if (schemaProperty.getTypeScriptType().equals("any")) {
                     String type = schemaProperty.getType();
                     property.put("default", "new "+type+"()");

@@ -1,7 +1,7 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
-import com.ravijar.model.SchemaProperty;
+import com.ravijar.model.SchemaPropertyDTO;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -107,17 +107,17 @@ public class OpenapiFileHandler {
         return apiResponse.getContent().values().iterator().next().getSchema();
     }
 
-    private List<SchemaProperty> extractProperties(Map<String, Schema> openApiData) {
-        List<SchemaProperty> properties = new ArrayList<>();
+    private List<SchemaPropertyDTO> extractProperties(Map<String, Schema> openApiData) {
+        List<SchemaPropertyDTO> properties = new ArrayList<>();
 
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
             String displayName = getExtentionString(value.getExtensions(), "x-displayName");
             if (value.getTypes() != null) {
-                properties.add(new SchemaProperty(key, value.getTypes().iterator().next().toString(), displayName));
+                properties.add(new SchemaPropertyDTO(key, value.getTypes().iterator().next().toString(), displayName));
             } else if (value.get$ref() != null) {
-                properties.add(new SchemaProperty(key, getSchemaFromRef(value.get$ref()), displayName));
+                properties.add(new SchemaPropertyDTO(key, getSchemaFromRef(value.get$ref()), displayName));
             } else {
                 logger.error("Type not defined properly for the property {}.", key);
             }
@@ -230,17 +230,17 @@ public class OpenapiFileHandler {
     }
 
 
-    public Map<String, List<SchemaProperty>> getSchemas() {
+    public Map<String, List<SchemaPropertyDTO>> getSchemas() {
         if (openAPIData == null) {
             logger.error("OpenAPI data is not initialized.");
             return null;
         }
 
         Map<String, Schema> result = openAPIData.getComponents().getSchemas();
-        Map<String, List<SchemaProperty>> schemas = new HashMap<>();
+        Map<String, List<SchemaPropertyDTO>> schemas = new HashMap<>();
 
         for (String key : result.keySet()) {
-            List<SchemaProperty> schema = extractProperties(result.get(key).getProperties());
+            List<SchemaPropertyDTO> schema = extractProperties(result.get(key).getProperties());
             schemas.put(key, schema);
         }
 

@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SchemaProperty {
+public class SchemaPropertyDTO {
     private String name;
     private String type;
     private String displayName;

@@ -3,14 +3,10 @@ package com.ravijar.core;
 import com.ravijar.config.FreeMarkerConfig;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
-import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.handler.PagesFileHandler;
-import com.ravijar.model.Page;
+import com.ravijar.model.PageDTO;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.parameters.Parameter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -71,11 +67,11 @@ public class ProjectManager {
         swaggerCodegenGenerator.generateClientApi(specDir, outputDir, "javascript");
     }
 
-    private void checkCustomStyleFiles(List<Page> pages) {
-        for (Page page : pages) {
-            File customStyleFile = new File(projectName + "\\styles\\pages\\" + page.getPageName() + "Styles.js");
+    private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
+        for (PageDTO pageDTO : pageDTOs) {
+            File customStyleFile = new File(projectName + "\\styles\\pages\\" + pageDTO.getPageName() + "Styles.js");
             if (customStyleFile.exists()) {
-                page.setCustomStyled(true);
+                pageDTO.setCustomStyled(true);
             }
         }
     }
@@ -121,9 +117,9 @@ public class ProjectManager {
         String stylesDir = ProjectManager.projectName + "\\styles\\";
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-        List<Page> pages = pagesFileHandler.getPages();
+        List<PageDTO> pageDTOs = pagesFileHandler.getPages();
 
-        checkCustomStyleFiles(pages);
+        checkCustomStyleFiles(pageDTOs);
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
@@ -140,11 +136,11 @@ public class ProjectManager {
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
 
-            for (Page page: pages) {
-                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), page);
+            for (PageDTO pageDTO : pageDTOs) {
+                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
             }
 
-            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pages);
+            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
 
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());

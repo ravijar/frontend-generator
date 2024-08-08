@@ -1,7 +1,8 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
-import com.ravijar.model.SchemaProperty;
+import com.ravijar.model.ParameterDTO;
+import com.ravijar.model.SchemaPropertyDTO;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -107,16 +108,17 @@ public class OpenapiFileHandler {
         return apiResponse.getContent().values().iterator().next().getSchema();
     }
 
-    private List<SchemaProperty> extractProperties(Map<String, Schema> openApiData) {
-        List<SchemaProperty> properties = new ArrayList<>();
+    private List<SchemaPropertyDTO> extractProperties(Map<String, Schema> openApiData) {
+        List<SchemaPropertyDTO> properties = new ArrayList<>();
 
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
+            String displayName = getExtentionString(value.getExtensions(), "x-displayName");
             if (value.getTypes() != null) {
-                properties.add(new SchemaProperty(key, value.getTypes().iterator().next().toString()));
+                properties.add(new SchemaPropertyDTO(key, value.getTypes().iterator().next().toString(), displayName));
             } else if (value.get$ref() != null) {
-                properties.add(new SchemaProperty(key, getSchemaFromRef(value.get$ref())));
+                properties.add(new SchemaPropertyDTO(key, getSchemaFromRef(value.get$ref()), displayName));
             } else {
                 logger.error("Type not defined properly for the property {}.", key);
             }
@@ -125,14 +127,31 @@ public class OpenapiFileHandler {
         return properties;
     }
 
-    public List<Parameter> getParameters(String path, PathItem.HttpMethod method) {
+    public String getExtentionString(Map<String, Object> extensions, String extensionName) {
+        if (extensions != null) {
+            Object result = extensions.get(extensionName);
+            if (result instanceof String) {
+                return result.toString();
+            }
+            logger.warn("Extension {} is not a string.", extensionName);
+        }
+        logger.warn("No extensions provided.");
+        return null;
+    }
+
+    public List<ParameterDTO> getParameters(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {
             return null;
         }
 
-        return operation.getParameters();
+        List<ParameterDTO> parameters = new ArrayList<>();
+        for (Parameter parameter : operation.getParameters()) {
+            parameters.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+        }
+
+        return parameters;
     }
 
     public String getRequestSchema(String path, PathItem.HttpMethod method) {
@@ -217,17 +236,17 @@ public class OpenapiFileHandler {
     }
 
 
-    public Map<String, List<SchemaProperty>> getSchemas() {
+    public Map<String, List<SchemaPropertyDTO>> getSchemas() {
         if (openAPIData == null) {
             logger.error("OpenAPI data is not initialized.");
             return null;
         }
 
         Map<String, Schema> result = openAPIData.getComponents().getSchemas();
-        Map<String, List<SchemaProperty>> schemas = new HashMap<>();
+        Map<String, List<SchemaPropertyDTO>> schemas = new HashMap<>();
 
         for (String key : result.keySet()) {
-            List<SchemaProperty> schema = extractProperties(result.get(key).getProperties());
+            List<SchemaPropertyDTO> schema = extractProperties(result.get(key).getProperties());
             schemas.put(key, schema);
         }
 
@@ -281,6 +300,24 @@ public class OpenapiFileHandler {
             return null;
         }
         return operation.getOperationId();
+    }
+
+    public Set<String> getResponseCodes(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            logger.error("Operation not found for path: {} and method: {}", path, method);
+            return Collections.emptySet();
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+
+        if (responses == null || responses.isEmpty()) {
+            logger.error("No responses found for path: {} and method: {}", path, method);
+            return Collections.emptySet();
+        }
+
+        return responses.keySet();
     }
 
 }

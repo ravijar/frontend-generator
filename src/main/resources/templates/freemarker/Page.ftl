@@ -6,11 +6,19 @@ import ${requestSchema} from "../client_api/src/model/${requestSchema}";
 </#if>
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
-import { getStyle } from "../common/Utils"
+import { getStyle, getDisplayName } from "../common/Utils"
 <#if customStyled>
 import styles from "../customStyles/${pageName?cap_first}Styles";
 </#if>
 import "./Page.css";
+
+const displayNames = {
+<#list displayNames as displayNameMap>
+<#list displayNameMap?keys as key>
+    ${key} : "${displayNameMap[key]}",
+</#list>
+</#list>
+}
 
 export default function ${pageName?cap_first}() {
     const navigate = useNavigate();
@@ -96,10 +104,10 @@ export default function ${pageName?cap_first}() {
                 <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>
                     <InputField
-                        label={"${field.name?cap_first}"}
+                        label={getDisplayName(displayNames, "${field.name}")}
                         value={${field.name}}
                         onChange={handle${field.name?cap_first}Change}
-                        placeholder={"Enter ${field.name?cap_first}"}
+                        placeholder={"Enter " + getDisplayName(displayNames, "${field.name}")}
                         error={${field.name}Error}
                         styles={getStyle(customStyles,"inputField")}
                     />
@@ -110,13 +118,19 @@ export default function ${pageName?cap_first}() {
 
         <#if responseSchema.type == "null">
             <div className="key-value-pairs-container" style={getStyle(customStyles,"keyValuePairsContainer")}>
-                <RecursiveKeyValuePair data={responseData} styles={getStyle(customStyles,"keyValuePair")}/>
+                <RecursiveKeyValuePair data={responseData}
+                                       displayNames={displayNames}
+                                       styles={getStyle(customStyles,"keyValuePair")}
+                />
             </div>
         <#elseif responseSchema.type == "array">
             <div className="array-container" style={getStyle(customStyles,"arrayContainer")}>
                 {responseData.map((item, index) => (
                     <div key={index} className="array-item" style={getStyle(customStyles,"arrayItem")}>
-                        <RecursiveKeyValuePair data={item} styles={getStyle(customStyles,"keyValuePair")}/>
+                        <RecursiveKeyValuePair data={item}
+                                               displayNames={displayNames}
+                                               styles={getStyle(customStyles,"keyValuePair")}
+                        />
                     </div>
                 ))}
             </div>

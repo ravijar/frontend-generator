@@ -1,6 +1,6 @@
 package com.ravijar.handler;
 
-import com.ravijar.model.Page;
+import com.ravijar.model.PageDTO;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,13 +33,13 @@ public class PagesFileHandler {
         return null;
     }
 
-    public List<Page> getPages() {
-        List<Page> pages = new ArrayList<>();
+    public List<PageDTO> getPages() {
+        List<PageDTO> pageDTOs = new ArrayList<>();
         try {
             File pagesFile = new File(pagesFilePath);
             if (!pagesFile.exists() || !pagesFile.canRead()) {
                 logger.error("File not found or not readable: {}", pagesFile.getAbsolutePath());
-                return pages;
+                return pageDTOs;
             }
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -60,13 +60,13 @@ public class PagesFileHandler {
                         logger.error("Invalid HTTP method '{}' in page '{}'.", eElement.getAttribute("resource-method"), pageName);
                         continue;
                     }
-                    pages.add(new Page(pageName,resourceUrl,resourceMethod,false));
+                    pageDTOs.add(new PageDTO(pageName,resourceUrl,resourceMethod,false));
                 }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return pages;
+        return pageDTOs;
     }
 }
 

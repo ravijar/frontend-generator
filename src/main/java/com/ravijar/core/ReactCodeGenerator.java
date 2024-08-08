@@ -1,26 +1,23 @@
 package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
-import com.ravijar.model.Page;
-import com.ravijar.model.SchemaProperty;
+import com.ravijar.model.PageDTO;
+import com.ravijar.model.ParameterDTO;
+import com.ravijar.model.SchemaPropertyDTO;
 import com.ravijar.model.TypeScriptDefaultValue;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.parameters.Parameter;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ReactCodeGenerator {
     private final Configuration cfg;
     private final OpenapiFileHandler openapiFileHandler;
-    private final Map<String, List<SchemaProperty>> schemas;
+    private final Map<String, List<SchemaPropertyDTO>> schemas;
 
     public ReactCodeGenerator(Configuration cfg) {
         this.cfg = cfg;
@@ -28,13 +25,13 @@ public class ReactCodeGenerator {
         this.schemas = openapiFileHandler.getSchemas();
     }
 
-    public void updateAppPage(String outputDir, List<Page> pageList) throws IOException, TemplateException {
+    public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
         List<Map<String, String>> pages = new ArrayList<>();
-        for (Page page : pageList) {
+        for (PageDTO pageDTO : pageDTOList) {
             Map<String, String> pageData = new HashMap<>();
-            pageData.put("name", page.getPageName());
+            pageData.put("name", pageDTO.getPageName());
             pages.add(pageData);
         }
         dataModel.put("pages", pages);
@@ -45,19 +42,34 @@ public class ReactCodeGenerator {
         }
     }
 
-    public void createPage(String outputDir, Page page) throws IOException, TemplateException {
-        List<Parameter> parameters = openapiFileHandler.getParameters(page.getResourceUrl(), page.getResourceMethod());
-        String responseSchemaName = openapiFileHandler.getResponseSchemaName(page.getResourceUrl(), page.getResourceMethod(),"200");
-        String responseSchemaType = openapiFileHandler.getResponseSchemaType(page.getResourceUrl(), page.getResourceMethod(),"200");
-        String requestSchema = openapiFileHandler.getRequestSchema(page.getResourceUrl(), page.getResourceMethod());
-        List<String> nextPageList = openapiFileHandler.getNextPages(page.getResourceUrl(), page.getResourceMethod(), "200");
+    public void createPage(String outputDir, PageDTO pageDTO) throws IOException, TemplateException {
+        List<ParameterDTO> parameters = openapiFileHandler.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
+        String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
+        String requestSchema = openapiFileHandler.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), "200");
 
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("pageName", page.getPageName());
-        dataModel.put("apiMethod", openapiFileHandler.getOperationId(page.getResourceUrl(), page.getResourceMethod()));
+        dataModel.put("pageName", pageDTO.getPageName());
+        dataModel.put("apiMethod", openapiFileHandler.getOperationId(pageDTO.getResourceUrl(), pageDTO.getResourceMethod()));
         dataModel.put("requestSchema", requestSchema);
-        dataModel.put("httpMethod", page.getResourceMethod().toString());
-        dataModel.put("customStyled", page.isCustomStyled());
+        dataModel.put("httpMethod", pageDTO.getResourceMethod().toString());
+        dataModel.put("customStyled", pageDTO.isCustomStyled());
+
+        Set<String> responseCodes = openapiFileHandler.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        List<Map<String, String>> displayNames = new ArrayList<>();
+        for (String code : responseCodes) {
+            List<SchemaPropertyDTO> responseSchema = schemas.get(openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code));
+            for (SchemaPropertyDTO schemaPropertyDTO : responseSchema) {
+                Map<String, String> displayName = new HashMap<>();
+                if (schemaPropertyDTO.getDisplayName() != null) {
+                    displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
+                    if (!displayNames.contains(displayName)) {
+                        displayNames.add(displayName);
+                    }
+                }
+            }
+        }
 
         Map<String, String> responseSchema = new HashMap<>();
         responseSchema.put("name", responseSchemaName);
@@ -66,26 +78,44 @@ public class ReactCodeGenerator {
 
         List<Map<String, String>> fields = new ArrayList<>();
         List<Map<String, String>> requestParams = new ArrayList<>();
-        for (Parameter parameter : parameters) {
+        for (ParameterDTO parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
             if (!fields.contains(field)) {
                 fields.add(field);
             }
 
+            if (parameter.getDisplayName() != null) {
+                Map<String, String> displayName = new HashMap<>();
+                displayName.put(parameter.getName(), parameter.getDisplayName());
+                if (!displayNames.contains(displayName)) {
+                    displayNames.add(displayName);
+                }
+            }
         }
+
         if (requestSchema != null) {
-            for (SchemaProperty schemaProperty : schemas.get(requestSchema)) {
+            for (SchemaPropertyDTO schemaPropertyDTO : schemas.get(requestSchema)) {
                 Map<String, String> field = new HashMap<>();
-                field.put("name", schemaProperty.getProperty());
+                field.put("name", schemaPropertyDTO.getName());
                 if (!fields.contains(field)) {
                     fields.add(field);
                 }
+
+                if (schemaPropertyDTO.getDisplayName() != null) {
+                    Map<String, String> displayName = new HashMap<>();
+                    displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
+                    if (!displayNames.contains(displayName)) {
+                        displayNames.add(displayName);
+                    }
+                }
+
                 requestParams.add(field);
             }
         }
         dataModel.put("fields", fields);
         dataModel.put("requestParams", requestParams);
+        dataModel.put("displayNames", displayNames);
 
         List<Map<String,String>> nextPages = new ArrayList<>();
         for (String nextPage : nextPageList) {
@@ -96,34 +126,34 @@ public class ReactCodeGenerator {
         dataModel.put("nextPages", nextPages);
 
         Template template = cfg.getTemplate("Page.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getPageName() + ".js")) {
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".js")) {
             template.process(dataModel, fileWriter);
         }
     }
 
     @Deprecated
     public void generateModels(String outputDir) throws IOException, TemplateException {
-        for (Map.Entry<String, List<SchemaProperty>> entry : schemas.entrySet()) {
+        for (Map.Entry<String, List<SchemaPropertyDTO>> entry : schemas.entrySet()) {
             String modelName = entry.getKey();
-            List<SchemaProperty> responseProperties = entry.getValue();
+            List<SchemaPropertyDTO> responseProperties = entry.getValue();
 
             Map<String, Object> dataModel = new HashMap<>();
             dataModel.put("modelName", modelName);
 
             List<Map<String, String>> properties = new ArrayList<>();
             List<Map<String, String>> otherTypes = new ArrayList<>();
-            for (SchemaProperty schemaProperty : responseProperties) {
+            for (SchemaPropertyDTO schemaPropertyDTO : responseProperties) {
                 Map<String, String> property = new HashMap<>();
                 Map<String, String> otherType = new HashMap<>();
 
-                property.put("name", schemaProperty.getProperty());
-                if (schemaProperty.getTypeScriptType().equals("any")) {
-                    String type = schemaProperty.getType();
+                property.put("name", schemaPropertyDTO.getName());
+                if (schemaPropertyDTO.getTypeScriptType().equals("any")) {
+                    String type = schemaPropertyDTO.getType();
                     property.put("default", "new "+type+"()");
                     otherType.put("name", type);
                     otherTypes.add(otherType);
                 } else {
-                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(schemaProperty.getTypeScriptType()));
+                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(schemaPropertyDTO.getTypeScriptType()));
                 }
                 properties.add(property);
             }

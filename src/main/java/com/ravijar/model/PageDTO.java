@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Page {
+public class PageDTO {
     private String pageName;
     private String resourceUrl;
     private PathItem.HttpMethod resourceMethod;

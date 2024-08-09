@@ -100,6 +100,10 @@ export default function ${pageName?cap_first}() {
 
     return (
         <div className="page-container" style={getStyle(customStyles,"pageContainer")}>
+            <div className="title-bar" style={getStyle(customStyles,"titleBar")}>
+                <div className="title" style={getStyle(customStyles,"title")}>${pageTitle}</div>
+            </div>
+
             <form onSubmit={handleSubmit} className="form-container" style={getStyle(customStyles,"formContainer")}>
                 <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>
@@ -118,18 +122,20 @@ export default function ${pageName?cap_first}() {
 
         <#if responseSchema.type == "null">
             <div className="key-value-pairs-container" style={getStyle(customStyles,"keyValuePairsContainer")}>
-                <RecursiveKeyValuePair data={responseData}
-                                       displayNames={displayNames}
-                                       styles={getStyle(customStyles,"keyValuePair")}
+                <RecursiveKeyValuePair
+                    data={responseData}
+                    displayNames={displayNames}
+                    styles={getStyle(customStyles,"keyValuePair")}
                 />
             </div>
         <#elseif responseSchema.type == "array">
             <div className="array-container" style={getStyle(customStyles,"arrayContainer")}>
                 {responseData.map((item, index) => (
                     <div key={index} className="array-item" style={getStyle(customStyles,"arrayItem")}>
-                        <RecursiveKeyValuePair data={item}
-                                               displayNames={displayNames}
-                                               styles={getStyle(customStyles,"keyValuePair")}
+                        <RecursiveKeyValuePair
+                            data={item}
+                            displayNames={displayNames}
+                            styles={getStyle(customStyles,"keyValuePair")}
                         />
                     </div>
                 ))}
@@ -138,10 +144,13 @@ export default function ${pageName?cap_first}() {
 
             <div className="navigation-buttons-container" style={getStyle(customStyles,"navigationButtonsContainer")}>
             <#list nextPages as nextPage>
-                <button className="navigation-button"
-                        style={getStyle(customStyles,"navigationButton")}
-                        onClick={onClick${nextPage.name}}
-                >${nextPage.name}</button>
+                <button
+                    className="navigation-button"
+                    style={getStyle(customStyles,"navigationButton")}
+                    onClick={onClick${nextPage.name}}
+                >
+                    ${nextPage.name}
+                </button>
             </#list>
             </div>
         </div>

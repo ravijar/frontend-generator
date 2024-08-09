@@ -60,7 +60,7 @@ public class PagesFileHandler {
                         logger.error("Invalid HTTP method '{}' in page '{}'.", eElement.getAttribute("resource-method"), pageName);
                         continue;
                     }
-                    pageDTOs.add(new PageDTO(pageName,resourceUrl,resourceMethod,false));
+                    pageDTOs.add(new PageDTO(pageName,resourceUrl,resourceMethod,false, ""));
                 }
             }
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
+import com.ravijar.model.PageDTO;
 import com.ravijar.model.ParameterDTO;
 import com.ravijar.model.SchemaPropertyDTO;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -318,6 +319,11 @@ public class OpenapiFileHandler {
         }
 
         return responses.keySet();
+    }
+
+    public void getPageExtensions(PageDTO pageDTO) {
+        Operation operation = getOperation(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        pageDTO.setPageTitle(getExtentionString(operation.getExtensions(), "x-pageTitle"));
     }
 
 }

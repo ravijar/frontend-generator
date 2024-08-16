@@ -59,7 +59,7 @@ export default function ${pageName?cap_first}() {
     const handleSubmit = (event) => {
         event.preventDefault();
     <#if httpMethod == "POST" || httpMethod == "PUT">
-        const body = new ${requestSchema}({
+        const body = ${requestSchema}.constructFromObject({
         <#list requestParams as param>
             ${param.name} : ${param.name},
         </#list>

@@ -147,12 +147,18 @@ public class OpenapiFileHandler {
             return null;
         }
 
-        List<ParameterDTO> parameters = new ArrayList<>();
-        for (Parameter parameter : operation.getParameters()) {
-            parameters.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+        List<Parameter> parameters = operation.getParameters();
+        List<ParameterDTO> parameterDTOs = new ArrayList<>();
+
+        if (parameters == null) {
+            return parameterDTOs;
         }
 
-        return parameters;
+        for (Parameter parameter : parameters) {
+            parameterDTOs.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+        }
+
+        return parameterDTOs;
     }
 
     public String getRequestSchema(String path, PathItem.HttpMethod method) {

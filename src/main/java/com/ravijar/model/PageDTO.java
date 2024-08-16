@@ -15,4 +15,5 @@ public class PageDTO {
     private String resourceUrl;
     private PathItem.HttpMethod resourceMethod;
     private boolean customStyled;
+    private String pageTitle;
 }

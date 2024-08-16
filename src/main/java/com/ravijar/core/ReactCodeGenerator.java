@@ -48,6 +48,7 @@ public class ReactCodeGenerator {
         String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
         String requestSchema = openapiFileHandler.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), "200");
+        openapiFileHandler.getPageExtensions(pageDTO);
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", pageDTO.getPageName());
@@ -55,6 +56,7 @@ public class ReactCodeGenerator {
         dataModel.put("requestSchema", requestSchema);
         dataModel.put("httpMethod", pageDTO.getResourceMethod().toString());
         dataModel.put("customStyled", pageDTO.isCustomStyled());
+        dataModel.put("pageTitle", pageDTO.getPageTitle());
 
         Set<String> responseCodes = openapiFileHandler.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         List<Map<String, String>> displayNames = new ArrayList<>();

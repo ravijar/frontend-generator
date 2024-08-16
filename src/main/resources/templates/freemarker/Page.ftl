@@ -100,10 +100,11 @@ export default function ${pageName?cap_first}() {
 
     return (
         <div className="page-container" style={getStyle(customStyles,"pageContainer")}>
+        <#if pageTitle?? && pageTitle?has_content>
             <div className="title-bar" style={getStyle(customStyles,"titleBar")}>
                 <div className="title" style={getStyle(customStyles,"title")}>${pageTitle}</div>
             </div>
-
+        </#if>
             <form onSubmit={handleSubmit} className="form-container" style={getStyle(customStyles,"formContainer")}>
                 <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>

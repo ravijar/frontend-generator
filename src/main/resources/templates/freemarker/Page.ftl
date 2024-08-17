@@ -6,6 +6,7 @@ import ${requestSchema} from "../client_api/src/model/${requestSchema}";
 </#if>
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
+import Alert from "../components/Alert";
 import { getStyle, getDisplayName } from "../common/Utils"
 <#if customStyled>
 import styles from "../customStyles/${pageName?cap_first}Styles";
@@ -53,6 +54,25 @@ export default function ${pageName?cap_first}() {
 
     const [responseSchema, setResponseSchema] = useState({});
     const [nextPages, setNextPages] = useState([])
+    const [alert, setAlert] = useState({
+        type: '',
+        statusCode: null,
+        message: '',
+        visible: false,
+    });
+
+    const showAlert = (type, statusCode, message) => {
+        setAlert({
+            type: type,
+            statusCode: statusCode,
+            message: message,
+            visible: true,
+        });
+    };
+
+    const closeAlert = () => {
+        setAlert({ ...alert, visible: false });
+    };
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {
@@ -71,6 +91,7 @@ export default function ${pageName?cap_first}() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        closeAlert();
     <#if httpMethod == "POST" || httpMethod == "PUT">
         const body = ${requestSchema}.constructFromObject({
         <#list requestParams as param>
@@ -90,6 +111,9 @@ export default function ${pageName?cap_first}() {
     </#if>
             if (error) {
                 console.log(error);
+                showAlert("error", response.statusCode, "An error occurred while completing the action!");
+            } else if (response.body == null) {
+                showAlert("success", response.statusCode, "Action completed successfully!");
             }
             console.log(response)
             setResponseSchema(responses[response.statusCode]?.responseSchema);
@@ -120,6 +144,15 @@ export default function ${pageName?cap_first}() {
                 </div>
                 <button type="submit" className="form-submit" style={getStyle(customStyles,"formSubmit")}>Submit</button>
             </form>
+
+            {alert.visible && (
+                <Alert
+                    type={alert.type}
+                    statusCode={alert.statusCode}
+                    message={alert.message}
+                    onClose={closeAlert}
+                />
+            )}
 
             {responseSchema && (
                 <>

@@ -61,6 +61,7 @@ public class ReactCodeGenerator {
         for (String code : responseCodes) {
             String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
             String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseDescription = openapiFileHandler.getResponseDescription(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
             List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
 
             List<SchemaPropertyDTO> result = schemas.get(responseSchemaName);
@@ -90,6 +91,7 @@ public class ReactCodeGenerator {
             Map<String, Object> codeData = new HashMap<>();
             codeData.put("responseSchema", responseSchema);
             codeData.put("nextPages", nextPages);
+            codeData.put("description", responseDescription);
 
             responses.put(code, codeData);
         }

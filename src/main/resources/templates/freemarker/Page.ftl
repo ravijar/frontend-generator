@@ -24,6 +24,7 @@ const displayNames = {
 const responses = {
 <#list responses?keys as code>
     "${code}": {
+        description: <#if responses[code].description??>"${responses[code].description}"<#else>null</#if>,
         responseSchema: {
             name: <#if responses[code].responseSchema.name??>"${responses[code].responseSchema.name}"<#else>null</#if>,
             type: <#if responses[code].responseSchema.type??>"${responses[code].responseSchema.type}"<#else>null</#if>
@@ -111,9 +112,9 @@ export default function ${pageName?cap_first}() {
     </#if>
             if (error) {
                 console.log(error);
-                showAlert("error", response.statusCode, "An error occurred while completing the action!");
+                showAlert("error", response.statusCode, responses[response.statusCode]?.description);
             } else if (response.body == null) {
-                showAlert("success", response.statusCode, "Action completed successfully!");
+                showAlert("success", response.statusCode, responses[response.statusCode]?.description);
             }
             console.log(response)
             setResponseSchema(responses[response.statusCode]?.responseSchema);

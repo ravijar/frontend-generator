@@ -20,6 +20,22 @@ const displayNames = {
 </#list>
 }
 
+const responses = {
+<#list responses?keys as code>
+    "${code}": {
+        responseSchema: {
+            name: <#if responses[code].responseSchema.name??>"${responses[code].responseSchema.name}"<#else>null</#if>,
+            type: <#if responses[code].responseSchema.type??>"${responses[code].responseSchema.type}"<#else>null</#if>
+        },
+        nextPages: [
+        <#list responses[code].nextPages as nextPage>
+            {name: "${nextPage.name}"}<#if nextPage_has_next>,</#if>
+        </#list>
+        ]
+    }<#if code_has_next>,</#if>
+</#list>
+};
+
 export default function ${pageName?cap_first}() {
     const navigate = useNavigate();
     const clientApi = new DefaultApi();
@@ -33,11 +49,10 @@ export default function ${pageName?cap_first}() {
     const [${field.name}Error, set${field.name?cap_first}Error] = useState("");
 </#list>
 
-<#if responseSchema.type == "null">
     const [responseData, setResponseData] = useState({});
-<#elseif responseSchema.type == "array">
-    const [responseData, setResponseData] = useState([]);
-</#if>
+
+    const [responseSchema, setResponseSchema] = useState({});
+    const [nextPages, setNextPages] = useState([])
 
 <#list fields as field>
     const handle${field.name?cap_first}Change = (value) => {
@@ -50,12 +65,10 @@ export default function ${pageName?cap_first}() {
     };
 
 </#list>
-<#list nextPages as nextPage>
-    const onClick${nextPage.name} = () => {
-        navigate("/${nextPage.name?uncap_first}");
+    const onNextPageButtonClick = (pageName) => {
+        navigate("/" + pageName.charAt(0).toLowerCase() + pageName.slice(1));
     }
 
-</#list>
     const handleSubmit = (event) => {
         event.preventDefault();
     <#if httpMethod == "POST" || httpMethod == "PUT">
@@ -68,34 +81,21 @@ export default function ${pageName?cap_first}() {
 
     <#if httpMethod == "GET">
         clientApi.${apiMethod}(<#list fields as field>${field.name}, </#list>(error, data, response) => {
-            if (error) {
-                console.log(error);
-            }
-            setResponseData(response.body);
-        });
     <#elseif httpMethod == "POST">
         clientApi.${apiMethod}(body, (error, data, response) => {
-            if (error) {
-                console.log(error);
-            }
-            setResponseData(response.body);
-        });
     <#elseif httpMethod == "DELETE">
         clientApi.${apiMethod}(${fields[0].name}, (error, data, response) => {
-            if (error) {
-                console.log(error);
-            }
-            setResponseData(response.body);
-        });
     <#elseif httpMethod == "PUT">
         clientApi.${apiMethod}(body, ${fields[0].name}, (error, data, response) => {
+    </#if>
             if (error) {
                 console.log(error);
             }
+            console.log(response)
+            setResponseSchema(responses[response.statusCode]?.responseSchema);
+            setNextPages(responses[response.statusCode]?.nextPages);
             setResponseData(response.body);
         });
-    </#if>
-
     };
 
     return (
@@ -121,39 +121,48 @@ export default function ${pageName?cap_first}() {
                 <button type="submit" className="form-submit" style={getStyle(customStyles,"formSubmit")}>Submit</button>
             </form>
 
-        <#if responseSchema.type == "null">
-            <div className="key-value-pairs-container" style={getStyle(customStyles,"keyValuePairsContainer")}>
-                <RecursiveKeyValuePair
-                    data={responseData}
-                    displayNames={displayNames}
-                    styles={getStyle(customStyles,"keyValuePair")}
-                />
-            </div>
-        <#elseif responseSchema.type == "array">
-            <div className="array-container" style={getStyle(customStyles,"arrayContainer")}>
-                {responseData.map((item, index) => (
-                    <div key={index} className="array-item" style={getStyle(customStyles,"arrayItem")}>
-                        <RecursiveKeyValuePair
-                            data={item}
-                            displayNames={displayNames}
-                            styles={getStyle(customStyles,"keyValuePair")}
-                        />
-                    </div>
-                ))}
-            </div>
-        </#if>
+            {responseSchema && (
+                <>
+                    {responseSchema.type === "null" && (
+                        <div className="key-value-pairs-container" style={getStyle(customStyles,"keyValuePairsContainer")}>
+                            <RecursiveKeyValuePair
+                                data={responseData}
+                                displayNames={displayNames}
+                                styles={getStyle(customStyles,"keyValuePair")}
+                            />
+                        </div>
+                    )}
 
-            <div className="navigation-buttons-container" style={getStyle(customStyles,"navigationButtonsContainer")}>
-            <#list nextPages as nextPage>
-                <button
-                    className="navigation-button"
-                    style={getStyle(customStyles,"navigationButton")}
-                    onClick={onClick${nextPage.name}}
-                >
-                    ${nextPage.name}
-                </button>
-            </#list>
-            </div>
+                    {responseSchema.type === "array" && (
+                        <div className="array-container" style={getStyle(customStyles,"arrayContainer")}>
+                            {responseData.map((item, index) => (
+                                <div key={index} className="array-item" style={getStyle(customStyles,"arrayItem")}>
+                                    <RecursiveKeyValuePair
+                                        data={item}
+                                        displayNames={displayNames}
+                                        styles={getStyle(customStyles,"keyValuePair")}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
+
+            {nextPages.length > 0 && (
+                <div className="navigation-buttons-container" style={getStyle(customStyles,"navigationButtonsContainer")}>
+                    {nextPages.map((nextPage, index) => (
+                        <button
+                            key={index}
+                            className="navigation-button"
+                            style={getStyle(customStyles, "navigationButton")}
+                            onClick={() => onNextPageButtonClick(nextPage.name)}
+                        >
+                        {nextPage.name}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

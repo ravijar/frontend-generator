@@ -20,9 +20,9 @@ public class ProjectManager {
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
-    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair"};
+    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();

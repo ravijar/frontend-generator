@@ -1,6 +1,7 @@
 package com.ravijar.handler;
 
 import com.ravijar.core.ProjectManager;
+import com.ravijar.model.PageDTO;
 import com.ravijar.model.ParameterDTO;
 import com.ravijar.model.SchemaPropertyDTO;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -146,12 +147,18 @@ public class OpenapiFileHandler {
             return null;
         }
 
-        List<ParameterDTO> parameters = new ArrayList<>();
-        for (Parameter parameter : operation.getParameters()) {
-            parameters.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+        List<Parameter> parameters = operation.getParameters();
+        List<ParameterDTO> parameterDTOs = new ArrayList<>();
+
+        if (parameters == null) {
+            return parameterDTOs;
         }
 
-        return parameters;
+        for (Parameter parameter : parameters) {
+            parameterDTOs.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+        }
+
+        return parameterDTOs;
     }
 
     public String getRequestSchema(String path, PathItem.HttpMethod method) {
@@ -318,6 +325,11 @@ public class OpenapiFileHandler {
         }
 
         return responses.keySet();
+    }
+
+    public void getPageExtensions(PageDTO pageDTO) {
+        Operation operation = getOperation(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        pageDTO.setPageTitle(getExtentionString(operation.getExtensions(), "x-pageTitle"));
     }
 
 }

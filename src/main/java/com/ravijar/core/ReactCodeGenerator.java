@@ -44,10 +44,8 @@ public class ReactCodeGenerator {
 
     public void createPage(String outputDir, PageDTO pageDTO) throws IOException, TemplateException {
         List<ParameterDTO> parameters = openapiFileHandler.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
-        String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(),"200");
         String requestSchema = openapiFileHandler.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), "200");
+        openapiFileHandler.getPageExtensions(pageDTO);
 
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("pageName", pageDTO.getPageName());
@@ -55,26 +53,47 @@ public class ReactCodeGenerator {
         dataModel.put("requestSchema", requestSchema);
         dataModel.put("httpMethod", pageDTO.getResourceMethod().toString());
         dataModel.put("customStyled", pageDTO.isCustomStyled());
+        dataModel.put("pageTitle", pageDTO.getPageTitle());
 
         Set<String> responseCodes = openapiFileHandler.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         List<Map<String, String>> displayNames = new ArrayList<>();
+        Map<String, Map<String, Object>> responses= new HashMap<>();
         for (String code : responseCodes) {
-            List<SchemaPropertyDTO> responseSchema = schemas.get(openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code));
-            for (SchemaPropertyDTO schemaPropertyDTO : responseSchema) {
-                Map<String, String> displayName = new HashMap<>();
-                if (schemaPropertyDTO.getDisplayName() != null) {
-                    displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
-                    if (!displayNames.contains(displayName)) {
-                        displayNames.add(displayName);
+            String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+
+            List<SchemaPropertyDTO> result = schemas.get(responseSchemaName);
+            if (result != null) {
+                for (SchemaPropertyDTO schemaPropertyDTO : result) {
+                    Map<String, String> displayName = new HashMap<>();
+                    if (schemaPropertyDTO.getDisplayName() != null) {
+                        displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
+                        if (!displayNames.contains(displayName)) {
+                            displayNames.add(displayName);
+                        }
                     }
                 }
             }
-        }
 
-        Map<String, String> responseSchema = new HashMap<>();
-        responseSchema.put("name", responseSchemaName);
-        responseSchema.put("type", responseSchemaType);
-        dataModel.put("responseSchema", responseSchema);
+            Map<String, String> responseSchema = new HashMap<>();
+            responseSchema.put("name", responseSchemaName);
+            responseSchema.put("type", responseSchemaType);
+
+            List<Map<String,String>> nextPages = new ArrayList<>();
+            for (String nextPage : nextPageList) {
+                Map<String, String> nextPageData = new HashMap<>();
+                nextPageData.put("name", nextPage);
+                nextPages.add(nextPageData);
+            }
+
+            Map<String, Object> codeData = new HashMap<>();
+            codeData.put("responseSchema", responseSchema);
+            codeData.put("nextPages", nextPages);
+
+            responses.put(code, codeData);
+        }
+        dataModel.put("responses", responses);
 
         List<Map<String, String>> fields = new ArrayList<>();
         List<Map<String, String>> requestParams = new ArrayList<>();
@@ -116,14 +135,6 @@ public class ReactCodeGenerator {
         dataModel.put("fields", fields);
         dataModel.put("requestParams", requestParams);
         dataModel.put("displayNames", displayNames);
-
-        List<Map<String,String>> nextPages = new ArrayList<>();
-        for (String nextPage : nextPageList) {
-            Map<String, String> nextPageData = new HashMap<>();
-            nextPageData.put("name", nextPage);
-            nextPages.add(nextPageData);
-        }
-        dataModel.put("nextPages", nextPages);
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".js")) {

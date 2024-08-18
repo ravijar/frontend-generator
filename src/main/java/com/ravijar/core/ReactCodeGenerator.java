@@ -1,10 +1,7 @@
 package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
-import com.ravijar.model.PageDTO;
-import com.ravijar.model.ParameterDTO;
-import com.ravijar.model.SchemaPropertyDTO;
-import com.ravijar.model.TypeScriptDefaultValue;
+import com.ravijar.model.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -48,16 +45,13 @@ public class ReactCodeGenerator {
         openapiFileHandler.getPageExtensions(pageDTO);
 
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("pageName", pageDTO.getPageName());
         dataModel.put("apiMethod", openapiFileHandler.getOperationId(pageDTO.getResourceUrl(), pageDTO.getResourceMethod()));
         dataModel.put("requestSchema", requestSchema);
-        dataModel.put("httpMethod", pageDTO.getResourceMethod().toString());
-        dataModel.put("customStyled", pageDTO.isCustomStyled());
-        dataModel.put("pageTitle", pageDTO.getPageTitle());
+        dataModel.put("pageDTO",pageDTO);
 
         Set<String> responseCodes = openapiFileHandler.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         List<Map<String, String>> displayNames = new ArrayList<>();
-        Map<String, Map<String, Object>> responses= new HashMap<>();
+        List<ResponseDTO> responses= new ArrayList<>();
         for (String code : responseCodes) {
             String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
             String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
@@ -77,23 +71,8 @@ public class ReactCodeGenerator {
                 }
             }
 
-            Map<String, String> responseSchema = new HashMap<>();
-            responseSchema.put("name", responseSchemaName);
-            responseSchema.put("type", responseSchemaType);
-
-            List<Map<String,String>> nextPages = new ArrayList<>();
-            for (String nextPage : nextPageList) {
-                Map<String, String> nextPageData = new HashMap<>();
-                nextPageData.put("name", nextPage);
-                nextPages.add(nextPageData);
-            }
-
-            Map<String, Object> codeData = new HashMap<>();
-            codeData.put("responseSchema", responseSchema);
-            codeData.put("nextPages", nextPages);
-            codeData.put("description", responseDescription);
-
-            responses.put(code, codeData);
+            ResponseDTO responseDTO = new ResponseDTO(code, responseDescription, responseSchemaName, responseSchemaType, nextPageList);
+            responses.add(responseDTO);
         }
         dataModel.put("responses", responses);
 

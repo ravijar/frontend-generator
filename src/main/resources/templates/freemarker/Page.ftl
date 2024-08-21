@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DefaultApi } from "../client_api";
 <#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
@@ -90,8 +90,12 @@ export default function ${pageDTO.pageName?cap_first}() {
         navigate("/" + pageName.charAt(0).toLowerCase() + pageName.slice(1));
     }
 
+<#if !fields?has_content>
+    useEffect(() => {
+<#else>
     const handleSubmit = (event) => {
         event.preventDefault();
+</#if>
         closeAlert();
     <#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
         const body = ${requestSchema}.constructFromObject({
@@ -121,7 +125,7 @@ export default function ${pageDTO.pageName?cap_first}() {
             setNextPages(responses[response.statusCode]?.nextPages);
             setResponseData(response.body);
         });
-    };
+    }<#if !fields?has_content>, [])</#if>;
 
     return (
         <div className="page-container" style={getStyle(customStyles,"pageContainer")}>
@@ -130,6 +134,7 @@ export default function ${pageDTO.pageName?cap_first}() {
                 <div className="title" style={getStyle(customStyles,"title")}>${pageDTO.pageTitle}</div>
             </div>
         </#if>
+        <#if fields?has_content>
             <form onSubmit={handleSubmit} className="form-container" style={getStyle(customStyles,"formContainer")}>
                 <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>
@@ -145,6 +150,7 @@ export default function ${pageDTO.pageName?cap_first}() {
                 </div>
                 <button type="submit" className="form-submit" style={getStyle(customStyles,"formSubmit")}>Submit</button>
             </form>
+        </#if>
 
             {alert.visible && (
                 <Alert

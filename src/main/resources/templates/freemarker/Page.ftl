@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DefaultApi } from "../client_api";
-<#if httpMethod == "POST" || httpMethod == "PUT">
+<#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
 import ${requestSchema} from "../client_api/src/model/${requestSchema}";
 </#if>
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
 import Alert from "../components/Alert";
 import { getStyle, getDisplayName } from "../common/Utils"
-<#if customStyled>
-import styles from "../customStyles/${pageName?cap_first}Styles";
+<#if pageDTO.customStyled>
+import styles from "../customStyles/${pageDTO.pageName?cap_first}Styles";
 </#if>
 import "./Page.css";
 
@@ -22,27 +22,27 @@ const displayNames = {
 }
 
 const responses = {
-<#list responses?keys as code>
-    "${code}": {
-        description: <#if responses[code].description??>"${responses[code].description}"<#else>null</#if>,
+<#list responses as response>
+    "${response.code}": {
+        description: <#if response.description??>"${response.description}"<#else>null</#if>,
         responseSchema: {
-            name: <#if responses[code].responseSchema.name??>"${responses[code].responseSchema.name}"<#else>null</#if>,
-            type: <#if responses[code].responseSchema.type??>"${responses[code].responseSchema.type}"<#else>null</#if>
+            name: <#if response.schema??>"${response.schema}"<#else>null</#if>,
+            type: <#if response.type??>"${response.type}"<#else>null</#if>
         },
         nextPages: [
-        <#list responses[code].nextPages as nextPage>
-            {name: "${nextPage.name}"}<#if nextPage_has_next>,</#if>
+        <#list response.nextPages as nextPage>
+            {name: "${nextPage}"}<#if nextPage_has_next>,</#if>
         </#list>
         ]
-    }<#if code_has_next>,</#if>
+    }<#if response_has_next>,</#if>
 </#list>
 };
 
-export default function ${pageName?cap_first}() {
+export default function ${pageDTO.pageName?cap_first}() {
     const navigate = useNavigate();
     const clientApi = new DefaultApi();
     let customStyles = {};
-<#if customStyled>
+<#if pageDTO.customStyled>
     customStyles = styles;
 </#if>
 
@@ -90,10 +90,14 @@ export default function ${pageName?cap_first}() {
         navigate("/" + pageName.charAt(0).toLowerCase() + pageName.slice(1));
     }
 
+<#if !fields?has_content>
+    useEffect(() => {
+<#else>
     const handleSubmit = (event) => {
         event.preventDefault();
+</#if>
         closeAlert();
-    <#if httpMethod == "POST" || httpMethod == "PUT">
+    <#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
         const body = ${requestSchema}.constructFromObject({
         <#list requestParams as param>
             ${param.name} : ${param.name},
@@ -101,13 +105,13 @@ export default function ${pageName?cap_first}() {
         });
     </#if>
 
-    <#if httpMethod == "GET">
+    <#if pageDTO.resourceMethod == "GET">
         clientApi.${apiMethod}(<#list fields as field>${field.name}, </#list>(error, data, response) => {
-    <#elseif httpMethod == "POST">
+    <#elseif pageDTO.resourceMethod == "POST">
         clientApi.${apiMethod}(body, (error, data, response) => {
-    <#elseif httpMethod == "DELETE">
+    <#elseif pageDTO.resourceMethod == "DELETE">
         clientApi.${apiMethod}(${fields[0].name}, (error, data, response) => {
-    <#elseif httpMethod == "PUT">
+    <#elseif pageDTO.resourceMethod == "PUT">
         clientApi.${apiMethod}(body, ${fields[0].name}, (error, data, response) => {
     </#if>
             if (error) {
@@ -121,15 +125,16 @@ export default function ${pageName?cap_first}() {
             setNextPages(responses[response.statusCode]?.nextPages);
             setResponseData(response.body);
         });
-    };
+    }<#if !fields?has_content>, [])</#if>;
 
     return (
         <div className="page-container" style={getStyle(customStyles,"pageContainer")}>
-        <#if pageTitle?? && pageTitle?has_content>
+        <#if pageDTO.pageTitle?? && pageDTO.pageTitle?has_content>
             <div className="title-bar" style={getStyle(customStyles,"titleBar")}>
-                <div className="title" style={getStyle(customStyles,"title")}>${pageTitle}</div>
+                <div className="title" style={getStyle(customStyles,"title")}>${pageDTO.pageTitle}</div>
             </div>
         </#if>
+        <#if fields?has_content>
             <form onSubmit={handleSubmit} className="form-container" style={getStyle(customStyles,"formContainer")}>
                 <div className="form-inputs" style={getStyle(customStyles,"formInputs")}>
                 <#list fields as field>
@@ -145,6 +150,7 @@ export default function ${pageName?cap_first}() {
                 </div>
                 <button type="submit" className="form-submit" style={getStyle(customStyles,"formSubmit")}>Submit</button>
             </form>
+        </#if>
 
             {alert.visible && (
                 <Alert

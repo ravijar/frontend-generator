@@ -1,30 +1,35 @@
-name: CI Pipeline
+name: Java CI with Maven
 
 on:
   push:
     branches:
-      - '*'
+      - '**'  # Triggers on push to any branch
   pull_request:
     branches:
       - master
 
 jobs:
   setup:
+
     runs-on: windows-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Upgrade Maven to Latest Version
-      run: |
-        choco upgrade maven -y --force
-
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '21'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
 
   build:
     runs-on: windows-latest
@@ -34,15 +39,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Cache Maven packages
-      uses: actions/cache@v3
-      with:
-        path: C:\Users\runneradmin\.m2\repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-maven-
-
     - name: Build with Maven
-      run: mvn -B clean package --file pom.xml
+      run: mvn -B clean install
 
   test:
     runs-on: windows-latest
@@ -52,5 +50,5 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Run tests
+    - name: Run tests with Maven
       run: mvn test

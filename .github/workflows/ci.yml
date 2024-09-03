@@ -19,7 +19,6 @@ jobs:
     - name: Upgrade Maven to Latest Version
       run: |
         choco upgrade maven -y --force
-        mvn -version
 
     - name: Set up JDK 21
       uses: actions/setup-java@v3

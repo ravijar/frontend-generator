@@ -16,9 +16,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Latest Maven
+    - name: Upgrade Maven to Latest Version
       run: |
-        choco install maven -y
+        choco upgrade maven -y --force
         mvn -version
 
     - name: Set up JDK 21

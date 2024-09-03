@@ -1,14 +1,12 @@
 package com.ravijar.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class SchemaPropertyDTO {
     private String name;
     private String type;

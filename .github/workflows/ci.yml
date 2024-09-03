@@ -44,6 +44,8 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B clean install
+      env:
+        JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}
 
   test:
     runs-on: windows-latest

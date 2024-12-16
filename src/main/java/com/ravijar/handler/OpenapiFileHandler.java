@@ -74,6 +74,22 @@ public class OpenapiFileHandler {
         return operation;
     }
 
+    private ApiResponse getApiResponse(String path, PathItem.HttpMethod method, String responseType) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            return null;
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+        if (responses == null || !responses.containsKey(responseType)) {
+            logger.error("Response not found for path in OpenAPI specification: {} {}", path, method);
+            return null;
+        }
+
+        return responses.get(responseType);
+    }
+
     @Deprecated
     private String getBaseUrl() {
         List<Server> servers = openAPIData.getServers();
@@ -90,19 +106,13 @@ public class OpenapiFileHandler {
     }
 
     private Schema getResponseSchema(String path, PathItem.HttpMethod method, String responseType) {
-        Operation operation = getOperation(path, method);
-
-        if (operation == null) {
+        ApiResponse apiResponse = getApiResponse(path, method, responseType);
+        if (apiResponse == null) {
             return null;
         }
 
-        Map<String, ApiResponse> responses = operation.getResponses();
-        if (responses == null || !responses.containsKey(responseType)) {
-            return null;
-        }
-
-        ApiResponse apiResponse = responses.get(responseType);
         if (apiResponse.getContent() == null || apiResponse.getContent().isEmpty()) {
+            logger.error("Response content not found for path in OpenAPI specification: {} {} {}", path, method, responseType);
             return null;
         }
 
@@ -182,6 +192,14 @@ public class OpenapiFileHandler {
         return getSchemaFromRef(content.values().iterator().next().getSchema().get$ref());
     }
 
+    public String getResponseDescription(String path, PathItem.HttpMethod method, String responseType) {
+        ApiResponse apiResponse = getApiResponse(path, method, responseType);
+        if (apiResponse == null) {
+            return null;
+        }
+
+        return apiResponse.getDescription();
+    }
 
     public String getResponseSchemaName(String path, PathItem.HttpMethod method, String responseType) {
         Schema schema = getResponseSchema(path, method, responseType);

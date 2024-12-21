@@ -61,11 +61,19 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Deprecated dependency: Use 'openapi-generator' instead -->
     <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen-cli -->
     <dependency>
       <groupId>io.swagger.codegen.v3</groupId>
       <artifactId>swagger-codegen-cli</artifactId>
       <version>3.0.59</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.openapitools/openapi-generator -->
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>openapi-generator</artifactId>
+      <version>7.10.0</version>
     </dependency>
 
   </dependencies>

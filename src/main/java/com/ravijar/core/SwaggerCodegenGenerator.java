@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
+@Deprecated
 public class SwaggerCodegenGenerator {
     private static final Logger logger = LogManager.getLogger(SwaggerCodegenGenerator.class);
 

@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { DefaultApi } from "../client_api";
-<#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
-import ${requestSchema} from "../client_api/src/model/${requestSchema}";
-</#if>
+import { createConfiguration, DefaultApi } from "../client_api";
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
 import Alert from "../components/Alert";
@@ -40,7 +37,10 @@ const responses = {
 
 export default function ${pageDTO.pageName?cap_first}() {
     const navigate = useNavigate();
-    const clientApi = new DefaultApi();
+
+    const configuration = createConfiguration();
+    const clientApi = new DefaultApi(configuration);
+
     let customStyles = {};
 <#if pageDTO.customStyled>
     customStyles = styles;
@@ -90,6 +90,39 @@ export default function ${pageDTO.pageName?cap_first}() {
         navigate("/" + pageName.charAt(0).toLowerCase() + pageName.slice(1));
     }
 
+    const fetchData = async () => {
+        try {
+        <#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
+            const body = {
+            <#list requestParams as param>
+                ${param.name} : ${param.name},
+            </#list>
+            };
+
+        </#if>
+        <#if pageDTO.resourceMethod == "GET">
+            const response = await clientApi.${apiMethod}WithHttpInfo(<#list fields as field>${field.name}, </#list>);
+        <#elseif pageDTO.resourceMethod == "POST">
+            const response = await clientApi.${apiMethod}WithHttpInfo(body);
+        <#elseif pageDTO.resourceMethod == "DELETE">
+            const response = await clientApi.${apiMethod}WithHttpInfo(${fields[0].name});
+        <#elseif pageDTO.resourceMethod == "PUT" || pageDTO.resourceMethod == "PATCH">
+            const response = await clientApi.${apiMethod}WithHttpInfo(${fields[0].name}, body);
+        </#if>
+            console.log(response);
+            showAlert("success", response.httpStatusCode, responses[response.httpStatusCode]?.description);
+            setResponseSchema(responses[response.httpStatusCode]?.responseSchema);
+            setNextPages(responses[response.httpStatusCode]?.nextPages);
+            setResponseData(response.data);
+        } catch (error) {
+            console.log(error.message);
+            showAlert("error", error.code, responses[error.code]?.description);
+            setResponseSchema(responses[error.code]?.responseSchema);
+            setNextPages(responses[error.code]?.nextPages);
+            setResponseData({});
+        }
+    };
+
 <#if !fields?has_content>
     useEffect(() => {
 <#else>
@@ -97,34 +130,7 @@ export default function ${pageDTO.pageName?cap_first}() {
         event.preventDefault();
 </#if>
         closeAlert();
-    <#if pageDTO.resourceMethod == "POST" || pageDTO.resourceMethod == "PUT">
-        const body = ${requestSchema}.constructFromObject({
-        <#list requestParams as param>
-            ${param.name} : ${param.name},
-        </#list>
-        });
-    </#if>
-
-    <#if pageDTO.resourceMethod == "GET">
-        clientApi.${apiMethod}(<#list fields as field>${field.name}, </#list>(error, data, response) => {
-    <#elseif pageDTO.resourceMethod == "POST">
-        clientApi.${apiMethod}(body, (error, data, response) => {
-    <#elseif pageDTO.resourceMethod == "DELETE">
-        clientApi.${apiMethod}(${fields[0].name}, (error, data, response) => {
-    <#elseif pageDTO.resourceMethod == "PUT">
-        clientApi.${apiMethod}(body, ${fields[0].name}, (error, data, response) => {
-    </#if>
-            if (error) {
-                console.log(error);
-                showAlert("error", response.statusCode, responses[response.statusCode]?.description);
-            } else if (response.body == null) {
-                showAlert("success", response.statusCode, responses[response.statusCode]?.description);
-            }
-            console.log(response)
-            setResponseSchema(responses[response.statusCode]?.responseSchema);
-            setNextPages(responses[response.statusCode]?.nextPages);
-            setResponseData(response.body);
-        });
+        fetchData();
     }<#if !fields?has_content>, [])</#if>;
 
     return (

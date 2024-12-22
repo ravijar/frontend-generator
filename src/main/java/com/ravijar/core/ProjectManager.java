@@ -61,10 +61,10 @@ public class ProjectManager {
     }
 
     private void createClientApi() {
-        SwaggerCodegenGenerator swaggerCodegenGenerator = new SwaggerCodegenGenerator();
+        ClientApiGenerator clientApiGenerator = new ClientApiGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
-        swaggerCodegenGenerator.generateClientApi(specDir, outputDir, "javascript");
+        clientApiGenerator.generateClientApi(specDir, outputDir, "typescript");
     }
 
     private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {

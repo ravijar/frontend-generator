@@ -41,7 +41,6 @@ public class CommandHandler {
     }
 
     public void createReactApp(String baseDir) {
-
         File dir = new File(baseDir);
         if (!dir.exists()) {
             if (dir.mkdirs()) {
@@ -53,7 +52,7 @@ public class CommandHandler {
         }
 
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("npx.cmd", "create-react-app", "build");
+        processBuilder.command("npm.cmd", "create", "vite@latest", "build", "--", "--template", "react");
         processBuilder.directory(dir);
         runProcessBuilder(processBuilder);
     }
@@ -62,7 +61,7 @@ public class CommandHandler {
         File dir = checkBuildDirectory(baseDir);
         if (dir != null){
             ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("npm.cmd", "start");
+            processBuilder.command("npm.cmd", "run", "dev");
             processBuilder.directory(dir);
             runProcessBuilder(processBuilder);
         }

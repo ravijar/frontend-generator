@@ -1,4 +1,4 @@
-import KeyValuePair from "../components/KeyValuePair";
+import KeyValuePair from "./KeyValuePair";
 import "./KeyValuePair.css";
 import { getDisplayName } from "../common/Utils";
 

@@ -42,7 +42,7 @@ public class ProjectManager {
         String stylesDir = ProjectManager.projectName + "\\styles\\";
 
         for (String reactTemplate : reactComponentTemplates) {
-            fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".js", new File(buildSrcDir + "components\\" + reactTemplate + ".js"));
+            fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".jsx", new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
         }
 
         for (String reactTemplate : reactCommonTemplates) {

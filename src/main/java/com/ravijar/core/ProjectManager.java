@@ -5,6 +5,7 @@ import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
 import com.ravijar.handler.PagesFileHandler;
 import com.ravijar.model.PageDTO;
+import com.ravijar.model.xml.Page;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
@@ -169,6 +170,10 @@ public class ProjectManager {
     }
 
     public void test() {
-
+        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
+        for (Page page : pagesFileHandler.getPagesNew()) {
+            System.out.println(page);
+            System.out.println("==========================================");
+        }
     }
 }

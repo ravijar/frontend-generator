@@ -1,4 +1,5 @@
-<Button
-    text="${body.text.body}"
-    onClick={${component.id}Navigate}
-/>
+<#assign indent = ""?left_pad(indent * 4)>
+${indent}<Button
+${indent}    text="${body.text.body}"
+${indent}    onClick={${component.id}Navigate}
+${indent}/>

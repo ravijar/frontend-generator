@@ -18,6 +18,6 @@ public class HeroSection extends Component{
     private Image image;
 
     public HeroSection() {
-        this.setType("Herosection");
+        this.setType("HeroSection");
     }
 }

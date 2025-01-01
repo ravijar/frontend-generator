@@ -12,8 +12,8 @@ import lombok.ToString;
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = HeroSection.class, name = "Herosection"),
-        @JsonSubTypes.Type(value = SearchBar.class, name = "Searchbar"),
+        @JsonSubTypes.Type(value = HeroSection.class, name = "HeroSection"),
+        @JsonSubTypes.Type(value = SearchBar.class, name = "SearchBar"),
         @JsonSubTypes.Type(value = Button.class, name = "Button"),
 })
 

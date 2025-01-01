@@ -174,13 +174,13 @@ public class ReactCodeGenerator {
         for (Component component : page.getComponents()) {
             FreeMarkerComponent freeMarkerComponent = null;
             switch (component.getType()) {
-                case "Herosection":
-                    componentId = "herosection" + ids[0];
+                case "HeroSection":
+                    componentId = "heroSection" + ids[0];
                     ids[0] ++;
                     freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
                     break;
-                case "Searchbar":
-                    componentId = "searchbar" + ids[1];
+                case "SearchBar":
+                    componentId = "searchBar" + ids[1];
                     ids[1] ++;
                     Resource resource = ((SearchBar) component).getResource();
                     OpenAPIResource openAPIResource = getResourceData(resource);

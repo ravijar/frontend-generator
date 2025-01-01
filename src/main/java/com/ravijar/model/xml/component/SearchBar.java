@@ -14,6 +14,6 @@ public class SearchBar extends Component{
     private Resource resource;
 
     public SearchBar() {
-        this.setType("Searchbar");
+        this.setType("SearchBar");
     }
 }

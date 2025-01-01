@@ -21,6 +21,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public abstract class Component {
-    private String id;
     private String type;
 }

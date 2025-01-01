@@ -1,21 +1,36 @@
-<#list components as component>
-    component id = ${component.id}
+<#assign heroSectionTemplatePath = "/components/HeroSection.ftl">
+<#assign searchBarTemplatePath = "/components/SearchBar.ftl">
+<#assign buttonTemplatePath = "/components/Button.ftl">
 
-    <#switch component.type>
-        <#case "Herosection">
-            Text => ${component.text.body}
-            Image => ${component.image.url}
-        <#break>
+<#assign fetchTemplatePath = "/logic/Fetch.ftl">
+<#assign navigateTemplatePath = "/logic/Navigate.ftl">
+
+<#-- Creating Component Logic -->
+<#list data.components as component>
+    <#assign body = component.body>
+    <#assign resource = (component.resource)!>
+    <#switch body.type>
         <#case "Searchbar">
-            Resource URL => ${component.resource.url}
-            Resource Method => ${component.resource.method}
+            <#include fetchTemplatePath>
         <#break>
         <#case "Button">
-            Text => ${component.text.body}
-            Route => ${component.route.url}
+            <#include navigateTemplatePath>
         <#break>
     </#switch>
+</#list>
 
-    ====================================
-
+<#-- Calling Components -->
+<#list data.components as component>
+    <#assign body = component.body>
+    <#switch body.type>
+        <#case "Herosection">
+            <#include heroSectionTemplatePath>
+        <#break>
+        <#case "Searchbar">
+            <#include searchBarTemplatePath>
+        <#break>
+        <#case "Button">
+            <#include buttonTemplatePath>
+        <#break>
+    </#switch>
 </#list>

@@ -12,4 +12,8 @@ import lombok.ToString;
 public class SearchBar extends Component{
     @JacksonXmlProperty(localName = "resource")
     private Resource resource;
+
+    public SearchBar() {
+        this.setType("Searchbar");
+    }
 }

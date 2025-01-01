@@ -2,6 +2,7 @@ package com.ravijar.model.xml.component;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.ravijar.model.xml.Route;
+import com.ravijar.model.xml.Text;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,9 +11,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Button extends Component{
-    @JacksonXmlProperty(isAttribute = true)
-    private String text;
+    @JacksonXmlProperty(localName = "text")
+    private Text text;
 
-    @JacksonXmlProperty(localName = "resource")
+    @JacksonXmlProperty(localName = "route")
     private Route route;
+
+    public Button() {
+        this.setType("Button");
+    }
 }

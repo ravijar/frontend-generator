@@ -175,5 +175,23 @@ public class ProjectManager {
             System.out.println(page);
             System.out.println("==========================================");
         }
+
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        File pageOutputDir = new File(ProjectManager.projectName + "\\testNewPages");
+        if (!pageOutputDir.exists()) {
+            pageOutputDir.mkdirs();
+        }
+
+        try {
+            ReactCodeGenerator reactCodeGenerator = new ReactCodeGenerator(freeMarkerConfig.getConfiguration());
+
+            for (Page page : pagesFileHandler.getPagesNew()) {
+                reactCodeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 }

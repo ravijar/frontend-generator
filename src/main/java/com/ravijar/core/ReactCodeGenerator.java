@@ -2,6 +2,11 @@ package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.model.*;
+import com.ravijar.model.xml.Page;
+import com.ravijar.model.xml.component.Button;
+import com.ravijar.model.xml.component.Component;
+import com.ravijar.model.xml.component.HeroSection;
+import com.ravijar.model.xml.component.SearchBar;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -119,6 +124,41 @@ public class ReactCodeGenerator {
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("pageName", page.getName());
+        List<Object> components = new ArrayList<>();
+
+        int[] ids = { 0, 0, 0 };
+
+        for (Component component : page.getComponents()) {
+            switch (component.getType()) {
+                case "Herosection":
+                    component.setId("herosection" + ids[0]);
+                    ids[0] ++;
+                    components.add((HeroSection) component);
+                    break;
+                case "Searchbar":
+                    component.setId("searchbar" + ids[1]);
+                    ids[1] ++;
+                    components.add((SearchBar) component);
+                    break;
+                case "Button":
+                    component.setId("button" + ids[2]);
+                    ids[2] ++;
+                    components.add((Button) component);
+                    break;
+            }
+        }
+
+        dataModel.put("components", components);
+
+        Template template = cfg.getTemplate("pages/Page.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
     }

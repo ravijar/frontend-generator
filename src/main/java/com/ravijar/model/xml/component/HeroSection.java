@@ -1,7 +1,7 @@
 package com.ravijar.model.xml.component;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.ravijar.model.xml.Content;
+import com.ravijar.model.xml.Text;
 import com.ravijar.model.xml.Image;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +11,13 @@ import lombok.ToString;
 @Setter
 @ToString
 public class HeroSection extends Component{
-    @JacksonXmlProperty(localName = "content")
-    private Content content;
+    @JacksonXmlProperty(localName = "text")
+    private Text text;
 
     @JacksonXmlProperty(localName = "image")
     private Image image;
+
+    public HeroSection() {
+        this.setType("Herosection");
+    }
 }

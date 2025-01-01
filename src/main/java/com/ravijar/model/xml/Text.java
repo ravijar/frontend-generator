@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Content {
+public class Text {
     @JacksonXmlText
     private String body;
 }

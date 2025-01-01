@@ -163,6 +163,21 @@ public class ReactCodeGenerator {
         }
     }
 
+    public void updateAppPageNew(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("pages/App.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
     public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
@@ -195,7 +210,7 @@ public class ReactCodeGenerator {
             freeMarkerComponents.add(freeMarkerComponent);
         }
 
-        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), freeMarkerComponents);
+        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
         dataModel.put("data", freeMarkerPage);
 
         Template template = cfg.getTemplate("pages/Page.ftl");

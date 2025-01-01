@@ -21,9 +21,9 @@ public class ProjectManager {
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
-    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert"};
+    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -107,6 +107,32 @@ public class ProjectManager {
         }
     }
 
+    private void generatePagesNew(List<Page> pages) {
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        if (!pageOutputDir.exists()) {
+            pageOutputDir.mkdirs();
+        }
+
+        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        if (!appOutputDir.exists()) {
+            appOutputDir.mkdirs();
+        }
+
+        try {
+            Configuration cfg = freeMarkerConfig.getConfiguration();
+            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+
+            for (Page page : pages) {
+                codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
+            }
+            codeGenerator.updateAppPageNew(appOutputDir.getAbsolutePath(), pages);
+        } catch (IOException | TemplateException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     private void createClientApi() {
         ClientApiGenerator clientApiGenerator = new ClientApiGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
@@ -171,27 +197,9 @@ public class ProjectManager {
 
     public void test() {
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-        for (Page page : pagesFileHandler.getPagesNew()) {
-            System.out.println(page);
-            System.out.println("==========================================");
-        }
+        List<Page> pages = pagesFileHandler.getPagesNew();
 
-        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
-
-        File pageOutputDir = new File(ProjectManager.projectName + "\\testNewPages");
-        if (!pageOutputDir.exists()) {
-            pageOutputDir.mkdirs();
-        }
-
-        try {
-            ReactCodeGenerator reactCodeGenerator = new ReactCodeGenerator(freeMarkerConfig.getConfiguration());
-
-            for (Page page : pagesFileHandler.getPagesNew()) {
-                reactCodeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        generatePagesNew(pages);
+        createClientApi();
     }
 }

@@ -5,6 +5,7 @@ import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
 import com.ravijar.handler.PagesFileHandler;
 import com.ravijar.model.PageDTO;
+import com.ravijar.model.xml.Page;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
@@ -20,9 +21,9 @@ public class ProjectManager {
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
-    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert"};
+    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -106,6 +107,32 @@ public class ProjectManager {
         }
     }
 
+    private void generatePagesNew(List<Page> pages) {
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        if (!pageOutputDir.exists()) {
+            pageOutputDir.mkdirs();
+        }
+
+        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        if (!appOutputDir.exists()) {
+            appOutputDir.mkdirs();
+        }
+
+        try {
+            Configuration cfg = freeMarkerConfig.getConfiguration();
+            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+
+            for (Page page : pages) {
+                codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
+            }
+            codeGenerator.updateAppPageNew(appOutputDir.getAbsolutePath(), pages);
+        } catch (IOException | TemplateException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     private void createClientApi() {
         ClientApiGenerator clientApiGenerator = new ClientApiGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
@@ -169,6 +196,10 @@ public class ProjectManager {
     }
 
     public void test() {
+        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
+        List<Page> pages = pagesFileHandler.getPagesNew();
 
+        generatePagesNew(pages);
+        createClientApi();
     }
 }

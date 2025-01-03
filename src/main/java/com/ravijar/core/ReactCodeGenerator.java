@@ -2,9 +2,18 @@ package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.model.*;
+import com.ravijar.model.freemarker.FreeMarkerPage;
+import com.ravijar.model.openapi.OpenAPIResource;
+import com.ravijar.model.freemarker.FreeMarkerComponent;
+import com.ravijar.model.xml.Page;
+import com.ravijar.model.xml.Resource;
+import com.ravijar.model.xml.component.Component;
+import com.ravijar.model.xml.component.Form;
+import com.ravijar.model.xml.component.SearchBar;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import io.swagger.v3.oas.models.PathItem;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +29,38 @@ public class ReactCodeGenerator {
         this.cfg = cfg;
         this.openapiFileHandler = new OpenapiFileHandler();
         this.schemas = openapiFileHandler.getSchemas();
+    }
+
+    private PathItem.HttpMethod getHttpMethod(String method) {
+        for (PathItem.HttpMethod httpMethod : PathItem.HttpMethod.values()) {
+            if (httpMethod.name().equalsIgnoreCase(method)) {
+                return httpMethod;
+            }
+        }
+        return null;
+    }
+
+    private OpenAPIResource getResourceData(Resource resource) {
+        PathItem.HttpMethod httpMethod = getHttpMethod(resource.getMethod());
+        String url = resource.getUrl();
+
+        String apiFunctionName = openapiFileHandler.getOperationId(url, httpMethod);
+        List<ParameterDTO> urlParameterList = openapiFileHandler.getParameters(url, httpMethod);
+        String requestSchema = openapiFileHandler.getRequestSchema(url, httpMethod);
+
+        List<String> urlParameters = new ArrayList<>();
+        for (ParameterDTO parameter : urlParameterList) {
+            urlParameters.add(parameter.getName());
+        }
+
+        List<String> requestParameters = new ArrayList<>();
+        if (requestSchema != null) {
+            for (SchemaPropertyDTO schemaPropertyDTO: schemas.get(requestSchema)) {
+                requestParameters.add(schemaPropertyDTO.getName());
+            }
+        }
+
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters);
     }
 
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {
@@ -119,6 +160,68 @@ public class ReactCodeGenerator {
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void updateAppPageNew(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("pages/App.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        int[] ids = { 0, 0, 0, 0 };
+        String componentId;
+
+        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
+
+        for (Component component : page.getComponents()) {
+            FreeMarkerComponent freeMarkerComponent = null;
+            Resource resource = null;
+            switch (component.getType()) {
+                case "HeroSection":
+                    componentId = "heroSection" + ids[0];
+                    ids[0] ++;
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
+                    break;
+                case "SearchBar":
+                    componentId = "searchBar" + ids[1];
+                    ids[1] ++;
+                    resource = ((SearchBar) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
+                    break;
+                case "Button":
+                    componentId = "button" + ids[2];
+                    ids[2] ++;
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
+                    break;
+                case "Form":
+                    componentId = "form" + ids[3];
+                    ids[3] ++;
+                    resource = ((Form) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
+                    break;
+            }
+            freeMarkerComponents.add(freeMarkerComponent);
+        }
+
+        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
+        dataModel.put("data", freeMarkerPage);
+
+        Template template = cfg.getTemplate("pages/Page.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
     }

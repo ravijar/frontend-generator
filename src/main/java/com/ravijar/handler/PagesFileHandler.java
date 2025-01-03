@@ -1,6 +1,8 @@
 package com.ravijar.handler;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.ravijar.model.PageDTO;
+import com.ravijar.model.xml.Page;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +69,18 @@ public class PagesFileHandler {
             logger.error(e.getMessage());
         }
         return pageDTOs;
+    }
+
+    public List<Page> getPagesNew() {
+        List<Page> pages = new ArrayList<>();
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            File pagesFile = new File(pagesFilePath);
+            pages = xmlMapper.readValue(pagesFile, xmlMapper.getTypeFactory().constructCollectionType(List.class, Page.class));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return pages;
     }
 }
 

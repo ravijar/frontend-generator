@@ -9,13 +9,13 @@ ${indent}            ${parameter} : ${component.id}${parameter?cap_first},
 ${indent}        };
             </#if>
             <#if resource.httpMethod == "GET">
-${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(<#list resource.urlParameters as parameter>${parameter}, </#list>);
+${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(<#list resource.urlParameters as parameter>${component.id}${parameter?cap_first}, </#list>);
             <#elseif resource.httpMethod == "POST">
 ${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(body);
             <#elseif resource.httpMethod == "DELETE">
-${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(${resource.urlParameters[0]});
+${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(${component.id}${resource.urlParameters[0]?cap_first});
             <#elseif resource.httpMethod == "PUT" || resource.httpMethod == "PATCH">
-${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(${resource.urlParameters[0]}, body);
+${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(${component.id}${resource.urlParameters[0]?cap_first}, body);
             </#if>
 ${indent}        console.log(response);
 ${indent}        set${component.id?cap_first}FetchResponse(response.data);

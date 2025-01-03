@@ -29,6 +29,12 @@ export default function ${data.name?cap_first}() {
         <#assign resource = (component.resource)!>
         <#switch body.type>
             <#case "SearchBar">
+                <#assign state = "${component.id}${resource.urlParameters[0]?cap_first}">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
+                <#assign state = "${component.id}${resource.urlParameters[0]?cap_first}Error">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
                 <#assign state = "${component.id}FetchResponse">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
@@ -63,8 +69,13 @@ export default function ${data.name?cap_first}() {
         <#assign resource = (component.resource)!>
         <#switch body.type>
             <#case "SearchBar">
+                <#assign value = "${component.id}${resource.urlParameters[0]?cap_first}">
+                <#assign indent = 1>
+                <#include handleChangeTemplatePath>
                 <#assign indent = 1>
                 <#include fetchTemplatePath>
+                <#assign indent = 1>
+                <#include handleSubmitTemplatePath>
             <#break>
             <#case "Button">
                 <#assign indent = 1>

@@ -2,3 +2,4 @@
 ${indent}const ${component.id}Navigate = () => {
 ${indent}    navigate("${body.route.url}");
 ${indent}};
+

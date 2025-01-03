@@ -8,6 +8,7 @@ import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.xml.Page;
 import com.ravijar.model.xml.Resource;
 import com.ravijar.model.xml.component.Component;
+import com.ravijar.model.xml.component.Form;
 import com.ravijar.model.xml.component.SearchBar;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -181,13 +182,14 @@ public class ReactCodeGenerator {
     public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        int[] ids = { 0, 0, 0 };
+        int[] ids = { 0, 0, 0, 0 };
         String componentId;
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for (Component component : page.getComponents()) {
             FreeMarkerComponent freeMarkerComponent = null;
+            Resource resource = null;
             switch (component.getType()) {
                 case "HeroSection":
                     componentId = "heroSection" + ids[0];
@@ -197,14 +199,19 @@ public class ReactCodeGenerator {
                 case "SearchBar":
                     componentId = "searchBar" + ids[1];
                     ids[1] ++;
-                    Resource resource = ((SearchBar) component).getResource();
-                    OpenAPIResource openAPIResource = getResourceData(resource);
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, openAPIResource);
+                    resource = ((SearchBar) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
                     break;
                 case "Button":
                     componentId = "button" + ids[2];
                     ids[2] ++;
                     freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
+                    break;
+                case "Form":
+                    componentId = "form" + ids[3];
+                    ids[3] ++;
+                    resource = ((Form) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
                     break;
             }
             freeMarkerComponents.add(freeMarkerComponent);

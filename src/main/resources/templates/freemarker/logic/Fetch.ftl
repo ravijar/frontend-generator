@@ -4,10 +4,9 @@ ${indent}    try {
             <#if resource.httpMethod == "POST" || resource.httpMethod == "PUT">
 ${indent}        const body = {
                 <#list resource.requestParameters as parameter>
-${indent}            ${parameter} : ${parameter},
+${indent}            ${parameter} : ${component.id}${parameter?cap_first},
                 </#list>
 ${indent}        };
-
             </#if>
             <#if resource.httpMethod == "GET">
 ${indent}        const response = await clientApi.${resource.apiFunctionName}WithHttpInfo(<#list resource.urlParameters as parameter>${parameter}, </#list>);
@@ -25,3 +24,4 @@ ${indent}        console.log(error.message);
 ${indent}        set${component.id?cap_first}FetchResponse({});
 ${indent}    }
 ${indent}};
+

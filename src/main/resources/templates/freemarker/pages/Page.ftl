@@ -2,6 +2,7 @@
 <#assign searchBarTemplatePath = "/components/SearchBar.ftl">
 <#assign buttonTemplatePath = "/components/Button.ftl">
 <#assign formTemplatePath = "/components/Form.ftl">
+<#assign cardTemplatePath = "/components/Card.ftl">
 
 <#assign fetchTemplatePath = "/logic/Fetch.ftl">
 <#assign navigateTemplatePath = "/logic/Navigate.ftl">
@@ -16,6 +17,7 @@ import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
+import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
 
 export default function ${data.name?cap_first}() {
     const navigate = useNavigate();
@@ -114,6 +116,11 @@ export default function ${data.name?cap_first}() {
                     <#case "SearchBar">
                         <#assign indent = 3>
                         <#include searchBarTemplatePath>
+                        <#if body.result.component.type == "Card">
+                            <#assign data = "${component.id}FetchResponse">
+                            <#assign indent = 4>
+                            <#include cardTemplatePath>
+                        </#if>
                     <#break>
                     <#case "Button">
                         <#assign indent = 3>

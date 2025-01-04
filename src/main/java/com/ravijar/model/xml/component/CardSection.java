@@ -7,6 +7,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Card extends Component {
-    public Card() { this.setType("Card");}
+public class CardSection extends Component {
+    public CardSection() { this.setType("CardSection");}
 }

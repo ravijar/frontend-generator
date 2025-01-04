@@ -19,9 +19,11 @@ ${indent}        const response = await clientApi.${resource.apiFunctionName}Wit
             </#if>
 ${indent}        console.log(response);
 ${indent}        set${component.id?cap_first}FetchResponse(response.data);
+${indent}        set${component.id?cap_first}FetchResponseSchema(${component.id}Responses[response.httpStatusCode]?.responseSchema);
 ${indent}    } catch (error) {
 ${indent}        console.log(error.message);
 ${indent}        set${component.id?cap_first}FetchResponse({});
+${indent}        set${component.id?cap_first}FetchResponseSchema(${component.id}Responses[error.code]?.responseSchema);
 ${indent}    }
 ${indent}};
 

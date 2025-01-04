@@ -5,6 +5,7 @@ import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
+import com.ravijar.model.openapi.OpenAPIResponse;
 import com.ravijar.model.xml.Page;
 import com.ravijar.model.xml.Resource;
 import com.ravijar.model.xml.component.Component;
@@ -47,6 +48,7 @@ public class ReactCodeGenerator {
         String apiFunctionName = openapiFileHandler.getOperationId(url, httpMethod);
         List<ParameterDTO> urlParameterList = openapiFileHandler.getParameters(url, httpMethod);
         String requestSchema = openapiFileHandler.getRequestSchema(url, httpMethod);
+        Set<String> responseCodes = openapiFileHandler.getResponseCodes(url, httpMethod);
 
         List<String> urlParameters = new ArrayList<>();
         for (ParameterDTO parameter : urlParameterList) {
@@ -60,7 +62,14 @@ public class ReactCodeGenerator {
             }
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters);
+        List<OpenAPIResponse> responses = new ArrayList<>();
+        for (String code : responseCodes) {
+            String schema = openapiFileHandler.getResponseSchemaName(url, httpMethod, code);
+            String type = openapiFileHandler.getResponseSchemaType(url, httpMethod, code);
+            responses.add(new OpenAPIResponse(code, schema, type));
+        }
+
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
     }
 
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {

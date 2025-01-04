@@ -10,6 +10,8 @@
 <#assign handleSubmitTemplatePath = "/logic/HandleSubmit.ftl">
 
 <#assign useStateTemplatePath = "/hooks/UseState.ftl">
+
+<#assign responsesTemplatePath = "/constants/Responses.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
@@ -18,6 +20,13 @@ import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
 import RecursiveKeyValuePair from "../components/RecursiveKeyValuePair";
+
+<#-- Creating Constants -->
+<#list data.components as component>
+    <#assign resource = (component.resource)!>
+    <#assign indent = 0>
+    <#include responsesTemplatePath>
+</#list>
 
 export default function ${data.name?cap_first}() {
     const navigate = useNavigate();

@@ -2,6 +2,7 @@
 <#assign searchBarTemplatePath = "/components/SearchBar.ftl">
 <#assign buttonTemplatePath = "/components/Button.ftl">
 <#assign formTemplatePath = "/components/Form.ftl">
+<#assign cardSectionTemplatePath = "/components/CardSection.ftl">
 
 <#assign fetchTemplatePath = "/logic/Fetch.ftl">
 <#assign navigateTemplatePath = "/logic/Navigate.ftl">
@@ -9,6 +10,9 @@
 <#assign handleSubmitTemplatePath = "/logic/HandleSubmit.ftl">
 
 <#assign useStateTemplatePath = "/hooks/UseState.ftl">
+<#assign useEffectTemplatePath = "/hooks/UseEffect.ftl">
+
+<#assign responsesTemplatePath = "/constants/Responses.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
@@ -16,6 +20,14 @@ import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
+import CardSection from "../components/CardSection";
+
+<#-- Creating Constants -->
+<#list data.components as component>
+    <#assign resource = (component.resource)!>
+    <#assign indent = 0>
+    <#include responsesTemplatePath>
+</#list>
 
 export default function ${data.name?cap_first}() {
     const navigate = useNavigate();
@@ -23,7 +35,7 @@ export default function ${data.name?cap_first}() {
     const configuration = createConfiguration();
     const clientApi = new DefaultApi(configuration);
 
-    <#-- Creating Component Hooks -->
+    <#-- Creating Component UseStates -->
     <#list data.components as component>
         <#assign body = component.body>
         <#assign resource = (component.resource)!>
@@ -36,6 +48,9 @@ export default function ${data.name?cap_first}() {
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
                 <#assign state = "${component.id}FetchResponse">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
+                <#assign state = "${component.id}FetchResponseSchema">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
             <#break>
@@ -59,8 +74,30 @@ export default function ${data.name?cap_first}() {
                 <#assign state = "${component.id}FetchResponse">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
+                <#assign state = "${component.id}FetchResponseSchema">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
+            <#break>
+            <#case "Container">
+                <#assign state = "${component.id}FetchResponse">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
+                <#assign state = "${component.id}FetchResponseSchema">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
             <#break>
         </#switch>
+    </#list>
+
+    <#-- Creating Component UseEffects -->
+    <#list data.components as component>
+    <#assign body = component.body>
+    <#switch body.type>
+        <#case "Container">
+            <#assign indent = 1>
+            <#include useEffectTemplatePath>
+        <#break>
+    </#switch>
     </#list>
 
     <#-- Creating Component Logic -->
@@ -97,6 +134,10 @@ export default function ${data.name?cap_first}() {
                 <#assign indent = 1>
                 <#include handleSubmitTemplatePath>
             <#break>
+            <#case "Container">
+                <#assign indent = 1>
+                <#include fetchTemplatePath>
+            <#break>
         </#switch>
     </#list>
 
@@ -114,6 +155,10 @@ export default function ${data.name?cap_first}() {
                     <#case "SearchBar">
                         <#assign indent = 3>
                         <#include searchBarTemplatePath>
+                        <#if body.result.component.type == "CardSection">
+                            <#assign indent = 3>
+                            <#include cardSectionTemplatePath>
+                        </#if>
                     <#break>
                     <#case "Button">
                         <#assign indent = 3>
@@ -122,6 +167,12 @@ export default function ${data.name?cap_first}() {
                     <#case "Form">
                         <#assign indent = 3>
                         <#include formTemplatePath>
+                    <#break>
+                    <#case "Container">
+                        <#if body.result.component.type == "CardSection">
+                            <#assign indent = 3>
+                            <#include cardSectionTemplatePath>
+                        </#if>
                     <#break>
                 </#switch>
             </#list>

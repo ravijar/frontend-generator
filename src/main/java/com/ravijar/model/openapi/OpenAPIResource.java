@@ -14,4 +14,5 @@ public class OpenAPIResource {
     private String apiFunctionName;
     private List<String> urlParameters;
     private List<String> requestParameters;
+    private List<OpenAPIResponse> responses;
 }

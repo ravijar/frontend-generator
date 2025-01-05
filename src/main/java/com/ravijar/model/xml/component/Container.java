@@ -10,14 +10,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SearchBar extends Component{
+public class Container extends Component{
     @JacksonXmlProperty(localName = "resource")
     private Resource resource;
 
     @JacksonXmlProperty(localName = "result")
     private Result result;
 
-    public SearchBar() {
-        this.setType("SearchBar");
+    public Container() {
+        this.setType("Container");
     }
 }

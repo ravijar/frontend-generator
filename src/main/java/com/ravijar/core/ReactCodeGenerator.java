@@ -5,9 +5,11 @@ import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
+import com.ravijar.model.openapi.OpenAPIResponse;
 import com.ravijar.model.xml.Page;
 import com.ravijar.model.xml.Resource;
 import com.ravijar.model.xml.component.Component;
+import com.ravijar.model.xml.component.Container;
 import com.ravijar.model.xml.component.Form;
 import com.ravijar.model.xml.component.SearchBar;
 import freemarker.template.Configuration;
@@ -47,6 +49,7 @@ public class ReactCodeGenerator {
         String apiFunctionName = openapiFileHandler.getOperationId(url, httpMethod);
         List<ParameterDTO> urlParameterList = openapiFileHandler.getParameters(url, httpMethod);
         String requestSchema = openapiFileHandler.getRequestSchema(url, httpMethod);
+        Set<String> responseCodes = openapiFileHandler.getResponseCodes(url, httpMethod);
 
         List<String> urlParameters = new ArrayList<>();
         for (ParameterDTO parameter : urlParameterList) {
@@ -60,7 +63,14 @@ public class ReactCodeGenerator {
             }
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters);
+        List<OpenAPIResponse> responses = new ArrayList<>();
+        for (String code : responseCodes) {
+            String schema = openapiFileHandler.getResponseSchemaName(url, httpMethod, code);
+            String type = openapiFileHandler.getResponseSchemaType(url, httpMethod, code);
+            responses.add(new OpenAPIResponse(code, schema, type));
+        }
+
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
     }
 
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {
@@ -179,10 +189,27 @@ public class ReactCodeGenerator {
         }
     }
 
+    public void createNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            if (page.isNavbar()) {
+                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+            }
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("components/NavBar.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
     public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        int[] ids = { 0, 0, 0, 0 };
+        int[] ids = { 0, 0, 0, 0, 0 };
         String componentId;
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
@@ -211,6 +238,12 @@ public class ReactCodeGenerator {
                     componentId = "form" + ids[3];
                     ids[3] ++;
                     resource = ((Form) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
+                    break;
+                case "Container":
+                    componentId = "container" + ids[4];
+                    ids[4] ++;
+                    resource = ((Container) component).getResource();
                     freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
                     break;
             }

@@ -1,6 +1,7 @@
 package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
+import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.openapi.OpenAPIResource;
@@ -209,42 +210,45 @@ public class ReactCodeGenerator {
     public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        int[] ids = { 0, 0, 0, 0, 0 };
-        String componentId;
-
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for (Component component : page.getComponents()) {
             FreeMarkerComponent freeMarkerComponent = null;
             Resource resource = null;
             switch (component.getType()) {
-                case "HeroSection":
-                    componentId = "heroSection" + ids[0];
-                    ids[0] ++;
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
+                case "HeroSection", "Button":
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            null
+                    );
                     break;
                 case "SearchBar":
-                    componentId = "searchBar" + ids[1];
-                    ids[1] ++;
                     resource = ((SearchBar) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
-                    break;
-                case "Button":
-                    componentId = "button" + ids[2];
-                    ids[2] ++;
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            getResourceData(resource)
+                    );
                     break;
                 case "Form":
-                    componentId = "form" + ids[3];
-                    ids[3] ++;
                     resource = ((Form) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            getResourceData(resource)
+                    );
                     break;
                 case "Container":
-                    componentId = "container" + ids[4];
-                    ids[4] ++;
                     resource = ((Container) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            getResourceData(resource));
                     break;
             }
             freeMarkerComponents.add(freeMarkerComponent);

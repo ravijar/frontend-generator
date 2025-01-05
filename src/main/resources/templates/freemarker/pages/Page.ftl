@@ -21,6 +21,7 @@ import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
 import CardSection from "../components/CardSection";
+import "./Page.css";
 
 <#-- Creating Constants -->
 <#list data.components as component>

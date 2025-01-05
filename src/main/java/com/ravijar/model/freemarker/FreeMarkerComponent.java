@@ -11,6 +11,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class FreeMarkerComponent {
     private String id;
+    private String styleId;
     private Component body;
     private OpenAPIResource resource;
 }

@@ -42,7 +42,7 @@ public class ProjectManager {
         String stylesDir = ProjectManager.projectName + "\\styles\\";
 
         for (String reactTemplate : reactComponentTemplates) {
-            fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".js", new File(buildSrcDir + "components\\" + reactTemplate + ".js"));
+            fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".jsx", new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
         }
 
         for (String reactTemplate : reactCommonTemplates) {
@@ -58,13 +58,59 @@ public class ProjectManager {
             }
             fileHandler.copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
         }
+
+        fileHandler.copyFile(new File(buildSrcDir + "index.css"), new File(stylesDir + "index.css"));
+    }
+
+    private void copyUserFiles() {
+        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
+        String stylesDir = ProjectManager.projectName + "\\styles\\";
+
+        for (String cssTemplate : cssComponentTemplates) {
+            File sourceFile = new File(stylesDir + "components\\" + cssTemplate + ".css");
+            if (cssTemplate.equals("Page")) {
+                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
+            } else {
+                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
+            }
+        }
+
+        fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
+
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "customStyles"));
+    }
+
+    private void generatePages(List<PageDTO> pageDTOs) {
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        if (!pageOutputDir.exists()) {
+            pageOutputDir.mkdirs();
+        }
+
+        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        if (!appOutputDir.exists()) {
+            appOutputDir.mkdirs();
+        }
+
+        try {
+            Configuration cfg = freeMarkerConfig.getConfiguration();
+            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+
+            for (PageDTO pageDTO : pageDTOs) {
+                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
+            }
+            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
+        } catch (IOException | TemplateException e) {
+            logger.error(e.getMessage());
+        }
     }
 
     private void createClientApi() {
-        SwaggerCodegenGenerator swaggerCodegenGenerator = new SwaggerCodegenGenerator();
+        ClientApiGenerator clientApiGenerator = new ClientApiGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
-        swaggerCodegenGenerator.generateClientApi(specDir, outputDir, "javascript");
+        clientApiGenerator.generateClientApi(specDir, outputDir, "typescript");
     }
 
     private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
@@ -113,50 +159,12 @@ public class ProjectManager {
     }
 
     public void buildProject() {
-        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
-        String stylesDir = ProjectManager.projectName + "\\styles\\";
-        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
         List<PageDTO> pageDTOs = pagesFileHandler.getPages();
 
         checkCustomStyleFiles(pageDTOs);
-
-        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
-        if (!pageOutputDir.exists()) {
-            pageOutputDir.mkdirs();
-        }
-
-        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
-        if (!appOutputDir.exists()) {
-            appOutputDir.mkdirs();
-        }
-
-        try {
-
-            Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
-
-            for (PageDTO pageDTO : pageDTOs) {
-                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
-            }
-
-            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
-
-        } catch (IOException | TemplateException e) {
-            logger.error(e.getMessage());
-        }
-
-        for (String cssTemplate : cssComponentTemplates) {
-            File sourceFile = new File(stylesDir + "components\\" + cssTemplate + ".css");
-            if (cssTemplate.equals("Page")) {
-                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
-            } else {
-                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
-            }
-        }
-
-        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "customStyles"));
-
+        generatePages(pageDTOs);
+        copyUserFiles();
         createClientApi();
     }
 

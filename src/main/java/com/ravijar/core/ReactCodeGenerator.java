@@ -34,7 +34,7 @@ public class ReactCodeGenerator {
         dataModel.put("pages", pages);
 
         Template template = cfg.getTemplate("App.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/App.js")) {
+        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
             template.process(dataModel, fileWriter);
         }
     }
@@ -118,7 +118,7 @@ public class ReactCodeGenerator {
         dataModel.put("displayNames", displayNames);
 
         Template template = cfg.getTemplate("Page.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".js")) {
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
     }

@@ -23,7 +23,7 @@ public class ProjectManager {
     private final CommandHandler commandHandler;
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -120,6 +120,11 @@ public class ProjectManager {
             appOutputDir.mkdirs();
         }
 
+        File componentOutputDir = new File(ProjectManager.projectName + "\\build\\src\\components");
+        if (!componentOutputDir.exists()) {
+            componentOutputDir.mkdirs();
+        }
+
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
@@ -128,6 +133,7 @@ public class ProjectManager {
                 codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
             }
             codeGenerator.updateAppPageNew(appOutputDir.getAbsolutePath(), pages);
+            codeGenerator.createNavBar(componentOutputDir.getAbsolutePath(), pages);
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }

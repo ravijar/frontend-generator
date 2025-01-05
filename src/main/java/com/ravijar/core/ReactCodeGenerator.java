@@ -189,6 +189,23 @@ public class ReactCodeGenerator {
         }
     }
 
+    public void createNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            if (page.isNavbar()) {
+                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+            }
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("components/NavBar.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
     public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 

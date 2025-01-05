@@ -207,7 +207,19 @@ public class ReactCodeGenerator {
         }
     }
 
-    public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
+    public void createForm(String outputDir, FreeMarkerComponent component) throws IOException, TemplateException {
+        String formName = component.getId().substring(0, 1).toUpperCase() + component.getId().substring(1);
+
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("data", component);
+
+        Template template = cfg.getTemplate("components/generate/Form.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void createPageNew(String pageOutputDir, String componentOutputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
@@ -241,6 +253,7 @@ public class ReactCodeGenerator {
                             component,
                             getResourceData(resource)
                     );
+                    createForm(componentOutputDir, freeMarkerComponent);
                     break;
                 case "Container":
                     resource = ((Container) component).getResource();
@@ -258,7 +271,7 @@ public class ReactCodeGenerator {
         dataModel.put("data", freeMarkerPage);
 
         Template template = cfg.getTemplate("pages/Page.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".jsx")) {
+        try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
     }

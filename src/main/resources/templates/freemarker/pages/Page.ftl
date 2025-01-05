@@ -19,8 +19,14 @@ import { createConfiguration, DefaultApi } from "../client_api";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
-import InputField from "../components/InputField";
 import CardSection from "../components/CardSection";
+<#list data.components as component>
+    <#switch component.body.type>
+        <#case "Form">
+import ${component.id?cap_first} from "../components/${component.id?cap_first}";
+        <#break>
+    </#switch>
+</#list>
 import "./Page.css";
 
 <#-- Creating Constants -->

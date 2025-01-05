@@ -23,7 +23,7 @@ public class ProjectManager {
     private final CommandHandler commandHandler;
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -130,7 +130,7 @@ public class ProjectManager {
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
 
             for (Page page : pages) {
-                codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
+                codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), componentOutputDir.getAbsolutePath(), page);
             }
             codeGenerator.updateAppPageNew(appOutputDir.getAbsolutePath(), pages);
             codeGenerator.createNavBar(componentOutputDir.getAbsolutePath(), pages);

@@ -10,6 +10,7 @@
 <#assign handleSubmitTemplatePath = "/logic/HandleSubmit.ftl">
 
 <#assign useStateTemplatePath = "/hooks/UseState.ftl">
+<#assign useEffectTemplatePath = "/hooks/UseEffect.ftl">
 
 <#assign responsesTemplatePath = "/constants/Responses.ftl">
 import { useState, useEffect } from "react";
@@ -34,7 +35,7 @@ export default function ${data.name?cap_first}() {
     const configuration = createConfiguration();
     const clientApi = new DefaultApi(configuration);
 
-    <#-- Creating Component Hooks -->
+    <#-- Creating Component UseStates -->
     <#list data.components as component>
         <#assign body = component.body>
         <#assign resource = (component.resource)!>
@@ -77,7 +78,26 @@ export default function ${data.name?cap_first}() {
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
             <#break>
+            <#case "Container">
+                <#assign state = "${component.id}FetchResponse">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
+                <#assign state = "${component.id}FetchResponseSchema">
+                <#assign indent = 1>
+                <#include useStateTemplatePath>
+            <#break>
         </#switch>
+    </#list>
+
+    <#-- Creating Component UseEffects -->
+    <#list data.components as component>
+    <#assign body = component.body>
+    <#switch body.type>
+        <#case "Container">
+            <#assign indent = 1>
+            <#include useEffectTemplatePath>
+        <#break>
+    </#switch>
     </#list>
 
     <#-- Creating Component Logic -->
@@ -114,6 +134,10 @@ export default function ${data.name?cap_first}() {
                 <#assign indent = 1>
                 <#include handleSubmitTemplatePath>
             <#break>
+            <#case "Container">
+                <#assign indent = 1>
+                <#include fetchTemplatePath>
+            <#break>
         </#switch>
     </#list>
 
@@ -143,6 +167,12 @@ export default function ${data.name?cap_first}() {
                     <#case "Form">
                         <#assign indent = 3>
                         <#include formTemplatePath>
+                    <#break>
+                    <#case "Container">
+                        <#if body.result.component.type == "CardSection">
+                            <#assign indent = 3>
+                            <#include cardSectionTemplatePath>
+                        </#if>
                     <#break>
                 </#switch>
             </#list>

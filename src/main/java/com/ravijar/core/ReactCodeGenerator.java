@@ -9,6 +9,7 @@ import com.ravijar.model.openapi.OpenAPIResponse;
 import com.ravijar.model.xml.Page;
 import com.ravijar.model.xml.Resource;
 import com.ravijar.model.xml.component.Component;
+import com.ravijar.model.xml.component.Container;
 import com.ravijar.model.xml.component.Form;
 import com.ravijar.model.xml.component.SearchBar;
 import freemarker.template.Configuration;
@@ -191,7 +192,7 @@ public class ReactCodeGenerator {
     public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        int[] ids = { 0, 0, 0, 0 };
+        int[] ids = { 0, 0, 0, 0, 0 };
         String componentId;
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
@@ -220,6 +221,12 @@ public class ReactCodeGenerator {
                     componentId = "form" + ids[3];
                     ids[3] ++;
                     resource = ((Form) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
+                    break;
+                case "Container":
+                    componentId = "container" + ids[4];
+                    ids[4] ++;
+                    resource = ((Container) component).getResource();
                     freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
                     break;
             }

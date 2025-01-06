@@ -1,18 +1,18 @@
-<#assign heroSectionTemplatePath = "/components/call/HeroSection.ftl">
-<#assign searchBarTemplatePath = "/components/call/SearchBar.ftl">
-<#assign buttonTemplatePath = "/components/call/Button.ftl">
-<#assign formTemplatePath = "/components/call/Form.ftl">
-<#assign cardSectionTemplatePath = "/components/call/CardSection.ftl">
+<#assign heroSectionTemplatePath = "/react/components/call/HeroSection.ftl">
+<#assign searchBarTemplatePath = "/react/components/call/SearchBar.ftl">
+<#assign buttonTemplatePath = "/react/components/call/Button.ftl">
+<#assign formTemplatePath = "/react/components/call/Form.ftl">
+<#assign cardSectionTemplatePath = "/react/components/call/CardSection.ftl">
 
-<#assign fetchTemplatePath = "/logic/Fetch.ftl">
-<#assign navigateTemplatePath = "/logic/Navigate.ftl">
-<#assign handleChangeTemplatePath = "/logic/HandleChange.ftl">
-<#assign handleSubmitTemplatePath = "/logic/HandleSubmit.ftl">
+<#assign fetchTemplatePath = "/react/logic/Fetch.ftl">
+<#assign navigateTemplatePath = "/react/logic/Navigate.ftl">
+<#assign handleChangeTemplatePath = "/react/logic/HandleChange.ftl">
+<#assign handleSubmitTemplatePath = "/react/logic/HandleSubmit.ftl">
 
-<#assign useStateTemplatePath = "/hooks/UseState.ftl">
-<#assign useEffectTemplatePath = "/hooks/UseEffect.ftl">
+<#assign useStateTemplatePath = "/react/hooks/UseState.ftl">
+<#assign useEffectTemplatePath = "/react/hooks/UseEffect.ftl">
 
-<#assign responsesTemplatePath = "/constants/Responses.ftl">
+<#assign responsesTemplatePath = "/react/constants/Responses.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";

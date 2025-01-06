@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class ReactCodeGenerator {
+public class ReactGenerator {
     private final Configuration cfg;
     private final OpenapiFileHandler openapiFileHandler;
     private final Map<String, List<SchemaPropertyDTO>> schemas;
 
-    public ReactCodeGenerator(Configuration cfg) {
+    public ReactGenerator(Configuration cfg) {
         this.cfg = cfg;
         this.openapiFileHandler = new OpenapiFileHandler();
         this.schemas = openapiFileHandler.getSchemas();
@@ -83,7 +83,7 @@ public class ReactCodeGenerator {
         }
         dataModel.put("data", freeMarkerPages);
 
-        Template template = cfg.getTemplate("pages/App.ftl");
+        Template template = cfg.getTemplate("react/pages/App.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
             template.process(dataModel, fileWriter);
         }
@@ -100,7 +100,7 @@ public class ReactCodeGenerator {
         }
         dataModel.put("data", freeMarkerPages);
 
-        Template template = cfg.getTemplate("components/generate/NavBar.ftl");
+        Template template = cfg.getTemplate("react/components/generate/NavBar.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
             template.process(dataModel, fileWriter);
         }
@@ -112,7 +112,7 @@ public class ReactCodeGenerator {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("data", component);
 
-        Template template = cfg.getTemplate("components/generate/Form.ftl");
+        Template template = cfg.getTemplate("react/components/generate/Form.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
@@ -169,7 +169,7 @@ public class ReactCodeGenerator {
         FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
         dataModel.put("data", freeMarkerPage);
 
-        Template template = cfg.getTemplate("pages/Page.ftl");
+        Template template = cfg.getTemplate("react/pages/Page.ftl");
         try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }

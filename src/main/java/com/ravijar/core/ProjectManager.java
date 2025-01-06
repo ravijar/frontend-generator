@@ -96,12 +96,12 @@ public class ProjectManager {
 
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+            ReactGenerator reactGenerator = new ReactGenerator(cfg);
 
             for (PageDTO pageDTO : pageDTOs) {
-                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
+                reactGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
             }
-            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
+            reactGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
@@ -127,23 +127,23 @@ public class ProjectManager {
 
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+            ReactGenerator reactGenerator = new ReactGenerator(cfg);
 
             for (Page page : pages) {
-                codeGenerator.generatePage(pageOutputDir.getAbsolutePath(), componentOutputDir.getAbsolutePath(), page);
+                reactGenerator.generatePage(pageOutputDir.getAbsolutePath(), componentOutputDir.getAbsolutePath(), page);
             }
-            codeGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
-            codeGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
+            reactGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
+            reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
     }
 
     private void createClientApi() {
-        ClientApiGenerator clientApiGenerator = new ClientApiGenerator();
+        ClientAPIGenerator clientAPIGenerator = new ClientAPIGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
-        clientApiGenerator.generateClientApi(specDir, outputDir, "typescript");
+        clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
     }
 
     private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {

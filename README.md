@@ -5,7 +5,7 @@
 [![React](https://img.shields.io/badge/React-18.3.1-blue)](https://reactjs.org/)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0.x%20%7C%203.1.0-orange)](https://www.openapis.org/)
 
-Welcome to the **Automatic Frontend Generation Framework**! This project aims to streamline the process of building React-based frontends by automating the generation of UI components, pages, and client-side API integrations directly from an OpenAPI Specification.
+Welcome to the **Automatic Frontend Generation Framework**! This project aims to streamline the process of building React-based frontends by automating the generation of UI components, pages, and client-side API integrations **directly from an OpenAPI Specification**.
 
 This framework is specifically designed for backend developers and teams who need a functional, customizable frontend without diving deep into frontend technologies. By using configuration files such as the **OpenAPI Specification** and **Page Configuration File**, the framework ensures that the frontend is always in sync with the backend while allowing flexibility in styling and structure.
 

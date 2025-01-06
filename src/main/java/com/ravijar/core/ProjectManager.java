@@ -130,10 +130,10 @@ public class ProjectManager {
             ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
 
             for (Page page : pages) {
-                codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), componentOutputDir.getAbsolutePath(), page);
+                codeGenerator.generatePage(pageOutputDir.getAbsolutePath(), componentOutputDir.getAbsolutePath(), page);
             }
-            codeGenerator.updateAppPageNew(appOutputDir.getAbsolutePath(), pages);
-            codeGenerator.createNavBar(componentOutputDir.getAbsolutePath(), pages);
+            codeGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
+            codeGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }

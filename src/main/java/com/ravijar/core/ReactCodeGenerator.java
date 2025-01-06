@@ -74,6 +74,107 @@ public class ReactCodeGenerator {
         return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
     }
 
+    public void generateAppPage(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("pages/App.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void generateNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            if (page.isNavbar()) {
+                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+            }
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("components/generate/NavBar.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void generateForm(String outputDir, FreeMarkerComponent component) throws IOException, TemplateException {
+        String formName = component.getId().substring(0, 1).toUpperCase() + component.getId().substring(1);
+
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("data", component);
+
+        Template template = cfg.getTemplate("components/generate/Form.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void generatePage(String pageOutputDir, String componentOutputDir, Page page) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
+
+        for (Component component : page.getComponents()) {
+            FreeMarkerComponent freeMarkerComponent = null;
+            Resource resource = null;
+            switch (component.getType()) {
+                case "HeroSection", "Button":
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            null
+                    );
+                    break;
+                case "SearchBar":
+                    resource = ((SearchBar) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            getResourceData(resource)
+                    );
+                    break;
+                case "Form":
+                    resource = ((Form) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            getResourceData(resource)
+                    );
+                    generateForm(componentOutputDir, freeMarkerComponent);
+                    break;
+                case "Container":
+                    resource = ((Container) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            StringConverter.toKebabCase(component.getId()),
+                            component,
+                            getResourceData(resource));
+                    break;
+            }
+            freeMarkerComponents.add(freeMarkerComponent);
+        }
+
+        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
+        dataModel.put("data", freeMarkerPage);
+
+        Template template = cfg.getTemplate("pages/Page.ftl");
+        try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
@@ -171,107 +272,6 @@ public class ReactCodeGenerator {
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void updateAppPageNew(String outputDir, List<Page> pages) throws IOException, TemplateException {
-        Map<String, Object> dataModel = new HashMap<>();
-
-        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
-        for (Page page : pages) {
-            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
-        }
-        dataModel.put("data", freeMarkerPages);
-
-        Template template = cfg.getTemplate("pages/App.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void createNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
-        Map<String, Object> dataModel = new HashMap<>();
-
-        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
-        for (Page page : pages) {
-            if (page.isNavbar()) {
-                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
-            }
-        }
-        dataModel.put("data", freeMarkerPages);
-
-        Template template = cfg.getTemplate("components/NavBar.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void createForm(String outputDir, FreeMarkerComponent component) throws IOException, TemplateException {
-        String formName = component.getId().substring(0, 1).toUpperCase() + component.getId().substring(1);
-
-        Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("data", component);
-
-        Template template = cfg.getTemplate("components/generate/Form.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void createPageNew(String pageOutputDir, String componentOutputDir, Page page) throws IOException, TemplateException {
-        Map<String, Object> dataModel = new HashMap<>();
-
-        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
-
-        for (Component component : page.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = null;
-            Resource resource = null;
-            switch (component.getType()) {
-                case "HeroSection", "Button":
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
-                            component,
-                            null
-                    );
-                    break;
-                case "SearchBar":
-                    resource = ((SearchBar) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
-                            component,
-                            getResourceData(resource)
-                    );
-                    break;
-                case "Form":
-                    resource = ((Form) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
-                            component,
-                            getResourceData(resource)
-                    );
-                    createForm(componentOutputDir, freeMarkerComponent);
-                    break;
-                case "Container":
-                    resource = ((Container) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
-                            component,
-                            getResourceData(resource));
-                    break;
-            }
-            freeMarkerComponents.add(freeMarkerComponent);
-        }
-
-        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
-        dataModel.put("data", freeMarkerPage);
-
-        Template template = cfg.getTemplate("pages/Page.ftl");
-        try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
     }

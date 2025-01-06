@@ -1,8 +1,8 @@
-<#assign heroSectionTemplatePath = "/components/HeroSection.ftl">
-<#assign searchBarTemplatePath = "/components/SearchBar.ftl">
-<#assign buttonTemplatePath = "/components/Button.ftl">
-<#assign formTemplatePath = "/components/Form.ftl">
-<#assign cardSectionTemplatePath = "/components/CardSection.ftl">
+<#assign heroSectionTemplatePath = "/components/call/HeroSection.ftl">
+<#assign searchBarTemplatePath = "/components/call/SearchBar.ftl">
+<#assign buttonTemplatePath = "/components/call/Button.ftl">
+<#assign formTemplatePath = "/components/call/Form.ftl">
+<#assign cardSectionTemplatePath = "/components/call/CardSection.ftl">
 
 <#assign fetchTemplatePath = "/logic/Fetch.ftl">
 <#assign navigateTemplatePath = "/logic/Navigate.ftl">

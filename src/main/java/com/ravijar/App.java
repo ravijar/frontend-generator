@@ -34,8 +34,21 @@ public class App {
                     projectManager.runProject();
                     break;
                 case "build":
-                    logger.info("Building application...");
-                    projectManager.buildProject();
+                    if (args.length == 2){
+                        switch (args[1]){
+                            case "--api":
+                                projectManager.generateClientAPI();
+                                break;
+                            case "--code":
+                                projectManager.generateCode();
+                                break;
+                            case "--styles":
+                                projectManager.addUserStyles();
+                        }
+                    } else {
+                        logger.info("Building application...");
+                        projectManager.buildProject();
+                    }
                     break;
                 case "test":
                     logger.info("Running test...");

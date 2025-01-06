@@ -4,6 +4,7 @@ import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
+import com.ravijar.model.freemarker.FreeMarkerPageStyles;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.openapi.OpenAPIResponse;
@@ -27,9 +28,11 @@ public class ReactGenerator {
     private final Configuration cfg;
     private final OpenapiFileHandler openapiFileHandler;
     private final Map<String, List<SchemaPropertyDTO>> schemas;
+    private final CSSGenerator cssGenerator;
 
     public ReactGenerator(Configuration cfg) {
         this.cfg = cfg;
+        this.cssGenerator = new CSSGenerator(cfg);
         this.openapiFileHandler = new OpenapiFileHandler();
         this.schemas = openapiFileHandler.getSchemas();
     }
@@ -118,19 +121,22 @@ public class ReactGenerator {
         }
     }
 
-    public void generatePage(String pageOutputDir, String componentOutputDir, Page page) throws IOException, TemplateException {
+    public void generatePage(String pageOutputDir, String componentOutputDir, String userStylesDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
+        List<String> classes = new ArrayList<>();
 
         for (Component component : page.getComponents()) {
             FreeMarkerComponent freeMarkerComponent = null;
             Resource resource = null;
+            String styleId = StringConverter.toKebabCase(component.getId());
+            classes.add(styleId);
             switch (component.getType()) {
                 case "HeroSection", "Button":
                     freeMarkerComponent = new FreeMarkerComponent(
                             component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
+                            styleId,
                             component,
                             null
                     );
@@ -139,7 +145,7 @@ public class ReactGenerator {
                     resource = ((SearchBar) component).getResource();
                     freeMarkerComponent = new FreeMarkerComponent(
                             component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
+                            styleId,
                             component,
                             getResourceData(resource)
                     );
@@ -148,7 +154,7 @@ public class ReactGenerator {
                     resource = ((Form) component).getResource();
                     freeMarkerComponent = new FreeMarkerComponent(
                             component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
+                            styleId,
                             component,
                             getResourceData(resource)
                     );
@@ -158,7 +164,7 @@ public class ReactGenerator {
                     resource = ((Container) component).getResource();
                     freeMarkerComponent = new FreeMarkerComponent(
                             component.getId(),
-                            StringConverter.toKebabCase(component.getId()),
+                            styleId,
                             component,
                             getResourceData(resource));
                     break;
@@ -173,6 +179,8 @@ public class ReactGenerator {
         try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
+
+        this.cssGenerator.generatePageCSS(userStylesDir + "/pages", new FreeMarkerPageStyles(page.getName(), classes));
     }
 
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {

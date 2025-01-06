@@ -61,6 +61,7 @@ public class ProjectManager {
         }
 
         fileHandler.copyFile(new File(buildSrcDir + "index.css"), new File(stylesDir + "index.css"));
+        fileHandler.copyFile(new File(buildSrcDir + "App.css"), new File(stylesDir + "App.css"));
     }
 
     private void copyUserFiles() {
@@ -107,8 +108,11 @@ public class ProjectManager {
         }
     }
 
-    private void generatePagesNew(List<Page> pages) {
+    public void generateCode() {
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
+        List<Page> pages = pagesFileHandler.getPagesNew();
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
@@ -125,25 +129,45 @@ public class ProjectManager {
             componentOutputDir.mkdirs();
         }
 
+        File userStylesDir = new File(ProjectManager.projectName + "\\styles");
+        if (!componentOutputDir.exists()) {
+            componentOutputDir.mkdirs();
+        }
+
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactGenerator reactGenerator = new ReactGenerator(cfg);
 
             for (Page page : pages) {
-                reactGenerator.generatePage(pageOutputDir.getAbsolutePath(), componentOutputDir.getAbsolutePath(), page);
+                reactGenerator.generatePage(
+                        pageOutputDir.getAbsolutePath(),
+                        componentOutputDir.getAbsolutePath(),
+                        userStylesDir.getAbsolutePath(),
+                        page
+                );
             }
             reactGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
             reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
+            addUserStyles();
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void createClientApi() {
+    public void generateClientAPI() {
         ClientAPIGenerator clientAPIGenerator = new ClientAPIGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
         clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
+    }
+
+    public void addUserStyles() {
+        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
+        String stylesDir = ProjectManager.projectName + "\\styles\\";
+
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "components"), new File(buildSrcDir + "components"));
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "pages"));
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "custom_styles"), new File(buildSrcDir + "custom_styles"));
     }
 
     private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
@@ -173,12 +197,13 @@ public class ProjectManager {
             this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
             this.fileHandler.createDirectory(projectDir, "styles/components");
             this.fileHandler.createDirectory(projectDir, "styles/pages");
+            this.fileHandler.createDirectory(projectDir, "styles/custom_styles");
             this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(ProjectManager.projectName);
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
             this.fileHandler.createDirectory(projectDir, "build/src/components");
             this.fileHandler.createDirectory(projectDir, "build/src/pages");
-            this.fileHandler.createDirectory(projectDir, "build/src/customStyles");
+            this.fileHandler.createDirectory(projectDir, "build/src/custom_styles");
             this.fileHandler.createDirectory(projectDir, "build/src/common");
             copyTemplateFiles();
             logger.info("Project initialized successfully.");
@@ -198,14 +223,10 @@ public class ProjectManager {
         checkCustomStyleFiles(pageDTOs);
         generatePages(pageDTOs);
         copyUserFiles();
-        createClientApi();
+        generateClientAPI();
     }
 
     public void test() {
-        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-        List<Page> pages = pagesFileHandler.getPagesNew();
 
-        generatePagesNew(pages);
-        createClientApi();
     }
 }

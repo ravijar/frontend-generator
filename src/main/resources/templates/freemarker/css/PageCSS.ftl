@@ -1,5 +1,6 @@
 <#list data.classes as class>
-.${class} {
+.${class}-container {
 
 }
 </#list>
+

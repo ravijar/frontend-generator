@@ -12,5 +12,6 @@ ${indent}        ${component.id}${parameter?cap_first}={${component.id}${paramet
 ${indent}        ${component.id}${parameter?cap_first}HandleChange={${component.id}${parameter?cap_first}HandleChange}
 ${indent}        ${component.id}${parameter?cap_first}Error={${component.id}${parameter?cap_first}Error}
         </#list>
+${indent}        styles = {styles.${component.id}}
 ${indent}    />
 ${indent}</div>

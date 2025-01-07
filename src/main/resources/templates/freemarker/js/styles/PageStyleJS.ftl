@@ -3,9 +3,11 @@
 <#assign formTemplate = "/js/styles/components/Form.ftl">
 <#assign heroSectionTemplate = "/js/styles/components/HeroSection.ftl">
 <#assign searchBarTemplate = "/js/styles/components/SearchBar.ftl">
+<#assign containerTemplate = "/js/styles/components/Container.ftl">
 const styles = {
 <#list data.components as component>
-    <#switch component>
+    <#assign body = component.body>
+    <#switch body.type>
         <#case "Button">
             <#assign indentValue = 1>
             <#include buttonTemplate>
@@ -26,6 +28,12 @@ const styles = {
             <#assign indentValue = 1>
             <#include searchBarTemplate>
         <#break>
+        <#case "Container">
+            <#assign indentValue = 1>
+            <#include containerTemplate>
+        <#break>
     </#switch>
 </#list>
-}
+};
+
+export default styles;

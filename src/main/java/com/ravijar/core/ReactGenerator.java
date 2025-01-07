@@ -4,7 +4,6 @@ import com.ravijar.handler.OpenapiFileHandler;
 import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
-import com.ravijar.model.freemarker.FreeMarkerPageCustomStyles;
 import com.ravijar.model.freemarker.FreeMarkerPageStyles;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
@@ -129,14 +128,14 @@ public class ReactGenerator {
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
         List<String> classes = new ArrayList<>();
-        List<String> componentNames = new ArrayList<>();
+        List<String> componentIds = new ArrayList<>();
 
         for (Component component : page.getComponents()) {
             FreeMarkerComponent freeMarkerComponent = null;
             Resource resource = null;
             String styleId = StringConverter.toKebabCase(component.getId());
             classes.add(styleId);
-            componentNames.add(component.getType());
+            componentIds.add(component.getId());
             switch (component.getType()) {
                 case "HeroSection", "Button":
                     freeMarkerComponent = new FreeMarkerComponent(
@@ -154,7 +153,6 @@ public class ReactGenerator {
                             component,
                             getResourceData(resource)
                     );
-                    componentNames.add(((SearchBar) component).getResult().getComponent().getType());
                     break;
                 case "Form":
                     resource = ((Form) component).getResource();
@@ -173,7 +171,6 @@ public class ReactGenerator {
                             styleId,
                             component,
                             getResourceData(resource));
-                    componentNames.add(((Container) component).getResult().getComponent().getType());
                     break;
             }
             freeMarkerComponents.add(freeMarkerComponent);
@@ -188,7 +185,7 @@ public class ReactGenerator {
         }
 
         this.cssGenerator.generatePageCSS(userStylesDir + "/pages", new FreeMarkerPageStyles(page.getName(), classes));
-        this.jsGenerator.generatePageStyleJS(userStylesDir + "/custom_styles", new FreeMarkerPageCustomStyles(page.getName(), componentNames));
+        this.jsGenerator.generatePageStyleJS(userStylesDir + "/custom_styles", freeMarkerPage);
     }
 
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {

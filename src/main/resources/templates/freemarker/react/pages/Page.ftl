@@ -28,6 +28,7 @@ import ${component.id?cap_first} from "../components/${component.id?cap_first}";
     </#switch>
 </#list>
 import "./Page.css";
+import styles from "../custom_styles/${data.name?cap_first}";
 
 <#-- Creating Constants -->
 <#list data.components as component>

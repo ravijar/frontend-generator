@@ -1,6 +1,6 @@
 package com.ravijar.core;
 
-import com.ravijar.model.freemarker.FreeMarkerPageCustomStyles;
+import com.ravijar.model.freemarker.FreeMarkerPage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -19,12 +19,12 @@ public class JSGenerator {
         this.cfg = cfg;
     }
 
-    public void generatePageStyleJS(String outputDir, FreeMarkerPageCustomStyles pageCustomStyles) throws IOException, TemplateException {
+    public void generatePageStyleJS(String outputDir, FreeMarkerPage page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("data", pageCustomStyles);
+        dataModel.put("data", page);
 
         Template template = cfg.getTemplate("js/styles/PageStyleJS.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + pageCustomStyles.getPageName() + ".js")) {
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".js")) {
             template.process(dataModel, fileWriter);
         }
     }

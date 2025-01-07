@@ -1,7 +1,7 @@
 <#assign inputFieldTemplate = "/js/styles/components/InputField.ftl">
 <#assign buttonTemplate = "/js/styles/components/Button.ftl">
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}form : {
+${indent}${body.id} : {
 ${indent}    formContainer : {
 
 ${indent}    },

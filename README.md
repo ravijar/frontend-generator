@@ -267,7 +267,7 @@ styles/
 ### 3: Generate Frontend Code
 - After adding the input files, execute the following command to generate the required React code:
   ```
-  java -jar FrontendGenerator-1.0-SNAPSHOT.jar build
+  java -jar FrontendGenerator-<version>.jar build
   ```
 - This command will:
   - Create the frontend components for the pages defined in `pages.xml`.
@@ -277,7 +277,7 @@ styles/
 ### 4: Run the Application
 - To preview and test the generated frontend, execute:
   ```
-  java -jar FrontendGenerator-1.0-SNAPSHOT.jar run
+  java -jar FrontendGenerator-<version>.jar run
   ```
 - This will launch a local server and allow you to interact with the generated frontend in your browser.
 
@@ -288,7 +288,7 @@ styles/
 ### 6: View Available Commands
 - To view all available commands and their usage, run:
   ```
-  java -jar FrontendGenerator-1.0-SNAPSHOT.jar help
+  java -jar FrontendGenerator-<version>.jar help
   ```
 - This will display detailed information about the commands you can use and their respective options.
 

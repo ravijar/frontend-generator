@@ -134,8 +134,6 @@ public class ReactGenerator {
             FreeMarkerComponent freeMarkerComponent = null;
             Resource resource = null;
             String styleId = StringConverter.toKebabCase(component.getId());
-            classes.add(styleId);
-            componentIds.add(component.getId());
             switch (component.getType()) {
                 case "HeroSection", "Button":
                     freeMarkerComponent = new FreeMarkerComponent(
@@ -184,7 +182,7 @@ public class ReactGenerator {
             template.process(dataModel, fileWriter);
         }
 
-        this.cssGenerator.generatePageCSS(userStylesDir + "/pages", new FreeMarkerPageStyles(page.getName(), classes));
+        this.cssGenerator.generatePageCSS(userStylesDir + "/pages", freeMarkerPage);
         this.jsGenerator.generatePageStyleJS(userStylesDir + "/custom_styles", freeMarkerPage);
     }
 

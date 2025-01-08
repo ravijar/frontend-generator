@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Deprecated
 public class FreeMarkerPageStyles {
     private String pageName;
     private List<String> classes;

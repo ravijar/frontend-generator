@@ -1,6 +1,6 @@
 package com.ravijar.core;
 
-import com.ravijar.model.freemarker.FreeMarkerPageStyles;
+import com.ravijar.model.freemarker.FreeMarkerPage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -18,12 +18,12 @@ public class CSSGenerator {
         this.cfg = cfg;
     }
 
-    public void generatePageCSS(String outputDir, FreeMarkerPageStyles pageStyles) throws IOException, TemplateException {
+    public void generatePageCSS(String outputDir, FreeMarkerPage page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("data", pageStyles);
+        dataModel.put("data", page);
 
         Template template = cfg.getTemplate("css/PageCSS.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + pageStyles.getPageName() + ".css")) {
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".css")) {
             template.process(dataModel, fileWriter);
         }
     }

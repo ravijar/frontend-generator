@@ -24,6 +24,7 @@ public class ProjectManager {
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
     private final String[] reactCommonTemplates = {"Utils"};
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
+    private final String[] cssCommonTemplates = {"App", "index"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -58,6 +59,11 @@ public class ProjectManager {
                 fileHandler.copyResource(resourcePath, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
             }
             fileHandler.copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
+        }
+
+        for (String cssTemplate : cssCommonTemplates) {
+            String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
+            fileHandler.copyResource(resourcePath, new File(buildSrcDir + cssTemplate + ".css"));
         }
 
         fileHandler.copyFile(new File(buildSrcDir + "index.css"), new File(stylesDir + "index.css"));
@@ -168,6 +174,8 @@ public class ProjectManager {
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "components"), new File(buildSrcDir + "components"));
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "pages"));
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "custom_styles"), new File(buildSrcDir + "custom_styles"));
+        fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
+        fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
     }
 
     private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {

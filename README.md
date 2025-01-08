@@ -54,7 +54,6 @@ The framework requires the following input files to function:
   ProjectName/
   ├── build/
   ├── styles/
-  ├── js/
   ├── openapi.yaml
   └── pages.xml
   ```

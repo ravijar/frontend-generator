@@ -8,10 +8,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-public class ClientApiGenerator {
-    private static final Logger logger = LogManager.getLogger(ClientApiGenerator.class);
+public class ClientAPIGenerator {
+    private static final Logger logger = LogManager.getLogger(ClientAPIGenerator.class);
 
-    public void generateClientApi(File specFile, File outputDir, String language) {
+    public void generateClientAPI(File specFile, File outputDir, String language) {
         if (!specFile.exists()) {
             logger.error("OpenAPI spec file not found: {}", specFile.getAbsolutePath());
             return;

@@ -1,26 +1,36 @@
-<#assign heroSectionTemplatePath = "/components/HeroSection.ftl">
-<#assign searchBarTemplatePath = "/components/SearchBar.ftl">
-<#assign buttonTemplatePath = "/components/Button.ftl">
-<#assign formTemplatePath = "/components/Form.ftl">
-<#assign cardSectionTemplatePath = "/components/CardSection.ftl">
+<#assign heroSectionTemplatePath = "/react/components/call/HeroSection.ftl">
+<#assign searchBarTemplatePath = "/react/components/call/SearchBar.ftl">
+<#assign buttonTemplatePath = "/react/components/call/Button.ftl">
+<#assign formTemplatePath = "/react/components/call/Form.ftl">
+<#assign cardSectionTemplatePath = "/react/components/call/CardSection.ftl">
+<#assign alertTemplatePath = "/react/components/call/Alert.ftl">
 
-<#assign fetchTemplatePath = "/logic/Fetch.ftl">
-<#assign navigateTemplatePath = "/logic/Navigate.ftl">
-<#assign handleChangeTemplatePath = "/logic/HandleChange.ftl">
-<#assign handleSubmitTemplatePath = "/logic/HandleSubmit.ftl">
+<#assign fetchTemplatePath = "/react/logic/Fetch.ftl">
+<#assign navigateTemplatePath = "/react/logic/Navigate.ftl">
+<#assign handleChangeTemplatePath = "/react/logic/HandleChange.ftl">
+<#assign handleSubmitTemplatePath = "/react/logic/HandleSubmit.ftl">
 
-<#assign useStateTemplatePath = "/hooks/UseState.ftl">
-<#assign useEffectTemplatePath = "/hooks/UseEffect.ftl">
+<#assign useStateTemplatePath = "/react/hooks/UseState.ftl">
+<#assign useEffectTemplatePath = "/react/hooks/UseEffect.ftl">
 
-<#assign responsesTemplatePath = "/constants/Responses.ftl">
+<#assign responsesTemplatePath = "/react/constants/Responses.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
-import InputField from "../components/InputField";
 import CardSection from "../components/CardSection";
+import Alert from "../components/Alert";
+<#list data.components as component>
+    <#switch component.body.type>
+        <#case "Form">
+import ${component.id?cap_first} from "../components/${component.id?cap_first}";
+        <#break>
+    </#switch>
+</#list>
+import "./${data.name?cap_first}.css";
+import styles from "../custom_styles/${data.name?cap_first}";
 
 <#-- Creating Constants -->
 <#list data.components as component>
@@ -77,6 +87,14 @@ export default function ${data.name?cap_first}() {
                 <#assign state = "${component.id}FetchResponseSchema">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
+                <#if body.result.component.type == "Alert">
+                    <#assign state = "${component.id}ShowAlert">
+                    <#assign indent = 1>
+                    <#include useStateTemplatePath>
+                    <#assign state = "${component.id}AlertData">
+                    <#assign indent = 1>
+                    <#include useStateTemplatePath>
+                </#if>
             <#break>
             <#case "Container">
                 <#assign state = "${component.id}FetchResponse">
@@ -167,6 +185,10 @@ export default function ${data.name?cap_first}() {
                     <#case "Form">
                         <#assign indent = 3>
                         <#include formTemplatePath>
+                        <#if body.result.component.type == "Alert">
+                            <#assign indent = 3>
+                            <#include alertTemplatePath>
+                        </#if>
                     <#break>
                     <#case "Container">
                         <#if body.result.component.type == "CardSection">

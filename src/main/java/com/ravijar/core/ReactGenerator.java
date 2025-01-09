@@ -1,8 +1,10 @@
 package com.ravijar.core;
 
 import com.ravijar.handler.OpenapiFileHandler;
+import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
+import com.ravijar.model.freemarker.FreeMarkerPageStyles;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.openapi.OpenAPIResponse;
@@ -22,13 +24,17 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class ReactCodeGenerator {
+public class ReactGenerator {
     private final Configuration cfg;
     private final OpenapiFileHandler openapiFileHandler;
     private final Map<String, List<SchemaPropertyDTO>> schemas;
+    private final CSSGenerator cssGenerator;
+    private final JSGenerator jsGenerator;
 
-    public ReactCodeGenerator(Configuration cfg) {
+    public ReactGenerator(Configuration cfg) {
         this.cfg = cfg;
+        this.cssGenerator = new CSSGenerator(cfg);
+        this.jsGenerator = new JSGenerator(cfg);
         this.openapiFileHandler = new OpenapiFileHandler();
         this.schemas = openapiFileHandler.getSchemas();
     }
@@ -67,10 +73,118 @@ public class ReactCodeGenerator {
         for (String code : responseCodes) {
             String schema = openapiFileHandler.getResponseSchemaName(url, httpMethod, code);
             String type = openapiFileHandler.getResponseSchemaType(url, httpMethod, code);
-            responses.add(new OpenAPIResponse(code, schema, type));
+            String description = openapiFileHandler.getResponseDescription(url, httpMethod, code);
+            responses.add(new OpenAPIResponse(code, schema, type, description));
         }
 
         return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
+    }
+
+    public void generateAppPage(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("react/pages/App.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void generateNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
+        for (Page page : pages) {
+            if (page.isNavbar()) {
+                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+            }
+        }
+        dataModel.put("data", freeMarkerPages);
+
+        Template template = cfg.getTemplate("react/components/generate/NavBar.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void generateForm(String outputDir, FreeMarkerComponent component) throws IOException, TemplateException {
+        String formName = component.getId().substring(0, 1).toUpperCase() + component.getId().substring(1);
+
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("data", component);
+
+        Template template = cfg.getTemplate("react/components/generate/Form.ftl");
+        try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+    }
+
+    public void generatePage(String pageOutputDir, String componentOutputDir, String userStylesDir, Page page) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+
+        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
+        List<String> classes = new ArrayList<>();
+        List<String> componentIds = new ArrayList<>();
+
+        for (Component component : page.getComponents()) {
+            FreeMarkerComponent freeMarkerComponent = null;
+            Resource resource = null;
+            String styleId = StringConverter.toKebabCase(component.getId());
+            switch (component.getType()) {
+                case "HeroSection", "Button":
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            styleId,
+                            component,
+                            null
+                    );
+                    break;
+                case "SearchBar":
+                    resource = ((SearchBar) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            styleId,
+                            component,
+                            getResourceData(resource)
+                    );
+                    break;
+                case "Form":
+                    resource = ((Form) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            styleId,
+                            component,
+                            getResourceData(resource)
+                    );
+                    generateForm(componentOutputDir, freeMarkerComponent);
+                    break;
+                case "Container":
+                    resource = ((Container) component).getResource();
+                    freeMarkerComponent = new FreeMarkerComponent(
+                            component.getId(),
+                            styleId,
+                            component,
+                            getResourceData(resource));
+                    break;
+            }
+            freeMarkerComponents.add(freeMarkerComponent);
+        }
+
+        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
+        dataModel.put("data", freeMarkerPage);
+
+        Template template = cfg.getTemplate("react/pages/Page.ftl");
+        try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {
+            template.process(dataModel, fileWriter);
+        }
+
+        this.cssGenerator.generatePageCSS(userStylesDir + "/pages", freeMarkerPage);
+        this.jsGenerator.generatePageStyleJS(userStylesDir + "/custom_styles", freeMarkerPage);
     }
 
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {
@@ -170,91 +284,6 @@ public class ReactCodeGenerator {
 
         Template template = cfg.getTemplate("Page.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + pageDTO.getPageName() + ".jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void updateAppPageNew(String outputDir, List<Page> pages) throws IOException, TemplateException {
-        Map<String, Object> dataModel = new HashMap<>();
-
-        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
-        for (Page page : pages) {
-            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
-        }
-        dataModel.put("data", freeMarkerPages);
-
-        Template template = cfg.getTemplate("pages/App.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void createNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
-        Map<String, Object> dataModel = new HashMap<>();
-
-        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
-        for (Page page : pages) {
-            if (page.isNavbar()) {
-                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
-            }
-        }
-        dataModel.put("data", freeMarkerPages);
-
-        Template template = cfg.getTemplate("components/NavBar.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
-            template.process(dataModel, fileWriter);
-        }
-    }
-
-    public void createPageNew(String outputDir, Page page) throws IOException, TemplateException {
-        Map<String, Object> dataModel = new HashMap<>();
-
-        int[] ids = { 0, 0, 0, 0, 0 };
-        String componentId;
-
-        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
-
-        for (Component component : page.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = null;
-            Resource resource = null;
-            switch (component.getType()) {
-                case "HeroSection":
-                    componentId = "heroSection" + ids[0];
-                    ids[0] ++;
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
-                    break;
-                case "SearchBar":
-                    componentId = "searchBar" + ids[1];
-                    ids[1] ++;
-                    resource = ((SearchBar) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
-                    break;
-                case "Button":
-                    componentId = "button" + ids[2];
-                    ids[2] ++;
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, null);
-                    break;
-                case "Form":
-                    componentId = "form" + ids[3];
-                    ids[3] ++;
-                    resource = ((Form) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
-                    break;
-                case "Container":
-                    componentId = "container" + ids[4];
-                    ids[4] ++;
-                    resource = ((Container) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(componentId, component, getResourceData(resource));
-                    break;
-            }
-            freeMarkerComponents.add(freeMarkerComponent);
-        }
-
-        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
-        dataModel.put("data", freeMarkerPage);
-
-        Template template = cfg.getTemplate("pages/Page.ftl");
-        try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".jsx")) {
             template.process(dataModel, fileWriter);
         }
     }

@@ -5,8 +5,9 @@ ${indent}const ${component.id}Responses = {
 ${indent}    "${response.code}": {
 ${indent}        responseSchema: {
 ${indent}            name: <#if response.schema??>"${response.schema}"<#else>null</#if>,
-${indent}            type: <#if response.type??>"${response.type}"<#else>null</#if>
+${indent}            type: <#if response.type??>"${response.type}"<#else>null</#if>,
 ${indent}        },
+${indent}        description: <#if response.description??>"${response.description}"<#else>null</#if>,
 ${indent}    }<#if response_has_next>,</#if>
         </#list>
 ${indent}};

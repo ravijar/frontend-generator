@@ -23,7 +23,8 @@ public class ProjectManager {
     private final CommandHandler commandHandler;
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
+    private final String[] cssCommonTemplates = {"App", "index"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -60,7 +61,13 @@ public class ProjectManager {
             fileHandler.copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
         }
 
+        for (String cssTemplate : cssCommonTemplates) {
+            String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
+            fileHandler.copyResource(resourcePath, new File(buildSrcDir + cssTemplate + ".css"));
+        }
+
         fileHandler.copyFile(new File(buildSrcDir + "index.css"), new File(stylesDir + "index.css"));
+        fileHandler.copyFile(new File(buildSrcDir + "App.css"), new File(stylesDir + "App.css"));
     }
 
     private void copyUserFiles() {
@@ -96,19 +103,22 @@ public class ProjectManager {
 
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+            ReactGenerator reactGenerator = new ReactGenerator(cfg);
 
             for (PageDTO pageDTO : pageDTOs) {
-                codeGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
+                reactGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
             }
-            codeGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
+            reactGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void generatePagesNew(List<Page> pages) {
+    public void generateCode() {
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
+        List<Page> pages = pagesFileHandler.getPagesNew();
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
@@ -125,25 +135,47 @@ public class ProjectManager {
             componentOutputDir.mkdirs();
         }
 
+        File userStylesDir = new File(ProjectManager.projectName + "\\styles");
+        if (!componentOutputDir.exists()) {
+            componentOutputDir.mkdirs();
+        }
+
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactCodeGenerator codeGenerator = new ReactCodeGenerator(cfg);
+            ReactGenerator reactGenerator = new ReactGenerator(cfg);
 
             for (Page page : pages) {
-                codeGenerator.createPageNew(pageOutputDir.getAbsolutePath(), page);
+                reactGenerator.generatePage(
+                        pageOutputDir.getAbsolutePath(),
+                        componentOutputDir.getAbsolutePath(),
+                        userStylesDir.getAbsolutePath(),
+                        page
+                );
             }
-            codeGenerator.updateAppPageNew(appOutputDir.getAbsolutePath(), pages);
-            codeGenerator.createNavBar(componentOutputDir.getAbsolutePath(), pages);
+            reactGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
+            reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
+            addUserStyles();
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void createClientApi() {
-        ClientApiGenerator clientApiGenerator = new ClientApiGenerator();
+    public void generateClientAPI() {
+        ClientAPIGenerator clientAPIGenerator = new ClientAPIGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
-        clientApiGenerator.generateClientApi(specDir, outputDir, "typescript");
+        clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
+    }
+
+    public void addUserStyles() {
+        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
+        String stylesDir = ProjectManager.projectName + "\\styles\\";
+
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "components"), new File(buildSrcDir + "components"));
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "pages"));
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "custom_styles"), new File(buildSrcDir + "custom_styles"));
+        fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
+        fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
     }
 
     private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
@@ -173,12 +205,13 @@ public class ProjectManager {
             this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
             this.fileHandler.createDirectory(projectDir, "styles/components");
             this.fileHandler.createDirectory(projectDir, "styles/pages");
+            this.fileHandler.createDirectory(projectDir, "styles/custom_styles");
             this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(ProjectManager.projectName);
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
             this.fileHandler.createDirectory(projectDir, "build/src/components");
             this.fileHandler.createDirectory(projectDir, "build/src/pages");
-            this.fileHandler.createDirectory(projectDir, "build/src/customStyles");
+            this.fileHandler.createDirectory(projectDir, "build/src/custom_styles");
             this.fileHandler.createDirectory(projectDir, "build/src/common");
             copyTemplateFiles();
             logger.info("Project initialized successfully.");
@@ -198,14 +231,10 @@ public class ProjectManager {
         checkCustomStyleFiles(pageDTOs);
         generatePages(pageDTOs);
         copyUserFiles();
-        createClientApi();
+        generateClientAPI();
     }
 
     public void test() {
-        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-        List<Page> pages = pagesFileHandler.getPagesNew();
 
-        generatePagesNew(pages);
-        createClientApi();
     }
 }

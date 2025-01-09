@@ -4,7 +4,7 @@
   <groupId>com.ravijar</groupId>
   <artifactId>FrontendGenerator</artifactId>
   <name>FrontendGenerator</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>

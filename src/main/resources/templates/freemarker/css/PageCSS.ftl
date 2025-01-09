@@ -36,6 +36,11 @@
 
 }
     <#break>
+    <#case "Form">
+        .${component.styleId}-result-container {
+
+        }
+    <#break>
 </#switch>
 </#list>
 

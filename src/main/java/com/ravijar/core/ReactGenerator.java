@@ -73,7 +73,8 @@ public class ReactGenerator {
         for (String code : responseCodes) {
             String schema = openapiFileHandler.getResponseSchemaName(url, httpMethod, code);
             String type = openapiFileHandler.getResponseSchemaType(url, httpMethod, code);
-            responses.add(new OpenAPIResponse(code, schema, type));
+            String description = openapiFileHandler.getResponseDescription(url, httpMethod, code);
+            responses.add(new OpenAPIResponse(code, schema, type, description));
         }
 
         return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);

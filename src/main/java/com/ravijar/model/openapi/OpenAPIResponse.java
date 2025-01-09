@@ -11,4 +11,5 @@ public class OpenAPIResponse {
     private String code;
     private String schema;
     private String type;
+    private String description;
 }

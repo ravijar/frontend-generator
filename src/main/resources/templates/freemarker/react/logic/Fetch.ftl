@@ -20,10 +20,24 @@ ${indent}        const response = await clientApi.${resource.apiFunctionName}Wit
 ${indent}        console.log(response);
 ${indent}        set${component.id?cap_first}FetchResponse(response.data);
 ${indent}        set${component.id?cap_first}FetchResponseSchema(${component.id}Responses[response.httpStatusCode]?.responseSchema);
+            <#if body.result.component.type == "Alert">
+${indent}        set${component.id?cap_first}AlertData({
+                    code : response.httpStatusCode,
+                    message : ${component.id}Responses[response.httpStatusCode]?.description
+                 });
+                 set${component.id?cap_first}ShowAlert(true);
+            </#if>
 ${indent}    } catch (error) {
 ${indent}        console.log(error.message);
 ${indent}        set${component.id?cap_first}FetchResponse({});
 ${indent}        set${component.id?cap_first}FetchResponseSchema(${component.id}Responses[error.code]?.responseSchema);
+            <#if body.result.component.type == "Alert">
+                 set${component.id?cap_first}AlertData({
+                    code : error.code,
+                    message : ${component.id}Responses[error.code]?.description
+                 });
+                 set${component.id?cap_first}ShowAlert(true);
+            </#if>
 ${indent}    }
 ${indent}};
 

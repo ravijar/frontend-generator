@@ -3,6 +3,7 @@
 <#assign buttonTemplatePath = "/react/components/call/Button.ftl">
 <#assign formTemplatePath = "/react/components/call/Form.ftl">
 <#assign cardSectionTemplatePath = "/react/components/call/CardSection.ftl">
+<#assign alertTemplatePath = "/react/components/call/Alert.ftl">
 
 <#assign fetchTemplatePath = "/react/logic/Fetch.ftl">
 <#assign navigateTemplatePath = "/react/logic/Navigate.ftl">
@@ -20,6 +21,7 @@ import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import CardSection from "../components/CardSection";
+import Alert from "../components/Alert";
 <#list data.components as component>
     <#switch component.body.type>
         <#case "Form">
@@ -85,6 +87,14 @@ export default function ${data.name?cap_first}() {
                 <#assign state = "${component.id}FetchResponseSchema">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
+                <#if body.result.component.type == "Alert">
+                    <#assign state = "${component.id}ShowAlert">
+                    <#assign indent = 1>
+                    <#include useStateTemplatePath>
+                    <#assign state = "${component.id}AlertData">
+                    <#assign indent = 1>
+                    <#include useStateTemplatePath>
+                </#if>
             <#break>
             <#case "Container">
                 <#assign state = "${component.id}FetchResponse">
@@ -175,6 +185,10 @@ export default function ${data.name?cap_first}() {
                     <#case "Form">
                         <#assign indent = 3>
                         <#include formTemplatePath>
+                        <#if body.result.component.type == "Alert">
+                            <#assign indent = 3>
+                            <#include alertTemplatePath>
+                        </#if>
                     <#break>
                     <#case "Container">
                         <#if body.result.component.type == "CardSection">

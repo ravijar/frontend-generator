@@ -35,9 +35,9 @@ By leveraging the OAS as a central standard, the **Automatic Frontend Generation
 
 ### Input Files
 The framework requires the following input files to function:
-- **OpenAPI Specification**: The OpenAPI Specification used as input must be tailored to include specific extensions and configurations required by the framework.
-- **Pages Configuration File**: Maps API endpoints to frontend pages.
-- **User Customization Files**: Predefined and customizable styles for components and pages.
+- **[OpenAPI Specification](#i-openapi-specification)**: The OpenAPI Specification used as input must be tailored to include specific extensions and configurations required by the framework.
+- **[Pages Configuration File](#ii-pages-configuration-file)**: Maps API endpoints to frontend pages.
+- **[User Customization Files](#iii-user-customization-files)**: Predefined and customizable styles for components and pages.
 
 #### Download and Build the Framework
 - **Clone the Repository**
@@ -75,7 +75,7 @@ iv. `pages.xml` File:
 
 
 ### 2: Add Input Files
-#### i. Open API Specification
+#### i. OpenAPI Specification
 The framework requires specific custom extensions in the OpenAPI Specification for it to function correctly and leverage its full capabilities. Below is an explanation of each required extension, where it must be included, and its purpose:
 
 - `x-pageTitle` extension:

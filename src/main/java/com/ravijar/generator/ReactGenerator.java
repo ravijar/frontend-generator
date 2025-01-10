@@ -1,10 +1,11 @@
-package com.ravijar.core;
+package com.ravijar.generator;
 
-import com.ravijar.handler.OpenapiFileHandler;
+import com.ravijar.model.openapi.OpenAPIParameter;
+import com.ravijar.model.openapi.OpenAPISchemaProperty;
+import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
-import com.ravijar.model.freemarker.FreeMarkerPageStyles;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.openapi.OpenAPIResponse;
@@ -26,8 +27,8 @@ import java.util.*;
 
 public class ReactGenerator {
     private final Configuration cfg;
-    private final OpenapiFileHandler openapiFileHandler;
-    private final Map<String, List<SchemaPropertyDTO>> schemas;
+    private final OpenAPIParser openAPIParser;
+    private final Map<String, List<OpenAPISchemaProperty>> schemas;
     private final CSSGenerator cssGenerator;
     private final JSGenerator jsGenerator;
 
@@ -35,8 +36,8 @@ public class ReactGenerator {
         this.cfg = cfg;
         this.cssGenerator = new CSSGenerator(cfg);
         this.jsGenerator = new JSGenerator(cfg);
-        this.openapiFileHandler = new OpenapiFileHandler();
-        this.schemas = openapiFileHandler.getSchemas();
+        this.openAPIParser = new OpenAPIParser();
+        this.schemas = openAPIParser.getSchemas();
     }
 
     private PathItem.HttpMethod getHttpMethod(String method) {
@@ -52,28 +53,28 @@ public class ReactGenerator {
         PathItem.HttpMethod httpMethod = getHttpMethod(resource.getMethod());
         String url = resource.getUrl();
 
-        String apiFunctionName = openapiFileHandler.getOperationId(url, httpMethod);
-        List<ParameterDTO> urlParameterList = openapiFileHandler.getParameters(url, httpMethod);
-        String requestSchema = openapiFileHandler.getRequestSchema(url, httpMethod);
-        Set<String> responseCodes = openapiFileHandler.getResponseCodes(url, httpMethod);
+        String apiFunctionName = openAPIParser.getOperationId(url, httpMethod);
+        List<OpenAPIParameter> urlParameterList = openAPIParser.getParameters(url, httpMethod);
+        String requestSchema = openAPIParser.getRequestSchema(url, httpMethod);
+        Set<String> responseCodes = openAPIParser.getResponseCodes(url, httpMethod);
 
         List<String> urlParameters = new ArrayList<>();
-        for (ParameterDTO parameter : urlParameterList) {
+        for (OpenAPIParameter parameter : urlParameterList) {
             urlParameters.add(parameter.getName());
         }
 
         List<String> requestParameters = new ArrayList<>();
         if (requestSchema != null) {
-            for (SchemaPropertyDTO schemaPropertyDTO: schemas.get(requestSchema)) {
-                requestParameters.add(schemaPropertyDTO.getName());
+            for (OpenAPISchemaProperty openAPISchemaProperty : schemas.get(requestSchema)) {
+                requestParameters.add(openAPISchemaProperty.getName());
             }
         }
 
         List<OpenAPIResponse> responses = new ArrayList<>();
         for (String code : responseCodes) {
-            String schema = openapiFileHandler.getResponseSchemaName(url, httpMethod, code);
-            String type = openapiFileHandler.getResponseSchemaType(url, httpMethod, code);
-            String description = openapiFileHandler.getResponseDescription(url, httpMethod, code);
+            String schema = openAPIParser.getResponseSchemaName(url, httpMethod, code);
+            String type = openAPIParser.getResponseSchemaType(url, httpMethod, code);
+            String description = openAPIParser.getResponseDescription(url, httpMethod, code);
             responses.add(new OpenAPIResponse(code, schema, type, description));
         }
 
@@ -128,12 +129,10 @@ public class ReactGenerator {
         Map<String, Object> dataModel = new HashMap<>();
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
-        List<String> classes = new ArrayList<>();
-        List<String> componentIds = new ArrayList<>();
 
         for (Component component : page.getComponents()) {
             FreeMarkerComponent freeMarkerComponent = null;
-            Resource resource = null;
+            Resource resource;
             String styleId = StringConverter.toKebabCase(component.getId());
             switch (component.getType()) {
                 case "HeroSection", "Button":
@@ -187,6 +186,7 @@ public class ReactGenerator {
         this.jsGenerator.generatePageStyleJS(userStylesDir + "/custom_styles", freeMarkerPage);
     }
 
+    @Deprecated
     public void updateAppPage(String outputDir, List<PageDTO> pageDTOList) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
@@ -204,31 +204,32 @@ public class ReactGenerator {
         }
     }
 
+    @Deprecated
     public void createPage(String outputDir, PageDTO pageDTO) throws IOException, TemplateException {
-        List<ParameterDTO> parameters = openapiFileHandler.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        String requestSchema = openapiFileHandler.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        openapiFileHandler.getPageExtensions(pageDTO);
+        List<OpenAPIParameter> parameters = openAPIParser.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        String requestSchema = openAPIParser.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        openAPIParser.getPageExtensions(pageDTO);
 
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("apiMethod", openapiFileHandler.getOperationId(pageDTO.getResourceUrl(), pageDTO.getResourceMethod()));
+        dataModel.put("apiMethod", openAPIParser.getOperationId(pageDTO.getResourceUrl(), pageDTO.getResourceMethod()));
         dataModel.put("requestSchema", requestSchema);
         dataModel.put("pageDTO",pageDTO);
 
-        Set<String> responseCodes = openapiFileHandler.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        Set<String> responseCodes = openAPIParser.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         List<Map<String, String>> displayNames = new ArrayList<>();
         List<ResponseDTO> responses= new ArrayList<>();
         for (String code : responseCodes) {
-            String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
-            String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
-            String responseDescription = openapiFileHandler.getResponseDescription(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
-            List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseSchemaName = openAPIParser.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseSchemaType = openAPIParser.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseDescription = openAPIParser.getResponseDescription(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            List<String> nextPageList = openAPIParser.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
 
-            List<SchemaPropertyDTO> result = schemas.get(responseSchemaName);
+            List<OpenAPISchemaProperty> result = schemas.get(responseSchemaName);
             if (result != null) {
-                for (SchemaPropertyDTO schemaPropertyDTO : result) {
+                for (OpenAPISchemaProperty openAPISchemaProperty : result) {
                     Map<String, String> displayName = new HashMap<>();
-                    if (schemaPropertyDTO.getDisplayName() != null) {
-                        displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
+                    if (openAPISchemaProperty.getDisplayName() != null) {
+                        displayName.put(openAPISchemaProperty.getName(), openAPISchemaProperty.getDisplayName());
                         if (!displayNames.contains(displayName)) {
                             displayNames.add(displayName);
                         }
@@ -243,7 +244,7 @@ public class ReactGenerator {
 
         List<Map<String, String>> fields = new ArrayList<>();
         List<Map<String, String>> requestParams = new ArrayList<>();
-        for (ParameterDTO parameter : parameters) {
+        for (OpenAPIParameter parameter : parameters) {
             Map<String, String> field = new HashMap<>();
             field.put("name", parameter.getName());
             if (!fields.contains(field)) {
@@ -260,16 +261,16 @@ public class ReactGenerator {
         }
 
         if (requestSchema != null) {
-            for (SchemaPropertyDTO schemaPropertyDTO : schemas.get(requestSchema)) {
+            for (OpenAPISchemaProperty openAPISchemaProperty : schemas.get(requestSchema)) {
                 Map<String, String> field = new HashMap<>();
-                field.put("name", schemaPropertyDTO.getName());
+                field.put("name", openAPISchemaProperty.getName());
                 if (!fields.contains(field)) {
                     fields.add(field);
                 }
 
-                if (schemaPropertyDTO.getDisplayName() != null) {
+                if (openAPISchemaProperty.getDisplayName() != null) {
                     Map<String, String> displayName = new HashMap<>();
-                    displayName.put(schemaPropertyDTO.getName(), schemaPropertyDTO.getDisplayName());
+                    displayName.put(openAPISchemaProperty.getName(), openAPISchemaProperty.getDisplayName());
                     if (!displayNames.contains(displayName)) {
                         displayNames.add(displayName);
                     }
@@ -290,27 +291,27 @@ public class ReactGenerator {
 
     @Deprecated
     public void generateModels(String outputDir) throws IOException, TemplateException {
-        for (Map.Entry<String, List<SchemaPropertyDTO>> entry : schemas.entrySet()) {
+        for (Map.Entry<String, List<OpenAPISchemaProperty>> entry : schemas.entrySet()) {
             String modelName = entry.getKey();
-            List<SchemaPropertyDTO> responseProperties = entry.getValue();
+            List<OpenAPISchemaProperty> responseProperties = entry.getValue();
 
             Map<String, Object> dataModel = new HashMap<>();
             dataModel.put("modelName", modelName);
 
             List<Map<String, String>> properties = new ArrayList<>();
             List<Map<String, String>> otherTypes = new ArrayList<>();
-            for (SchemaPropertyDTO schemaPropertyDTO : responseProperties) {
+            for (OpenAPISchemaProperty openAPISchemaProperty : responseProperties) {
                 Map<String, String> property = new HashMap<>();
                 Map<String, String> otherType = new HashMap<>();
 
-                property.put("name", schemaPropertyDTO.getName());
-                if (schemaPropertyDTO.getTypeScriptType().equals("any")) {
-                    String type = schemaPropertyDTO.getType();
+                property.put("name", openAPISchemaProperty.getName());
+                if (openAPISchemaProperty.getTypeScriptType().equals("any")) {
+                    String type = openAPISchemaProperty.getType();
                     property.put("default", "new "+type+"()");
                     otherType.put("name", type);
                     otherTypes.add(otherType);
                 } else {
-                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(schemaPropertyDTO.getTypeScriptType()));
+                    property.put("default", TypeScriptDefaultValue.getDefaultValueForType(openAPISchemaProperty.getTypeScriptType()));
                 }
                 properties.add(property);
             }

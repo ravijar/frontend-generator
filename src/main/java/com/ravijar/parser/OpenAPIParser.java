@@ -1,9 +1,9 @@
-package com.ravijar.handler;
+package com.ravijar.parser;
 
 import com.ravijar.core.ProjectManager;
 import com.ravijar.model.PageDTO;
-import com.ravijar.model.ParameterDTO;
-import com.ravijar.model.SchemaPropertyDTO;
+import com.ravijar.model.openapi.OpenAPIParameter;
+import com.ravijar.model.openapi.OpenAPISchemaProperty;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -20,13 +20,13 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.*;
 
-public class OpenapiFileHandler {
-    private static final Logger logger = LogManager.getLogger(OpenapiFileHandler.class);
+public class OpenAPIParser {
+    private static final Logger logger = LogManager.getLogger(OpenAPIParser.class);
 
     private final String openapiFilePath = ProjectManager.getProjectName() + "\\openapi.yaml";
     private final OpenAPI openAPIData;
 
-    public OpenapiFileHandler() {
+    public OpenAPIParser() {
         this.openAPIData = getSpecData();
     }
 
@@ -90,17 +90,6 @@ public class OpenapiFileHandler {
         return responses.get(responseType);
     }
 
-    @Deprecated
-    private String getBaseUrl() {
-        List<Server> servers = openAPIData.getServers();
-        if (servers != null && !servers.isEmpty()) {
-            return servers.get(0).getUrl();
-        } else {
-            logger.error("No servers found in OpenAPI specification.");
-            return "";
-        }
-    }
-
     private String getSchemaFromRef(String ref) {
         return ref.substring(ref.lastIndexOf('/') + 1);
     }
@@ -119,17 +108,17 @@ public class OpenapiFileHandler {
         return apiResponse.getContent().values().iterator().next().getSchema();
     }
 
-    private List<SchemaPropertyDTO> extractProperties(Map<String, Schema> openApiData) {
-        List<SchemaPropertyDTO> properties = new ArrayList<>();
+    private List<OpenAPISchemaProperty> extractProperties(Map<String, Schema> openApiData) {
+        List<OpenAPISchemaProperty> properties = new ArrayList<>();
 
         Set<String> keys = openApiData.keySet();
         for (String key: keys) {
             Schema value = openApiData.get(key);
             String displayName = getExtentionString(value.getExtensions(), "x-displayName");
             if (value.getTypes() != null) {
-                properties.add(new SchemaPropertyDTO(key, value.getTypes().iterator().next().toString(), displayName));
+                properties.add(new OpenAPISchemaProperty(key, value.getTypes().iterator().next().toString(), displayName));
             } else if (value.get$ref() != null) {
-                properties.add(new SchemaPropertyDTO(key, getSchemaFromRef(value.get$ref()), displayName));
+                properties.add(new OpenAPISchemaProperty(key, getSchemaFromRef(value.get$ref()), displayName));
             } else {
                 logger.error("Type not defined properly for the property {}.", key);
             }
@@ -150,7 +139,7 @@ public class OpenapiFileHandler {
         return null;
     }
 
-    public List<ParameterDTO> getParameters(String path, PathItem.HttpMethod method) {
+    public List<OpenAPIParameter> getParameters(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
 
         if (operation == null) {
@@ -158,17 +147,17 @@ public class OpenapiFileHandler {
         }
 
         List<Parameter> parameters = operation.getParameters();
-        List<ParameterDTO> parameterDTOs = new ArrayList<>();
+        List<OpenAPIParameter> openAPIParameters = new ArrayList<>();
 
         if (parameters == null) {
-            return parameterDTOs;
+            return openAPIParameters;
         }
 
         for (Parameter parameter : parameters) {
-            parameterDTOs.add(new ParameterDTO(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
+            openAPIParameters.add(new OpenAPIParameter(parameter.getName(), getExtentionString(parameter.getExtensions(), "x-displayName")));
         }
 
-        return parameterDTOs;
+        return openAPIParameters;
     }
 
     public String getRequestSchema(String path, PathItem.HttpMethod method) {
@@ -234,6 +223,65 @@ public class OpenapiFileHandler {
         return schema.getTypes().iterator().next().toString();
     }
 
+    public Map<String, List<OpenAPISchemaProperty>> getSchemas() {
+        if (openAPIData == null) {
+            logger.error("OpenAPI data is not initialized.");
+            return null;
+        }
+
+        Map<String, Schema> result = openAPIData.getComponents().getSchemas();
+        Map<String, List<OpenAPISchemaProperty>> schemas = new HashMap<>();
+
+        for (String key : result.keySet()) {
+            List<OpenAPISchemaProperty> schema = extractProperties(result.get(key).getProperties());
+            schemas.put(key, schema);
+        }
+
+        if (schemas == null || schemas.isEmpty()) {
+            logger.error("No schemas found in OpenAPI specification.");
+            return null;
+        }
+
+        return schemas;
+    }
+
+    public String getOperationId(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+        if (operation == null) {
+            return null;
+        }
+        return operation.getOperationId();
+    }
+
+    public Set<String> getResponseCodes(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+
+        if (operation == null) {
+            logger.error("Operation not found for path: {} and method: {}", path, method);
+            return Collections.emptySet();
+        }
+
+        Map<String, ApiResponse> responses = operation.getResponses();
+
+        if (responses == null || responses.isEmpty()) {
+            logger.error("No responses found for path: {} and method: {}", path, method);
+            return Collections.emptySet();
+        }
+
+        return responses.keySet();
+    }
+
+    @Deprecated
+    private String getBaseUrl() {
+        List<Server> servers = openAPIData.getServers();
+        if (servers != null && !servers.isEmpty()) {
+            return servers.get(0).getUrl();
+        } else {
+            logger.error("No servers found in OpenAPI specification.");
+            return "";
+        }
+    }
+
     @Deprecated
     public String getUrlEndpoint(String resourceUrl) {
         if (openAPIData == null) {
@@ -260,29 +308,7 @@ public class OpenapiFileHandler {
         return null;
     }
 
-
-    public Map<String, List<SchemaPropertyDTO>> getSchemas() {
-        if (openAPIData == null) {
-            logger.error("OpenAPI data is not initialized.");
-            return null;
-        }
-
-        Map<String, Schema> result = openAPIData.getComponents().getSchemas();
-        Map<String, List<SchemaPropertyDTO>> schemas = new HashMap<>();
-
-        for (String key : result.keySet()) {
-            List<SchemaPropertyDTO> schema = extractProperties(result.get(key).getProperties());
-            schemas.put(key, schema);
-        }
-
-        if (schemas == null || schemas.isEmpty()) {
-            logger.error("No schemas found in OpenAPI specification.");
-            return null;
-        }
-
-        return schemas;
-    }
-
+    @Deprecated
     public List<String> getNextPages(String path, PathItem.HttpMethod method, String responseType) {
         Operation operation = getOperation(path, method);
 
@@ -319,32 +345,7 @@ public class OpenapiFileHandler {
         return Collections.emptyList();
     }
 
-    public String getOperationId(String path, PathItem.HttpMethod method) {
-        Operation operation = getOperation(path, method);
-        if (operation == null) {
-            return null;
-        }
-        return operation.getOperationId();
-    }
-
-    public Set<String> getResponseCodes(String path, PathItem.HttpMethod method) {
-        Operation operation = getOperation(path, method);
-
-        if (operation == null) {
-            logger.error("Operation not found for path: {} and method: {}", path, method);
-            return Collections.emptySet();
-        }
-
-        Map<String, ApiResponse> responses = operation.getResponses();
-
-        if (responses == null || responses.isEmpty()) {
-            logger.error("No responses found for path: {} and method: {}", path, method);
-            return Collections.emptySet();
-        }
-
-        return responses.keySet();
-    }
-
+    @Deprecated
     public void getPageExtensions(PageDTO pageDTO) {
         Operation operation = getOperation(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         pageDTO.setPageTitle(getExtentionString(operation.getExtensions(), "x-pageTitle"));

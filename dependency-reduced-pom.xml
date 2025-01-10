@@ -20,7 +20,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.ravijar.App</mainClass>
+                  <mainClass>com.ravijar.core.AppCLI</mainClass>
                 </transformer>
               </transformers>
             </configuration>

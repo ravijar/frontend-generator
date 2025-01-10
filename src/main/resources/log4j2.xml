@@ -1,13 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<!--<Configuration status="INFO">-->
+<!--    <Appenders>-->
+<!--        <Console name="Console" target="SYSTEM_OUT">-->
+<!--            <PatternLayout pattern="[%level] %msg%n"/>-->
+<!--        </Console>-->
+<!--    </Appenders>-->
+<!--    <Loggers>-->
+<!--        <Root level="info">-->
+<!--            <AppenderRef ref="Console"/>-->
+<!--        </Root>-->
+<!--    </Loggers>-->
+<!--</Configuration>-->
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<Configuration status="WARN">
+    <Properties>
+        <!-- Enable Jansi for colorized console output -->
+        <Property name="log4j.skipJansi">false</Property>
+    </Properties>
+
     <Appenders>
+        <!-- Console Appender -->
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%level] %msg%n"/>
+            <PatternLayout>
+                <Pattern>
+                    %highlight{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=magenta}
+                </Pattern>
+            </PatternLayout>
+            <!-- Include only INFO and higher-level logs in the console -->
+            <Filters>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
         </Console>
+
+        <!-- File Appender -->
+        <File name="File" fileName="logs/application.log" append="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <!-- Include DEBUG and higher-level logs in the file -->
+            <Filters>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </File>
     </Appenders>
+
     <Loggers>
-        <Root level="info">
-            <AppenderRef ref="Console"/>
+        <!-- Application-specific logger -->
+<!--        <Logger name="com.myapp" level="debug" additivity="false">-->
+<!--            <AppenderRef ref="Console" />-->
+<!--            <AppenderRef ref="File" />-->
+<!--        </Logger>-->
+
+        <!-- Root logger for all other logs -->
+        <Root level="debug">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
         </Root>
     </Loggers>
 </Configuration>

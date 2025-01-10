@@ -14,19 +14,16 @@ public class GenerateCommand implements Runnable {
 
     @Command(name = "--api", description = "Generates Client API using the OpenAPI Spec")
     public void generateApi() {
-        System.out.println("Generating ClientAPI");
-//        projectManager.generateClientAPI();
+        projectManager.generateClientAPI();
     }
 
     @Command(name = "--frontend", description = "Generates Frontend Application")
     public void generateFrontend() {
-        System.out.println("Generating Frontend");
-//        projectManager.generateCode();
+        projectManager.generateCode();
     }
 
     @Override
     public void run() {
-        System.out.println("Generating ClientAPI + Frontend");
-//        projectManager.buildProject();
+        projectManager.buildProject();
     }
 }

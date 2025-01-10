@@ -68,6 +68,7 @@ public class ProjectManager {
     }
 
     public void generateCode() {
+        logger.info("Generating Frontend...");
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
 
         XMLParser xmlParser = new XMLParser(ProjectManager.projectName);
@@ -114,6 +115,7 @@ public class ProjectManager {
     }
 
     public void generateClientAPI() {
+        logger.info("Generating ClientAPI...");
         ClientAPIGenerator clientAPIGenerator = new ClientAPIGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
@@ -170,6 +172,7 @@ public class ProjectManager {
     }
 
     public void buildProject() {
+        logger.info("Generating ClientAPI and Frontend...");
         generateCode();
         generateClientAPI();
     }

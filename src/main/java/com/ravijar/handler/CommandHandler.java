@@ -25,7 +25,6 @@ public class CommandHandler {
 
             int exitCode = process.waitFor();
             logger.debug("Exited with error code : {}" ,exitCode);
-
         } catch (IOException | InterruptedException e) {
             logger.error(e.getMessage());
         }
@@ -59,6 +58,7 @@ public class CommandHandler {
     }
 
     public void runReactApp(String baseDir) {
+        logger.info("Starting the react app...");
         File dir = checkBuildDirectory(baseDir);
         if (dir != null){
             ProcessBuilder processBuilder = new ProcessBuilder();
@@ -66,7 +66,7 @@ public class CommandHandler {
             processBuilder.directory(dir);
             runProcessBuilder(processBuilder);
         }
-
+        logger.info("✔ App Started on localHost!");
     }
 
     public void installNpmPackage(String baseDir, String packageName) {

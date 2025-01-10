@@ -13,7 +13,6 @@ public class RunCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Running the project...");
-//        projectManager.runProject();
+        projectManager.runProject();
     }
 }

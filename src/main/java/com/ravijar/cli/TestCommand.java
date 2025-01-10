@@ -14,7 +14,6 @@ public class TestCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Testing...");
-//        projectManager.test();
+        projectManager.test();
     }
 }

@@ -182,7 +182,7 @@ public class ProjectManager {
     }
 
     public void test() {
-
+        logger.info("Starting Testing...");
     }
 
     @Deprecated

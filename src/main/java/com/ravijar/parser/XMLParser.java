@@ -1,4 +1,4 @@
-package com.ravijar.handler;
+package com.ravijar.parser;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.ravijar.model.PageDTO;
@@ -17,12 +17,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagesFileHandler {
-    private static final Logger logger = LogManager.getLogger(PagesFileHandler.class);
+public class XMLParser {
+    private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
     private final String pagesFilePath;
 
-    public PagesFileHandler(String baseDir) {
+    public XMLParser(String baseDir) {
         this.pagesFilePath = baseDir + "\\pages.xml";
     }
 

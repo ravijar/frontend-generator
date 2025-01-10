@@ -1,4 +1,4 @@
-package com.ravijar.handler;
+package com.ravijar.parser;
 
 import com.ravijar.core.ProjectManager;
 import com.ravijar.model.PageDTO;
@@ -20,13 +20,13 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.*;
 
-public class OpenapiFileHandler {
-    private static final Logger logger = LogManager.getLogger(OpenapiFileHandler.class);
+public class OpenAPIParser {
+    private static final Logger logger = LogManager.getLogger(OpenAPIParser.class);
 
     private final String openapiFilePath = ProjectManager.getProjectName() + "\\openapi.yaml";
     private final OpenAPI openAPIData;
 
-    public OpenapiFileHandler() {
+    public OpenAPIParser() {
         this.openAPIData = getSpecData();
     }
 

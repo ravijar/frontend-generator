@@ -1,9 +1,11 @@
 package com.ravijar.core;
 
 import com.ravijar.config.FreeMarkerConfig;
+import com.ravijar.generator.ClientAPIGenerator;
+import com.ravijar.generator.ReactGenerator;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.FileHandler;
-import com.ravijar.handler.PagesFileHandler;
+import com.ravijar.parser.XMLParser;
 import com.ravijar.model.PageDTO;
 import com.ravijar.model.xml.Page;
 import freemarker.template.Configuration;
@@ -117,8 +119,8 @@ public class ProjectManager {
     public void generateCode() {
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
 
-        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-        List<Page> pages = pagesFileHandler.getPagesNew();
+        XMLParser xmlParser = new XMLParser(ProjectManager.projectName);
+        List<Page> pages = xmlParser.getPagesNew();
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
@@ -225,8 +227,8 @@ public class ProjectManager {
     }
 
     public void buildProject() {
-        PagesFileHandler pagesFileHandler = new PagesFileHandler(ProjectManager.projectName);
-        List<PageDTO> pageDTOs = pagesFileHandler.getPages();
+        XMLParser xmlParser = new XMLParser(ProjectManager.projectName);
+        List<PageDTO> pageDTOs = xmlParser.getPages();
 
         checkCustomStyleFiles(pageDTOs);
         generatePages(pageDTOs);

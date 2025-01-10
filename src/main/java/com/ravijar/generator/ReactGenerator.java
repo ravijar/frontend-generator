@@ -1,10 +1,9 @@
-package com.ravijar.core;
+package com.ravijar.generator;
 
-import com.ravijar.handler.OpenapiFileHandler;
+import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
 import com.ravijar.model.freemarker.FreeMarkerPage;
-import com.ravijar.model.freemarker.FreeMarkerPageStyles;
 import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.openapi.OpenAPIResponse;
@@ -26,7 +25,7 @@ import java.util.*;
 
 public class ReactGenerator {
     private final Configuration cfg;
-    private final OpenapiFileHandler openapiFileHandler;
+    private final OpenAPIParser openAPIParser;
     private final Map<String, List<SchemaPropertyDTO>> schemas;
     private final CSSGenerator cssGenerator;
     private final JSGenerator jsGenerator;
@@ -35,8 +34,8 @@ public class ReactGenerator {
         this.cfg = cfg;
         this.cssGenerator = new CSSGenerator(cfg);
         this.jsGenerator = new JSGenerator(cfg);
-        this.openapiFileHandler = new OpenapiFileHandler();
-        this.schemas = openapiFileHandler.getSchemas();
+        this.openAPIParser = new OpenAPIParser();
+        this.schemas = openAPIParser.getSchemas();
     }
 
     private PathItem.HttpMethod getHttpMethod(String method) {
@@ -52,10 +51,10 @@ public class ReactGenerator {
         PathItem.HttpMethod httpMethod = getHttpMethod(resource.getMethod());
         String url = resource.getUrl();
 
-        String apiFunctionName = openapiFileHandler.getOperationId(url, httpMethod);
-        List<ParameterDTO> urlParameterList = openapiFileHandler.getParameters(url, httpMethod);
-        String requestSchema = openapiFileHandler.getRequestSchema(url, httpMethod);
-        Set<String> responseCodes = openapiFileHandler.getResponseCodes(url, httpMethod);
+        String apiFunctionName = openAPIParser.getOperationId(url, httpMethod);
+        List<ParameterDTO> urlParameterList = openAPIParser.getParameters(url, httpMethod);
+        String requestSchema = openAPIParser.getRequestSchema(url, httpMethod);
+        Set<String> responseCodes = openAPIParser.getResponseCodes(url, httpMethod);
 
         List<String> urlParameters = new ArrayList<>();
         for (ParameterDTO parameter : urlParameterList) {
@@ -71,9 +70,9 @@ public class ReactGenerator {
 
         List<OpenAPIResponse> responses = new ArrayList<>();
         for (String code : responseCodes) {
-            String schema = openapiFileHandler.getResponseSchemaName(url, httpMethod, code);
-            String type = openapiFileHandler.getResponseSchemaType(url, httpMethod, code);
-            String description = openapiFileHandler.getResponseDescription(url, httpMethod, code);
+            String schema = openAPIParser.getResponseSchemaName(url, httpMethod, code);
+            String type = openAPIParser.getResponseSchemaType(url, httpMethod, code);
+            String description = openAPIParser.getResponseDescription(url, httpMethod, code);
             responses.add(new OpenAPIResponse(code, schema, type, description));
         }
 
@@ -205,23 +204,23 @@ public class ReactGenerator {
     }
 
     public void createPage(String outputDir, PageDTO pageDTO) throws IOException, TemplateException {
-        List<ParameterDTO> parameters = openapiFileHandler.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        String requestSchema = openapiFileHandler.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        openapiFileHandler.getPageExtensions(pageDTO);
+        List<ParameterDTO> parameters = openAPIParser.getParameters(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        String requestSchema = openAPIParser.getRequestSchema(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        openAPIParser.getPageExtensions(pageDTO);
 
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("apiMethod", openapiFileHandler.getOperationId(pageDTO.getResourceUrl(), pageDTO.getResourceMethod()));
+        dataModel.put("apiMethod", openAPIParser.getOperationId(pageDTO.getResourceUrl(), pageDTO.getResourceMethod()));
         dataModel.put("requestSchema", requestSchema);
         dataModel.put("pageDTO",pageDTO);
 
-        Set<String> responseCodes = openapiFileHandler.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
+        Set<String> responseCodes = openAPIParser.getResponseCodes(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
         List<Map<String, String>> displayNames = new ArrayList<>();
         List<ResponseDTO> responses= new ArrayList<>();
         for (String code : responseCodes) {
-            String responseSchemaName = openapiFileHandler.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
-            String responseSchemaType = openapiFileHandler.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
-            String responseDescription = openapiFileHandler.getResponseDescription(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
-            List<String> nextPageList = openapiFileHandler.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseSchemaName = openAPIParser.getResponseSchemaName(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseSchemaType = openAPIParser.getResponseSchemaType(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            String responseDescription = openAPIParser.getResponseDescription(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
+            List<String> nextPageList = openAPIParser.getNextPages(pageDTO.getResourceUrl(), pageDTO.getResourceMethod(), code);
 
             List<SchemaPropertyDTO> result = schemas.get(responseSchemaName);
             if (result != null) {

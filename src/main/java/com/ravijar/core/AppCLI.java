@@ -1,11 +1,10 @@
-package com.ravijar;
+package com.ravijar.core;
 
-import com.ravijar.core.ProjectManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class App {
-    private static final Logger logger = LogManager.getLogger(App.class);
+public class AppCLI {
+    private static final Logger logger = LogManager.getLogger(AppCLI.class);
 
     public static void main(String[] args) {
         String[] commands = {"help", "init", "build", "build --api", "build --code", "build --styles", "run", "test"};

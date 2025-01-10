@@ -100,7 +100,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>com.ravijar.App</mainClass>
+                  <mainClass>com.ravijar.core.AppCLI</mainClass>
                 </transformer>
               </transformers>
             </configuration>

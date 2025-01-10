@@ -112,6 +112,7 @@ public class ProjectManager {
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
+        logger.info("✔ Frontend Generated Successfully!");
     }
 
     public void generateClientAPI() {
@@ -120,9 +121,11 @@ public class ProjectManager {
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
         clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
+        logger.info("✔ Client API Generated Successfully!");
     }
 
     public void addUserStyles() {
+        logger.info("Applying User Styles... ");
         String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
         String stylesDir = ProjectManager.projectName + "\\styles\\";
 
@@ -131,6 +134,7 @@ public class ProjectManager {
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "custom_styles"), new File(buildSrcDir + "custom_styles"));
         fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
         fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
+        logger.info("✔ Build Complete!");
     }
 
     public void initializeProject() {

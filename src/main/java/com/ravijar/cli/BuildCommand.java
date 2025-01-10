@@ -15,7 +15,6 @@ public class BuildCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Applying User Styles... ");
-//        projectManager.addUserStyles();
+        projectManager.addUserStyles();
     }
 }

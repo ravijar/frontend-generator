@@ -25,7 +25,7 @@ public class ProjectManager {
     private final CommandHandler commandHandler;
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
     private final String[] reactCommonTemplates = {"Utils"};
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Page", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
+    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
     private final String[] cssCommonTemplates = {"App", "index"};
 
     public ProjectManager() {
@@ -46,81 +46,32 @@ public class ProjectManager {
         String stylesDir = ProjectManager.projectName + "\\styles\\";
 
         for (String reactTemplate : reactComponentTemplates) {
-            fileHandler.copyResource("/templates/react/components/" + reactTemplate + ".jsx", new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
+            String resourcePath = "/templates/react/components/" + reactTemplate + ".jsx";
+            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
         }
 
         for (String reactTemplate : reactCommonTemplates) {
-            fileHandler.copyResource("/templates/react/common/" + reactTemplate + ".js", new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
+            String resourcePath = "/templates/react/common/" + reactTemplate + ".js";
+            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
         }
 
         for (String cssTemplate : cssComponentTemplates) {
             String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
-            if (cssTemplate.equals("Page")) {
-                fileHandler.copyResource(resourcePath, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
-            } else {
-                fileHandler.copyResource(resourcePath, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
-            }
             fileHandler.copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
         }
 
         for (String cssTemplate : cssCommonTemplates) {
             String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
-            fileHandler.copyResource(resourcePath, new File(buildSrcDir + cssTemplate + ".css"));
+            fileHandler.copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
         }
 
-        fileHandler.copyFile(new File(buildSrcDir + "index.css"), new File(stylesDir + "index.css"));
-        fileHandler.copyFile(new File(buildSrcDir + "App.css"), new File(stylesDir + "App.css"));
-    }
-
-    private void copyUserFiles() {
-        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
-        String stylesDir = ProjectManager.projectName + "\\styles\\";
-
-        for (String cssTemplate : cssComponentTemplates) {
-            File sourceFile = new File(stylesDir + "components\\" + cssTemplate + ".css");
-            if (cssTemplate.equals("Page")) {
-                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
-            } else {
-                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
-            }
-        }
-
-        fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
-
-        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "customStyles"));
-    }
-
-    private void generatePages(List<PageDTO> pageDTOs) {
-        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
-
-        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
-        if (!pageOutputDir.exists()) {
-            pageOutputDir.mkdirs();
-        }
-
-        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
-        if (!appOutputDir.exists()) {
-            appOutputDir.mkdirs();
-        }
-
-        try {
-            Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactGenerator reactGenerator = new ReactGenerator(cfg);
-
-            for (PageDTO pageDTO : pageDTOs) {
-                reactGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
-            }
-            reactGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
-        } catch (IOException | TemplateException e) {
-            logger.error(e.getMessage());
-        }
     }
 
     public void generateCode() {
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
 
         XMLParser xmlParser = new XMLParser(ProjectManager.projectName);
-        List<Page> pages = xmlParser.getPagesNew();
+        List<Page> pages = xmlParser.getPages();
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
@@ -180,15 +131,6 @@ public class ProjectManager {
         fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
     }
 
-    private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
-        for (PageDTO pageDTO : pageDTOs) {
-            File customStyleFile = new File(projectName + "\\styles\\pages\\" + pageDTO.getPageName() + "Styles.js");
-            if (customStyleFile.exists()) {
-                pageDTO.setCustomStyled(true);
-            }
-        }
-    }
-
     public void initializeProject() {
         File projectDir = new File(projectName);
         if (!projectDir.exists()) {
@@ -227,16 +169,67 @@ public class ProjectManager {
     }
 
     public void buildProject() {
-        XMLParser xmlParser = new XMLParser(ProjectManager.projectName);
-        List<PageDTO> pageDTOs = xmlParser.getPages();
-
-        checkCustomStyleFiles(pageDTOs);
-        generatePages(pageDTOs);
-        copyUserFiles();
+        generateCode();
         generateClientAPI();
     }
 
     public void test() {
 
+    }
+
+    @Deprecated
+    private void copyUserFiles() {
+        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
+        String stylesDir = ProjectManager.projectName + "\\styles\\";
+
+        for (String cssTemplate : cssComponentTemplates) {
+            File sourceFile = new File(stylesDir + "components\\" + cssTemplate + ".css");
+            if (cssTemplate.equals("Page")) {
+                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
+            } else {
+                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
+            }
+        }
+
+        fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
+
+        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "customStyles"));
+    }
+
+    @Deprecated
+    private void generatePages(List<PageDTO> pageDTOs) {
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+
+        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        if (!pageOutputDir.exists()) {
+            pageOutputDir.mkdirs();
+        }
+
+        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        if (!appOutputDir.exists()) {
+            appOutputDir.mkdirs();
+        }
+
+        try {
+            Configuration cfg = freeMarkerConfig.getConfiguration();
+            ReactGenerator reactGenerator = new ReactGenerator(cfg);
+
+            for (PageDTO pageDTO : pageDTOs) {
+                reactGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
+            }
+            reactGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
+        } catch (IOException | TemplateException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    @Deprecated
+    private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
+        for (PageDTO pageDTO : pageDTOs) {
+            File customStyleFile = new File(projectName + "\\styles\\pages\\" + pageDTO.getPageName() + "Styles.js");
+            if (customStyleFile.exists()) {
+                pageDTO.setCustomStyled(true);
+            }
+        }
     }
 }

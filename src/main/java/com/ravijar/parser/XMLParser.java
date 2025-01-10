@@ -26,6 +26,19 @@ public class XMLParser {
         this.pagesFilePath = baseDir + "\\pages.xml";
     }
 
+    public List<Page> getPages() {
+        List<Page> pages = new ArrayList<>();
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            File pagesFile = new File(pagesFilePath);
+            pages = xmlMapper.readValue(pagesFile, xmlMapper.getTypeFactory().constructCollectionType(List.class, Page.class));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return pages;
+    }
+
+    @Deprecated
     private HttpMethod getHttpMethod(String method) {
         for (HttpMethod httpMethod : HttpMethod.values()) {
             if (httpMethod.name().equalsIgnoreCase(method)) {
@@ -35,7 +48,8 @@ public class XMLParser {
         return null;
     }
 
-    public List<PageDTO> getPages() {
+    @Deprecated
+    public List<PageDTO> getPagesV1() {
         List<PageDTO> pageDTOs = new ArrayList<>();
         try {
             File pagesFile = new File(pagesFilePath);
@@ -69,18 +83,6 @@ public class XMLParser {
             logger.error(e.getMessage());
         }
         return pageDTOs;
-    }
-
-    public List<Page> getPagesNew() {
-        List<Page> pages = new ArrayList<>();
-        try {
-            XmlMapper xmlMapper = new XmlMapper();
-            File pagesFile = new File(pagesFilePath);
-            pages = xmlMapper.readValue(pagesFile, xmlMapper.getTypeFactory().constructCollectionType(List.class, Page.class));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return pages;
     }
 }
 

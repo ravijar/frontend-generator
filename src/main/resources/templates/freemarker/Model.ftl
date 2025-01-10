@@ -1,6 +1,5 @@
 <#--
-  @deprecated This template is deprecated as of August 3, 2024.
-  Reason: This template is not in use as swagger codegen models are used instead.
+  @Deprecated since August 3, 2024.
 -->
 
 <#list otherTypes as otherType>

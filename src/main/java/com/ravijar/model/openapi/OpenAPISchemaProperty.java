@@ -1,4 +1,4 @@
-package com.ravijar.model;
+package com.ravijar.model.openapi;
 
 import lombok.*;
 
@@ -7,11 +7,12 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class SchemaPropertyDTO {
+public class OpenAPISchemaProperty {
     private String name;
     private String type;
     private String displayName;
 
+    @Deprecated
     public String getTypeScriptType() {
         switch (type) {
             case "integer":

@@ -8,7 +8,7 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
 
     public static void main(String[] args) {
-        String[] commands = {"help", "init", "build", "run", "test"};
+        String[] commands = {"help", "init", "build", "build --api", "build --code", "build --styles", "run", "test"};
 
         ProjectManager projectManager = new ProjectManager();
 

@@ -23,10 +23,15 @@ public class ProjectManager {
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
+
+    private final String[] projectTemplates = {"openapi.yaml", "pages.xml"};
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
     private final String[] reactCommonTemplates = {"Utils"};
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
     private final String[] cssCommonTemplates = {"App", "index"};
+    private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
+    private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
+    private final String[] npmPackages = {"react-router-dom"};
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -65,6 +70,11 @@ public class ProjectManager {
             fileHandler.copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
         }
 
+        for (String projectTemplate : projectTemplates) {
+            String resourcePath = "/templates/project/" + projectTemplate;
+            fileHandler.copyResource(resourcePath, new File(ProjectManager.projectName + "\\" + projectTemplate));
+        }
+
     }
 
     public void generateCode() {
@@ -74,24 +84,16 @@ public class ProjectManager {
         List<Page> pages = xmlParser.getPages();
 
         File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
-        if (!pageOutputDir.exists()) {
-            pageOutputDir.mkdirs();
-        }
+        this.fileHandler.createDirectoryIfNotExists(pageOutputDir);
 
         File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
-        if (!appOutputDir.exists()) {
-            appOutputDir.mkdirs();
-        }
+        this.fileHandler.createDirectoryIfNotExists(appOutputDir);
 
         File componentOutputDir = new File(ProjectManager.projectName + "\\build\\src\\components");
-        if (!componentOutputDir.exists()) {
-            componentOutputDir.mkdirs();
-        }
+        this.fileHandler.createDirectoryIfNotExists(componentOutputDir);
 
         File userStylesDir = new File(ProjectManager.projectName + "\\styles");
-        if (!componentOutputDir.exists()) {
-            componentOutputDir.mkdirs();
-        }
+        this.fileHandler.createDirectoryIfNotExists(userStylesDir);
 
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
@@ -133,35 +135,25 @@ public class ProjectManager {
 
     public void initializeProject() {
         File projectDir = new File(projectName);
-        if (!projectDir.exists()) {
-            if (projectDir.mkdirs()) {
-                logger.info("Project directory {} created.", projectName);
-            } else {
-                logger.error("Failed to create project directory {}." ,projectName);
-                return;
-            }
-        } else {
-            logger.warn("Project directory {} already exists.", projectName);
+        this.fileHandler.createDirectoryIfNotExists(projectDir);
+
+        for (String subDir : projectSubDirs) {
+            this.fileHandler.createSubDirectory(projectDir, subDir);
         }
 
-        try {
-            this.fileHandler.createFile(projectDir, "openapi.yaml", "# OpenAPI specification\nopenapi: \"3.0.0\"\ninfo:\n  title: \"Sample API\"\n  version: \"1.0.0\"\npaths: {}");
-            this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
-            this.fileHandler.createDirectory(projectDir, "styles/components");
-            this.fileHandler.createDirectory(projectDir, "styles/pages");
-            this.fileHandler.createDirectory(projectDir, "styles/custom_styles");
-            this.fileHandler.createDirectory(projectDir, "js");
-            this.commandHandler.createReactApp(ProjectManager.projectName);
-            this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
-            this.fileHandler.createDirectory(projectDir, "build/src/components");
-            this.fileHandler.createDirectory(projectDir, "build/src/pages");
-            this.fileHandler.createDirectory(projectDir, "build/src/custom_styles");
-            this.fileHandler.createDirectory(projectDir, "build/src/common");
-            copyTemplateFiles();
-            logger.info("Project initialized successfully.");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+        this.commandHandler.createReactApp(ProjectManager.projectName);
+
+        for (String npmPackage : npmPackages) {
+            this.commandHandler.installNpmPackage(ProjectManager.projectName, npmPackage);
         }
+
+        for (String subDir : buildSubDirs) {
+            this.fileHandler.createSubDirectory(projectDir, subDir);
+        }
+
+        copyTemplateFiles();
+
+        logger.info("Project initialized successfully.");
     }
 
     public void runProject() {

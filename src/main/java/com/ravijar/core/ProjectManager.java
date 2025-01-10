@@ -13,6 +13,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fusesource.jansi.Ansi;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,10 +132,11 @@ public class ProjectManager {
     }
 
     public void initializeProject() {
+        logger.info("Project Initialization Started...");
         File projectDir = new File(projectName);
         if (!projectDir.exists()) {
             if (projectDir.mkdirs()) {
-                logger.info("Project directory {} created.", projectName);
+                logger.debug("Project directory {} created.", projectName);
             } else {
                 logger.error("Failed to create project directory {}." ,projectName);
                 return;
@@ -157,7 +159,7 @@ public class ProjectManager {
             this.fileHandler.createDirectory(projectDir, "build/src/custom_styles");
             this.fileHandler.createDirectory(projectDir, "build/src/common");
             copyTemplateFiles();
-            logger.info("Project initialized successfully.");
+            logger.info(Ansi.ansi().fg(Ansi.Color.GREEN).a("✔ Project initialized successfully!").reset());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

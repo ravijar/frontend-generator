@@ -8,16 +8,12 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=magenta}"
+                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=magenta}"
                     disableAnsi="false"
             />
-
-            <Filters>
-                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
         </Console>
 g
-        <Console name="CoreConsole" target="SYSTEM_OUT">
+        <Console name="EntryConsole" target="SYSTEM_OUT">
                 <PatternLayout pattern="%m%n"/>
         </Console>
 
@@ -25,19 +21,16 @@ g
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Pattern>
             </PatternLayout>
-            <Filters>
-                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
         </File>
     </Appenders>
 
     <Loggers>
         <Logger name="entryLogger" additivity="false">
-            <AppenderRef ref="CoreConsole"/>
+            <AppenderRef ref="EntryConsole"/>
         </Logger>
 
-        <Root level="debug">
-            <AppenderRef ref="Console" level="WARN"/>
+        <Root level="trace">
+            <AppenderRef ref="Console" level="INFO"/>
             <AppenderRef ref="File"/>
         </Root>
     </Loggers>

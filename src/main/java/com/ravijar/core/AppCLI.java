@@ -1,10 +1,10 @@
-package com.ravijar;
+package com.ravijar.core;
 
 import com.ravijar.cli.*;
 import com.ravijar.core.ProjectManager;
 import picocli.CommandLine;
 
-public class App {
+public class AppCLI {
 
     public static void main(String[] args) {
 

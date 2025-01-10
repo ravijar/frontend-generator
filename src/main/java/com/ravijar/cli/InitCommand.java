@@ -16,7 +16,6 @@ public class InitCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Initializing a new project with template: " + projectName);
         ProjectManager.setProjectName(projectName);
         projectManager.initializeProject();
     }

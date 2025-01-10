@@ -1,5 +1,6 @@
 package com.ravijar.core;
 
+import com.ravijar.cli.MainCommand;
 import com.ravijar.config.FreeMarkerConfig;
 import com.ravijar.generator.ClientAPIGenerator;
 import com.ravijar.generator.ReactGenerator;
@@ -19,7 +20,6 @@ import java.util.List;
 
 public class ProjectManager {
     private static final Logger logger = LogManager.getLogger(ProjectManager.class);
-
     private static String projectName = "Untitled";
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
@@ -64,7 +64,6 @@ public class ProjectManager {
             String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
             fileHandler.copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
         }
-
     }
 
     public void generateCode() {

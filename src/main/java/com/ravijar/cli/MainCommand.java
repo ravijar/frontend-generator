@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 @Command(name = "fegen", version = "FeGenerator 1.0", mixinStandardHelpOptions = true)
 public class MainCommand implements Runnable {
-    private static final Logger logger = LogManager.getLogger(MainCommand.class);
+    private static final Logger logger = LogManager.getLogger("entryLogger");
 
     @Override
     public void run() {

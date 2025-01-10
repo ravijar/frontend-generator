@@ -1,4 +1,4 @@
-package com.ravijar.model;
+package com.ravijar.model.openapi;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class ParameterDTO {
+public class OpenAPIParameter {
     private String name;
     private String displayName;
 }

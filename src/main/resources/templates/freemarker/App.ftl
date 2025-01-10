@@ -1,3 +1,7 @@
+<#--
+  @Deprecated since January 10, 2025.
+-->
+
 import './App.css';
 import { BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 <#list pages as page>

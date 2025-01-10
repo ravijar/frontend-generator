@@ -1,4 +1,4 @@
-package com.ravijar.handler;
+package com.ravijar.parser;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.ravijar.model.PageDTO;
@@ -17,15 +17,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagesFileHandler {
-    private static final Logger logger = LogManager.getLogger(PagesFileHandler.class);
+public class XMLParser {
+    private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
     private final String pagesFilePath;
 
-    public PagesFileHandler(String baseDir) {
+    public XMLParser(String baseDir) {
         this.pagesFilePath = baseDir + "\\pages.xml";
     }
 
+    public List<Page> getPages() {
+        List<Page> pages = new ArrayList<>();
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            File pagesFile = new File(pagesFilePath);
+            pages = xmlMapper.readValue(pagesFile, xmlMapper.getTypeFactory().constructCollectionType(List.class, Page.class));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return pages;
+    }
+
+    @Deprecated
     private HttpMethod getHttpMethod(String method) {
         for (HttpMethod httpMethod : HttpMethod.values()) {
             if (httpMethod.name().equalsIgnoreCase(method)) {
@@ -35,7 +48,8 @@ public class PagesFileHandler {
         return null;
     }
 
-    public List<PageDTO> getPages() {
+    @Deprecated
+    public List<PageDTO> getPagesV1() {
         List<PageDTO> pageDTOs = new ArrayList<>();
         try {
             File pagesFile = new File(pagesFilePath);
@@ -69,18 +83,6 @@ public class PagesFileHandler {
             logger.error(e.getMessage());
         }
         return pageDTOs;
-    }
-
-    public List<Page> getPagesNew() {
-        List<Page> pages = new ArrayList<>();
-        try {
-            XmlMapper xmlMapper = new XmlMapper();
-            File pagesFile = new File(pagesFilePath);
-            pages = xmlMapper.readValue(pagesFile, xmlMapper.getTypeFactory().constructCollectionType(List.class, Page.class));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return pages;
     }
 }
 

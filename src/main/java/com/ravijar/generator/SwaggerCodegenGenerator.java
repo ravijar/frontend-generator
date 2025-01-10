@@ -1,4 +1,4 @@
-package com.ravijar.core;
+package com.ravijar.generator;
 
 import com.ravijar.handler.CommandHandler;
 import io.swagger.codegen.v3.cli.SwaggerCodegen;

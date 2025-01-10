@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Deprecated
 public class PageDTO {
     private String pageName;
     private String resourceUrl;

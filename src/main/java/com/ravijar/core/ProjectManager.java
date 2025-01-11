@@ -4,12 +4,16 @@ import com.ravijar.config.FreeMarkerConfig;
 import com.ravijar.generator.ClientAPIGenerator;
 import com.ravijar.generator.ReactGenerator;
 import com.ravijar.handler.CommandHandler;
+import com.ravijar.handler.ConfigHandler;
 import com.ravijar.handler.FileHandler;
+import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.parser.XMLParser;
 import com.ravijar.model.PageDTO;
 import com.ravijar.model.xml.Page;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,9 +24,13 @@ import java.util.List;
 public class ProjectManager {
     private static final Logger logger = LogManager.getLogger(ProjectManager.class);
 
-    private static String projectName = "Untitled";
+    @Getter
+    @Setter
+    private String projectName;
+
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
+    private final ConfigHandler configHandler;
 
     private final String[] projectTemplates = {"openapi.yaml", "pages.xml"};
     private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
@@ -36,19 +44,20 @@ public class ProjectManager {
     public ProjectManager() {
         this.fileHandler = new FileHandler();
         this.commandHandler = new CommandHandler();
+        this.configHandler = new ConfigHandler("config.properties");
     }
 
-    public static void setProjectName(String projectName) {
-        ProjectManager.projectName = projectName;
-    }
-
-    public static String getProjectName() {
-        return ProjectManager.projectName;
+    private boolean updateProjectName() {
+        if (!this.configHandler.isPropertiesFileAvailable()) {
+            return false;
+        }
+        setProjectName(this.configHandler.readProperty("projectName"));
+        return true;
     }
 
     private void copyTemplateFiles() {
-        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
-        String stylesDir = ProjectManager.projectName + "\\styles\\";
+        String buildSrcDir = projectName + "\\build\\src\\";
+        String stylesDir = projectName + "\\styles\\";
 
         for (String reactTemplate : reactComponentTemplates) {
             String resourcePath = "/templates/react/components/" + reactTemplate + ".jsx";
@@ -72,32 +81,35 @@ public class ProjectManager {
 
         for (String projectTemplate : projectTemplates) {
             String resourcePath = "/templates/project/" + projectTemplate;
-            fileHandler.copyResource(resourcePath, new File(ProjectManager.projectName + "\\" + projectTemplate));
+            fileHandler.copyResource(resourcePath, new File(projectName + "\\" + projectTemplate));
         }
 
     }
 
-    public void generateCode() {
-        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+    public boolean generateCode() {
+        if(!updateProjectName()) return false;
 
-        XMLParser xmlParser = new XMLParser(ProjectManager.projectName);
+        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+        OpenAPIParser openAPIParser = new OpenAPIParser(projectName + "\\openapi.yaml");
+
+        XMLParser xmlParser = new XMLParser(getProjectName());
         List<Page> pages = xmlParser.getPages();
 
-        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        File pageOutputDir = new File(projectName + "\\build\\src\\pages");
         this.fileHandler.createDirectoryIfNotExists(pageOutputDir);
 
-        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        File appOutputDir = new File(projectName + "\\build\\src");
         this.fileHandler.createDirectoryIfNotExists(appOutputDir);
 
-        File componentOutputDir = new File(ProjectManager.projectName + "\\build\\src\\components");
+        File componentOutputDir = new File(projectName + "\\build\\src\\components");
         this.fileHandler.createDirectoryIfNotExists(componentOutputDir);
 
-        File userStylesDir = new File(ProjectManager.projectName + "\\styles");
+        File userStylesDir = new File(projectName + "\\styles");
         this.fileHandler.createDirectoryIfNotExists(userStylesDir);
 
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactGenerator reactGenerator = new ReactGenerator(cfg);
+            ReactGenerator reactGenerator = new ReactGenerator(cfg, openAPIParser);
 
             for (Page page : pages) {
                 reactGenerator.generatePage(
@@ -113,27 +125,39 @@ public class ProjectManager {
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
+        return true;
     }
 
-    public void generateClientAPI() {
+    public boolean generateClientAPI() {
+        if(!updateProjectName()) return false;
+
         ClientAPIGenerator clientAPIGenerator = new ClientAPIGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
         clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
+
+        return true;
     }
 
-    public void addUserStyles() {
-        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
-        String stylesDir = ProjectManager.projectName + "\\styles\\";
+    public boolean addUserStyles() {
+        if(!updateProjectName()) return false;
+
+        String buildSrcDir = projectName + "\\build\\src\\";
+        String stylesDir = projectName + "\\styles\\";
 
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "components"), new File(buildSrcDir + "components"));
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "pages"));
         fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "custom_styles"), new File(buildSrcDir + "custom_styles"));
         fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
         fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
+
+        return true;
     }
 
-    public void initializeProject() {
+    public void initializeProject(String projectName) {
+        this.configHandler.createPropertiesFile(projectName);
+        setProjectName(projectName);
+
         File projectDir = new File(projectName);
         this.fileHandler.createDirectoryIfNotExists(projectDir);
 
@@ -141,10 +165,10 @@ public class ProjectManager {
             this.fileHandler.createSubDirectory(projectDir, subDir);
         }
 
-        this.commandHandler.createReactApp(ProjectManager.projectName);
+        this.commandHandler.createReactApp(getProjectName());
 
         for (String npmPackage : npmPackages) {
-            this.commandHandler.installNpmPackage(ProjectManager.projectName, npmPackage);
+            this.commandHandler.installNpmPackage(projectName, npmPackage);
         }
 
         for (String subDir : buildSubDirs) {
@@ -156,23 +180,33 @@ public class ProjectManager {
         logger.info("Project initialized successfully.");
     }
 
-    public void runProject() {
-        this.commandHandler.runReactApp(ProjectManager.projectName);
+    public boolean runProject() {
+        if(!updateProjectName()) return false;
+
+        this.commandHandler.runReactApp(getProjectName());
+
+        return true;
     }
 
-    public void buildProject() {
+    public boolean buildProject() {
+        if(!updateProjectName()) return false;
+
         generateCode();
         generateClientAPI();
+
+        return true;
     }
 
-    public void test() {
+    public boolean test() {
+        if(!updateProjectName()) return false;
 
+        return true;
     }
 
     @Deprecated
     private void copyUserFiles() {
-        String buildSrcDir = ProjectManager.projectName + "\\build\\src\\";
-        String stylesDir = ProjectManager.projectName + "\\styles\\";
+        String buildSrcDir = projectName + "\\build\\src\\";
+        String stylesDir = projectName + "\\styles\\";
 
         for (String cssTemplate : cssComponentTemplates) {
             File sourceFile = new File(stylesDir + "components\\" + cssTemplate + ".css");
@@ -191,20 +225,21 @@ public class ProjectManager {
     @Deprecated
     private void generatePages(List<PageDTO> pageDTOs) {
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
+        OpenAPIParser openAPIParser = new OpenAPIParser(projectName + "\\openapi.yaml");
 
-        File pageOutputDir = new File(ProjectManager.projectName + "\\build\\src\\pages");
+        File pageOutputDir = new File(projectName + "\\build\\src\\pages");
         if (!pageOutputDir.exists()) {
             pageOutputDir.mkdirs();
         }
 
-        File appOutputDir = new File(ProjectManager.projectName + "\\build\\src");
+        File appOutputDir = new File(projectName + "\\build\\src");
         if (!appOutputDir.exists()) {
             appOutputDir.mkdirs();
         }
 
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactGenerator reactGenerator = new ReactGenerator(cfg);
+            ReactGenerator reactGenerator = new ReactGenerator(cfg, openAPIParser);
 
             for (PageDTO pageDTO : pageDTOs) {
                 reactGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);

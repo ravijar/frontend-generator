@@ -8,6 +8,7 @@ public class AppCLI {
 
     public static void main(String[] args) {
         String[] commands = {"help", "init", "build", "build --api", "build --code", "build --styles", "run", "test"};
+        String configNotFound = "Configuration file not found. Initialize a project first!";
 
         ProjectManager projectManager = new ProjectManager();
 
@@ -21,37 +22,35 @@ public class AppCLI {
                     break;
                 case "init":
                     if (args.length == 2) {
-                        ProjectManager.setProjectName(args[1]);
-                        projectManager.initializeProject();
+                        projectManager.initializeProject(args[1]);
                     } else {
-                        projectManager.initializeProject();
-                        logger.info("Project will be named as 'Untitled'.");
+                        logger.error("Enter project name!");
                     }
                     break;
                 case "run":
                     logger.info("Starting application...");
-                    projectManager.runProject();
+                    if(!projectManager.runProject()) logger.error(configNotFound);
                     break;
                 case "build":
                     if (args.length == 2){
                         switch (args[1]){
                             case "--api":
-                                projectManager.generateClientAPI();
+                                if(!projectManager.generateClientAPI()) logger.error(configNotFound);
                                 break;
                             case "--code":
-                                projectManager.generateCode();
+                                if(!projectManager.generateCode()) logger.error(configNotFound);
                                 break;
                             case "--styles":
-                                projectManager.addUserStyles();
+                                if(!projectManager.addUserStyles()) logger.error(configNotFound);
                         }
                     } else {
                         logger.info("Building application...");
-                        projectManager.buildProject();
+                        if(!projectManager.buildProject()) logger.error(configNotFound);
                     }
                     break;
                 case "test":
                     logger.info("Running test...");
-                    projectManager.test();
+                    if(!projectManager.test()) logger.error(configNotFound);
                     break;
                 default:
                     logger.error("Invalid Command. Use 'help' to list supported commands.");

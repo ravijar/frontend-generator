@@ -5,7 +5,6 @@ import com.ravijar.core.ProjectManager;
 import picocli.CommandLine;
 
 public class AppCLI {
-
     public static void main(String[] args) {
 
         CommandLine commandLine = new CommandLine(new MainCommand());

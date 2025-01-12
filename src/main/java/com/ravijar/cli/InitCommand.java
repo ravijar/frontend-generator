@@ -13,10 +13,11 @@ public class InitCommand implements Runnable {
 
     @Option(names = {"-n", "--name"}, description = "Specify the project name", defaultValue = "Untitled")
     private String projectName;
+    @Option(names = {"-c", "--config"}, description = "Specify the config", required = true)
+    private String config;
 
     @Override
     public void run() {
-        ProjectManager.setProjectName(projectName);
-        projectManager.initializeProject();
+        projectManager.initializeProject(config);
     }
 }

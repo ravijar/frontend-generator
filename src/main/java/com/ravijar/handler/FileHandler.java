@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 public class FileHandler {
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
@@ -16,12 +17,74 @@ public class FileHandler {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(content);
             }
-            logger.debug("{} created in {}." ,fileName, fileDir.getName());
+            logger.debug("{} created in {}.", fileName, fileDir.getName());
 
         } else {
-            logger.warn("{} already exists in {}." ,fileName, fileDir.getName());
+            logger.warn("{} already exists in {}.", fileName, fileDir.getName());
         }
     }
+
+    public void copyAllTemplates() {
+        TemplatesConfigLoader templatesConfigLoader = new TemplatesConfigLoader();
+        List<TemplatesConfigLoader.TemplatesConfig> templatesConfigList = templatesConfigLoader.getTemplatesConfigList();
+        for (TemplatesConfigLoader.TemplatesConfig templateMappings : templatesConfigList) {
+            copyTemplates(templateMappings);
+        }
+    }
+
+    public void copyTemplates(TemplatesConfigLoader.TemplatesConfig mapping) {
+        // Iterate over the templates and copy them
+        for (String template : mapping.templates) {
+            String sourcePath = mapping.sourceFolder + template + mapping.extension;
+            String destinationPath = mapping.destinationFolder + template + mapping.extension;
+
+            File sourceFile = new File(sourcePath);
+            File destinationFile = new File(destinationPath);
+
+            try {
+                // Create parent directories for the destination if they don't exist
+                destinationFile.getParentFile().mkdirs();
+
+                Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                logger.debug("Copied: " + sourcePath + " to " + destinationPath);
+            } catch (IOException e) {
+                logger.error("Error copying directory from " + sourcePath + "to" + destinationPath, e.getMessage());
+            }
+        }
+    }
+
+//
+//
+//
+//
+//        String buildSrcDir = projectName + "\\build\\src\\";
+//        String stylesDir = projectName + "\\styles\\";
+//
+//        for (String reactTemplate : reactComponentTemplates) {
+//            String resourcePath = "/templates/react/components/" + reactTemplate + ".jsx";
+//            copyResource(resourcePath, new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
+//        }
+//
+//        for (String reactTemplate : reactCommonTemplates) {
+//            String resourcePath = "/templates/react/common/" + reactTemplate + ".js";
+//            copyResource(resourcePath, new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
+//        }
+//
+//        for (String cssTemplate : cssComponentTemplates) {
+//            String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
+//            copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
+//        }
+//
+//        for (String cssTemplate : cssCommonTemplates) {
+//            String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
+//            copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
+//        }
+//
+//        for (String projectTemplate : projectTemplates) {
+//            String resourcePath = "/templates/project/" + projectTemplate;
+//            copyResource(resourcePath, new File(projectName + "\\" + projectTemplate));
+//        }
+
 
     public void copyFile(File sourceFile, File destFile) {
         if (!sourceFile.exists()) {
@@ -65,7 +128,7 @@ public class FileHandler {
 
         // Create each subdirectory inside the root directory
         for (String subDir : subDirs) {
-            File dir = new File(rootDir,subDir);
+            File dir = new File(rootDir, subDir);
             if (!dir.exists()) {
                 if (dir.mkdirs()) {
                     logger.debug("Created subdirectory: {}", dir.getAbsolutePath());

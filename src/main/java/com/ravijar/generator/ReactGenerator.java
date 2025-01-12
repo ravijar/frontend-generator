@@ -32,11 +32,11 @@ public class ReactGenerator {
     private final CSSGenerator cssGenerator;
     private final JSGenerator jsGenerator;
 
-    public ReactGenerator(Configuration cfg) {
+    public ReactGenerator(Configuration cfg, OpenAPIParser openAPIParser) {
         this.cfg = cfg;
         this.cssGenerator = new CSSGenerator(cfg);
         this.jsGenerator = new JSGenerator(cfg);
-        this.openAPIParser = new OpenAPIParser();
+        this.openAPIParser = openAPIParser;
         this.schemas = openAPIParser.getSchemas();
     }
 

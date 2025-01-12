@@ -52,7 +52,7 @@ public class CommandHandler {
         }
 
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("npm.cmd", "create", "vite@latest", "build", "--", "--template", "react");
+        processBuilder.command("npm.cmd", "create", "vite@latest", "build", "--", "--template", "react" , ".");
         processBuilder.directory(dir);
         runProcessBuilder(processBuilder);
     }

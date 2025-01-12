@@ -1,6 +1,5 @@
 package com.ravijar.core;
 
-import com.ravijar.cli.MainCommand;
 import com.ravijar.config.FreeMarkerConfig;
 import com.ravijar.generator.ClientAPIGenerator;
 import com.ravijar.generator.ReactGenerator;
@@ -140,30 +139,21 @@ public class ProjectManager {
     public void initializeProject() {
         logger.info("Project Initialization Started...");
         File projectDir = new File(projectName);
-        if (!projectDir.exists()) {
-            if (projectDir.mkdirs()) {
-                logger.debug("Project directory {} created.", projectName);
-            } else {
-                logger.error("Failed to create project directory {}." ,projectName);
-                return;
-            }
-        } else {
-            logger.warn("Project directory {} already exists.", projectName);
-        }
-
         try {
-            this.fileHandler.createFile(projectDir, "openapi.yaml", "# OpenAPI specification\nopenapi: \"3.0.0\"\ninfo:\n  title: \"Sample API\"\n  version: \"1.0.0\"\npaths: {}");
-            this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
-            this.fileHandler.createDirectory(projectDir, "styles/components");
-            this.fileHandler.createDirectory(projectDir, "styles/pages");
-            this.fileHandler.createDirectory(projectDir, "styles/custom_styles");
-            this.fileHandler.createDirectory(projectDir, "js");
             this.commandHandler.createReactApp(ProjectManager.projectName);
             this.commandHandler.installNpmPackage(ProjectManager.projectName, "react-router-dom");
-            this.fileHandler.createDirectory(projectDir, "build/src/components");
-            this.fileHandler.createDirectory(projectDir, "build/src/pages");
-            this.fileHandler.createDirectory(projectDir, "build/src/custom_styles");
-            this.fileHandler.createDirectory(projectDir, "build/src/common");
+            fileHandler.createDirectoryStructure(projectDir, new String[]{
+                    "styles/components",
+                    "styles/pages",
+                    "styles/custom_styles",
+                    "js",
+                    "build/src/components",
+                    "build/src/pages",
+                    "build/src/custom_styles",
+                    "build/src/common"
+            });
+            this.fileHandler.createFile(projectDir, "openapi.yaml", "# OpenAPI specification\nopenapi: \"3.0.0\"\ninfo:\n  title: \"Sample API\"\n  version: \"1.0.0\"\npaths: {}");
+            this.fileHandler.createFile(projectDir, "pages.xml", "<pages>\n    <!-- Page configurations go here -->\n</pages>");
             copyTemplateFiles();
             logger.info(Ansi.ansi().fg(Ansi.Color.GREEN).a("✔ Project initialized successfully!").reset());
         } catch (IOException e) {
@@ -175,7 +165,7 @@ public class ProjectManager {
         this.commandHandler.runReactApp(ProjectManager.projectName);
     }
 
-    public void buildProject() {
+    public void generateAll() {
         logger.info("Generating ClientAPI and Frontend...");
         generateCode();
         generateClientAPI();

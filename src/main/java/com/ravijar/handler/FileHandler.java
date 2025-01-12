@@ -52,6 +52,30 @@ public class FileHandler {
         }
     }
 
+    public void createDirectoryStructure(File rootDir, String[] subDirs) {
+        // Create the root directory if it doesn't exist
+        if (!rootDir.exists()) {
+            if (rootDir.mkdirs()) {
+                logger.debug("Created root directory: {}", rootDir.getAbsolutePath());
+            } else {
+                logger.error("Failed to create root directory: {}", rootDir.getAbsolutePath());
+                return;
+            }
+        }
+
+        // Create each subdirectory inside the root directory
+        for (String subDir : subDirs) {
+            File dir = new File(rootDir,subDir);
+            if (!dir.exists()) {
+                if (dir.mkdirs()) {
+                    logger.debug("Created subdirectory: {}", dir.getAbsolutePath());
+                } else {
+                    logger.error("Failed to create subdirectory: {}", dir.getAbsolutePath());
+                }
+            }
+        }
+    }
+
     public void copyResource(String resourcePath, File destFile) {
         try (InputStream in = getClass().getResourceAsStream(resourcePath);
              BufferedInputStream bufferedIn = new BufferedInputStream(in);

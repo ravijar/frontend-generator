@@ -24,6 +24,6 @@ public class GenerateCommand implements Runnable {
 
     @Override
     public void run() {
-        projectManager.buildProject();
+        projectManager.generateAll();
     }
 }

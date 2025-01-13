@@ -11,7 +11,7 @@ public class InitCommand implements Runnable {
         this.projectManager = projectManager;
     }
 
-    @Option(names = {"-n", "--name"}, description = "Specify the project name", defaultValue = "Untitled")
+    @Option(names = {"-n", "--name"}, description = "Specify the project name", required=true)
     private String projectName;
 
     @Override

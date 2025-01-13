@@ -151,10 +151,6 @@ public class ProjectManager {
         return true;
     }
 
-
-    public boolean generateAll() {
-        if (!updateProjectName()) return false;
-        logger.info("Generating ClientAPI and Frontend...");
     public boolean generateAll() {
         if (!updateProjectName()) return false;
         logger.info("Generating ClientAPI and Frontend...");

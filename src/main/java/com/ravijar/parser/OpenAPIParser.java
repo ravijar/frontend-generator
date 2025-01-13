@@ -1,6 +1,5 @@
 package com.ravijar.parser;
 
-import com.ravijar.core.ProjectManager;
 import com.ravijar.model.PageDTO;
 import com.ravijar.model.openapi.OpenAPIParameter;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
@@ -23,10 +22,11 @@ import java.util.*;
 public class OpenAPIParser {
     private static final Logger logger = LogManager.getLogger(OpenAPIParser.class);
 
-    private final String openapiFilePath = ProjectManager.getProjectName() + "\\openapi.yaml";
+    private final String openapiFilePath;
     private final OpenAPI openAPIData;
 
-    public OpenAPIParser() {
+    public OpenAPIParser(String filePath) {
+        this.openapiFilePath = filePath;
         this.openAPIData = getSpecData();
     }
 

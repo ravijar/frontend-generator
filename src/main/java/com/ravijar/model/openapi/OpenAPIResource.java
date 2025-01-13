@@ -12,7 +12,7 @@ import java.util.List;
 public class OpenAPIResource {
     private String httpMethod;
     private String apiFunctionName;
-    private List<String> urlParameters;
-    private List<String> requestParameters;
+    private List<OpenAPIParameter> urlParameters;
+    private List<OpenAPISchemaProperty> requestProperties;
     private List<OpenAPIResponse> responses;
 }

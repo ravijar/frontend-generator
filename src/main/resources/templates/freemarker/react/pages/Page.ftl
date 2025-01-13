@@ -51,47 +51,44 @@ export default function ${data.name?cap_first}() {
         <#assign resource = (component.resource)!>
         <#switch body.type>
             <#case "SearchBar">
-                <#assign state = "${component.id}${resource.urlParameters[0]?cap_first}">
+                <#assign state = "${component.id}${resource.urlParameters[0].name?cap_first}">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
-                <#assign state = "${component.id}${resource.urlParameters[0]?cap_first}Error">
+                <#assign state = "${component.id}${resource.urlParameters[0].name?cap_first}Error">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
                 <#assign state = "${component.id}FetchResponse">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
-                <#assign state = "${component.id}FetchResponseSchema">
+                <#assign state = "${component.id}Fetched">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
             <#break>
             <#case "Form">
                 <#list resource.urlParameters as parameter>
-                    <#assign state = "${component.id}${parameter?cap_first}">
+                    <#assign state = "${component.id}${parameter.name?cap_first}">
                     <#assign indent = 1>
                     <#include useStateTemplatePath>
-                    <#assign state = "${component.id}${parameter?cap_first}Error">
+                    <#assign state = "${component.id}${parameter.name?cap_first}Error">
                     <#assign indent = 1>
                     <#include useStateTemplatePath>
                 </#list>
-                <#list resource.requestParameters as parameter>
-                    <#assign state = "${component.id}${parameter?cap_first}">
+                <#list resource.requestProperties as property>
+                    <#assign state = "${component.id}${property.name?cap_first}">
                     <#assign indent = 1>
                     <#include useStateTemplatePath>
-                    <#assign state = "${component.id}${parameter?cap_first}Error">
+                    <#assign state = "${component.id}${property.name?cap_first}Error">
                     <#assign indent = 1>
                     <#include useStateTemplatePath>
                 </#list>
                 <#assign state = "${component.id}FetchResponse">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
-                <#assign state = "${component.id}FetchResponseSchema">
+                <#assign state = "${component.id}Fetched">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
                 <#if body.result.component.type == "Alert">
                     <#assign state = "${component.id}ShowAlert">
-                    <#assign indent = 1>
-                    <#include useStateTemplatePath>
-                    <#assign state = "${component.id}AlertData">
                     <#assign indent = 1>
                     <#include useStateTemplatePath>
                 </#if>
@@ -100,7 +97,7 @@ export default function ${data.name?cap_first}() {
                 <#assign state = "${component.id}FetchResponse">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
-                <#assign state = "${component.id}FetchResponseSchema">
+                <#assign state = "${component.id}Fetched">
                 <#assign indent = 1>
                 <#include useStateTemplatePath>
             <#break>
@@ -124,7 +121,7 @@ export default function ${data.name?cap_first}() {
         <#assign resource = (component.resource)!>
         <#switch body.type>
             <#case "SearchBar">
-                <#assign value = "${component.id}${resource.urlParameters[0]?cap_first}">
+                <#assign value = "${component.id}${resource.urlParameters[0].name?cap_first}">
                 <#assign indent = 1>
                 <#include handleChangeTemplatePath>
                 <#assign indent = 1>
@@ -138,12 +135,12 @@ export default function ${data.name?cap_first}() {
             <#break>
             <#case "Form">
                 <#list resource.urlParameters as parameter>
-                    <#assign value = "${component.id}${parameter?cap_first}">
+                    <#assign value = "${component.id}${parameter.name?cap_first}">
                     <#assign indent = 1>
                     <#include handleChangeTemplatePath>
                 </#list>
-                <#list resource.requestParameters as parameter>
-                    <#assign value = "${component.id}${parameter?cap_first}">
+                <#list resource.requestProperties as property>
+                    <#assign value = "${component.id}${property.name?cap_first}">
                     <#assign indent = 1>
                     <#include handleChangeTemplatePath>
                 </#list>

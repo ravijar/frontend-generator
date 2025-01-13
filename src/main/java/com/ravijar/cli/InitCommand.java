@@ -16,7 +16,6 @@ public class InitCommand implements Runnable {
 
     @Override
     public void run() {
-        ProjectManager.setProjectName(projectName);
-        projectManager.initializeProject();
+        projectManager.initializeProject(projectName);
     }
 }

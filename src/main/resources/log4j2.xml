@@ -12,7 +12,7 @@
                     disableAnsi="false"
             />
         </Console>
-g
+
         <Console name="EntryConsole" target="SYSTEM_OUT">
                 <PatternLayout pattern="%m%n"/>
         </Console>

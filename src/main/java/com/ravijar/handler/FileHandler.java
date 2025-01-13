@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 public class FileHandler {
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
@@ -16,10 +17,44 @@ public class FileHandler {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(content);
             }
-            logger.info("{} created in {}." ,fileName, fileDir.getName());
+            logger.debug("{} created in {}.", fileName, fileDir.getName());
 
         } else {
-            logger.warn("{} already exists in {}." ,fileName, fileDir.getName());
+            logger.warn("{} already exists in {}.", fileName, fileDir.getName());
+        }
+    }
+
+    public void copyAllTemplates(String sourceRootPath, String destinationRootPath) {
+        TemplatesConfigLoader templatesConfigLoader = new TemplatesConfigLoader();
+        List<TemplatesConfigLoader.TemplateMapping> templateMappingList = templatesConfigLoader.getTemplateMappingList();
+        for (TemplatesConfigLoader.TemplateMapping templateMappings : templateMappingList) {
+            copyTemplates(templateMappings, sourceRootPath, destinationRootPath);
+        }
+
+    }
+
+    public void copyTemplates(TemplatesConfigLoader.TemplateMapping mapping, String sourceRootPath, String destinationRootPath) {
+        for (String template : mapping.getTemplates()) {
+            String resourcePath = sourceRootPath + mapping.getSourceFolder() + template + mapping.getExtension();
+            String destinationPath = destinationRootPath + mapping.getDestinationFolder() + template + mapping.getExtension();
+
+            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+                if (inputStream == null) {
+                    logger.error("Resource not found: " + resourcePath);
+                    continue;
+                }
+
+                File destinationFile = new File(destinationPath);
+
+                // Create parent directories for the destination if they don't exist
+                destinationFile.getParentFile().mkdirs();
+
+                // Copy the input stream to the destination file
+                Files.copy(inputStream, destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                logger.debug("Copied: " + resourcePath + " to " + destinationPath);
+            } catch (IOException e) {
+                logger.error("Error copying template from " + resourcePath + " to " + destinationPath, e);
+            }
         }
     }
 
@@ -35,22 +70,12 @@ public class FileHandler {
 
         try {
             Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            logger.info("File {} copied to {}.", sourceFile.getAbsolutePath(), destFile.getAbsolutePath());
+            logger.debug("File {} copied to {}.", sourceFile.getAbsolutePath(), destFile.getAbsolutePath());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    public void createSubDirectory(File baseDir, String directoryName) {
-        File directory = new File(baseDir, directoryName);
-        if (directory.mkdirs()) {
-            logger.info("{} directory created in {}.", directoryName, baseDir.getName());
-        } else if (directory.exists()) {
-            logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
-        } else {
-            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
-        }
-    }
 
     public void createDirectoryIfNotExists(File directory) {
         if (directory.exists()) {
@@ -68,26 +93,14 @@ public class FileHandler {
         }
     }
 
-    public void copyResource(String resourcePath, File destFile) {
-        try (InputStream in = getClass().getResourceAsStream(resourcePath);
-             BufferedInputStream bufferedIn = new BufferedInputStream(in);
-             FileOutputStream fileOut = new FileOutputStream(destFile);
-             BufferedOutputStream bufferedOut = new BufferedOutputStream(fileOut)) {
-
-            if (in == null) {
-                throw new FileNotFoundException("Resource not found: " + resourcePath);
-            }
-
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = bufferedIn.read(buffer)) != -1) {
-                bufferedOut.write(buffer, 0, bytesRead);
-            }
-
-            logger.info("Resource copied successfully from {} to {}", resourcePath, destFile.getAbsolutePath());
-
-        } catch (IOException e) {
-            logger.error("Error copying resource: {}", resourcePath, e);
+    public void createSubDirectory(File baseDir, String directoryName) {
+        File directory = new File(baseDir, directoryName);
+        if (directory.mkdirs()) {
+            logger.info("{} directory created in {}.", directoryName, baseDir.getName());
+        } else if (directory.exists()) {
+            logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
+        } else {
+            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
         }
     }
 

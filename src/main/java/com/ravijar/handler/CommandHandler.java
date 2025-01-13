@@ -70,7 +70,7 @@ public class CommandHandler {
     }
 
     public void installNpmPackage(String baseDir, String packageName) {
-        logger.info("Installing NPM Packages...");
+        logger.info("Installing " + packageName + "...");
         File dir = checkBuildDirectory(baseDir);
         if (dir != null){
             ProcessBuilder processBuilder = new ProcessBuilder();
@@ -81,6 +81,7 @@ public class CommandHandler {
     }
 
     public void npmInstall(File dir) {
+        logger.info("Installing NPM Packages...");
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("npm.cmd", "install");
         processBuilder.directory(dir);

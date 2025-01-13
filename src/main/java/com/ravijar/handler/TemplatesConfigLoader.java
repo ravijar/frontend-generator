@@ -9,10 +9,11 @@ import lombok.ToString;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class TemplatesConfigLoader {
-    private static final String TEMPLATE_FILE_PATH = "src/main/resources/templates.json";
+    private static final String TEMPLATE_FILE_NAME = "templates.json";
     @Getter
     private List<TemplateMapping> templateMappingList;
     private ObjectMapper objectMapper;
@@ -23,11 +24,14 @@ public class TemplatesConfigLoader {
     }
 
     private void loadTemplatesConfig() {
-        try {
-            TemplatesConfig templatesConfig = objectMapper.readValue(new File(TEMPLATE_FILE_PATH), TemplatesConfig.class);
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(TEMPLATE_FILE_NAME)) {
+            if (inputStream == null) {
+                throw new RuntimeException("Error: " + TEMPLATE_FILE_NAME + " not found in the classpath.");
+            }
+            TemplatesConfig templatesConfig = objectMapper.readValue(inputStream, TemplatesConfig.class);
             templateMappingList = templatesConfig.getTemplateMappings();
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading or parsing the templates file", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading or parsing the templates file: " + TEMPLATE_FILE_NAME, e);
         }
     }
 

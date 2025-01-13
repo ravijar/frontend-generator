@@ -35,25 +35,30 @@ public class FileHandler {
     }
 
     public void copyTemplates(TemplatesConfigLoader.TemplateMapping mapping, String sourceRootPath, String destinationRootPath) {
-        // Iterate over the templates and copy them
         for (String template : mapping.getTemplates()) {
-            String sourcePath = sourceRootPath + mapping.getSourceFolder() + template + mapping.getExtension();
+            String resourcePath = sourceRootPath + mapping.getSourceFolder() + template + mapping.getExtension();
             String destinationPath = destinationRootPath + mapping.getDestinationFolder() + template + mapping.getExtension();
 
-            File sourceFile = new File(sourcePath);
-            File destinationFile = new File(destinationPath);
+            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+                if (inputStream == null) {
+                    logger.error("Resource not found: " + resourcePath);
+                    continue;
+                }
 
-            try {
+                File destinationFile = new File(destinationPath);
+
                 // Create parent directories for the destination if they don't exist
                 destinationFile.getParentFile().mkdirs();
 
-                Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                logger.debug("Copied: " + sourcePath + " to " + destinationPath);
+                // Copy the input stream to the destination file
+                Files.copy(inputStream, destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                logger.debug("Copied: " + resourcePath + " to " + destinationPath);
             } catch (IOException e) {
-                logger.error("Error copying directory from " + sourcePath + "to" + destinationPath, e.getMessage());
+                logger.error("Error copying template from " + resourcePath + " to " + destinationPath, e);
             }
         }
     }
+
 
     public void copyFile(File sourceFile, File destFile) {
         if (!sourceFile.exists()) {

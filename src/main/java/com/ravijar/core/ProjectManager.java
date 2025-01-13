@@ -37,7 +37,7 @@ public class ProjectManager {
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
     private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
     private final String[] npmPackages = {"react-router-dom"};
-    private static final String SOURCE_ROOT_PATH="src/main/resources/templates";
+    private static final String SOURCE_ROOT_PATH="templates";
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();

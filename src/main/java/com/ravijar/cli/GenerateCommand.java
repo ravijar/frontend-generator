@@ -3,7 +3,7 @@ package com.ravijar.cli;
 import com.ravijar.core.ProjectManager;
 import picocli.CommandLine.Command;
 
-@Command(name = "generate", description = "Builds the project.")
+@Command(name = "generate", description = "Generate frontend and related code.")
 public class GenerateCommand implements Runnable {
 
     private final ProjectManager projectManager;
@@ -19,11 +19,11 @@ public class GenerateCommand implements Runnable {
 
     @Command(name = "--frontend", description = "Generates Frontend Application")
     public void generateFrontend() {
-        projectManager.generateCode();
+        projectManager.generatFrontend();
     }
 
     @Override
     public void run() {
-        projectManager.buildProject();
+        projectManager.generateAll();
     }
 }

@@ -6,6 +6,7 @@ import com.ravijar.generator.ReactGenerator;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.ConfigHandler;
 import com.ravijar.handler.FileHandler;
+import com.ravijar.handler.TemplatesConfigLoader;
 import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.parser.XMLParser;
 import com.ravijar.model.PageDTO;
@@ -32,14 +33,11 @@ public class ProjectManager {
     private final CommandHandler commandHandler;
     private final ConfigHandler configHandler;
 
-    private final String[] projectTemplates = {"openapi.yaml", "pages.xml"};
-    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
-    private final String[] reactCommonTemplates = {"Utils"};
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
-    private final String[] cssCommonTemplates = {"App", "index"};
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
     private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
     private final String[] npmPackages = {"react-router-dom"};
+    private static final String SOURCE_ROOT_PATH="templates";
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -55,39 +53,10 @@ public class ProjectManager {
         return true;
     }
 
-    private void copyTemplateFiles() {
-        String buildSrcDir = projectName + "\\build\\src\\";
-        String stylesDir = projectName + "\\styles\\";
-
-        for (String reactTemplate : reactComponentTemplates) {
-            String resourcePath = "/templates/react/components/" + reactTemplate + ".jsx";
-            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
-        }
-
-        for (String reactTemplate : reactCommonTemplates) {
-            String resourcePath = "/templates/react/common/" + reactTemplate + ".js";
-            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
-        }
-
-        for (String cssTemplate : cssComponentTemplates) {
-            String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
-            fileHandler.copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
-        }
-
-        for (String cssTemplate : cssCommonTemplates) {
-            String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
-            fileHandler.copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
-        }
-
-        for (String projectTemplate : projectTemplates) {
-            String resourcePath = "/templates/project/" + projectTemplate;
-            fileHandler.copyResource(resourcePath, new File(projectName + "\\" + projectTemplate));
-        }
-
-    }
-
-    public boolean generateCode() {
+    public boolean generatFrontend() {
         if(!updateProjectName()) return false;
+
+        logger.info("Generating Frontend...");
 
         FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
         OpenAPIParser openAPIParser = new OpenAPIParser(projectName + "\\openapi.yaml");
@@ -125,22 +94,31 @@ public class ProjectManager {
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
+
+        logger.info("✔ Frontend Generated Successfully!");
+
         return true;
     }
 
     public boolean generateClientAPI() {
         if(!updateProjectName()) return false;
 
+        logger.info("Generating ClientAPI...");
+
         ClientAPIGenerator clientAPIGenerator = new ClientAPIGenerator();
         File specDir = new File(projectName + "\\openapi.yaml");
         File outputDir = new File(projectName + "\\build\\src\\client_api");
         clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
+
+        logger.info("✔ Client API Generated Successfully!");
 
         return true;
     }
 
     public boolean addUserStyles() {
         if(!updateProjectName()) return false;
+
+        logger.info("Applying User Styles... ");
 
         String buildSrcDir = projectName + "\\build\\src\\";
         String stylesDir = projectName + "\\styles\\";
@@ -151,10 +129,14 @@ public class ProjectManager {
         fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
         fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
 
+        logger.info("✔ Build Complete!");
+
         return true;
     }
 
     public void initializeProject(String projectName) {
+        logger.info("Project Initialization Started...");
+
         this.configHandler.createPropertiesFile(projectName);
         setProjectName(projectName);
 
@@ -175,9 +157,9 @@ public class ProjectManager {
             this.fileHandler.createSubDirectory(projectDir, subDir);
         }
 
-        copyTemplateFiles();
+        fileHandler.copyAllTemplates(SOURCE_ROOT_PATH,projectName);
 
-        logger.info("Project initialized successfully.");
+        logger.info("✔ Project initialized successfully!");
     }
 
     public boolean runProject() {
@@ -188,10 +170,10 @@ public class ProjectManager {
         return true;
     }
 
-    public boolean buildProject() {
+    public boolean generateAll() {
         if(!updateProjectName()) return false;
-
-        generateCode();
+        logger.info("Generating ClientAPI and Frontend...");
+        generatFrontend();
         generateClientAPI();
 
         return true;
@@ -199,6 +181,8 @@ public class ProjectManager {
 
     public boolean test() {
         if(!updateProjectName()) return false;
+
+        logger.info("Starting Testing...");
 
         return true;
     }

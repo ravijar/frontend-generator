@@ -1,5 +1,6 @@
 package com.ravijar.generator;
 
+import com.ravijar.helper.OpenAPIConverter;
 import com.ravijar.model.openapi.OpenAPIParameter;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
 import com.ravijar.parser.OpenAPIParser;
@@ -40,45 +41,24 @@ public class ReactGenerator {
         this.schemas = openAPIParser.getSchemas();
     }
 
-    private PathItem.HttpMethod getHttpMethod(String method) {
-        for (PathItem.HttpMethod httpMethod : PathItem.HttpMethod.values()) {
-            if (httpMethod.name().equalsIgnoreCase(method)) {
-                return httpMethod;
-            }
-        }
-        return null;
-    }
-
     private OpenAPIResource getResourceData(Resource resource) {
-        PathItem.HttpMethod httpMethod = getHttpMethod(resource.getMethod());
+        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(resource.getMethod());
         String url = resource.getUrl();
 
         String apiFunctionName = openAPIParser.getOperationId(url, httpMethod);
-        List<OpenAPIParameter> urlParameterList = openAPIParser.getParameters(url, httpMethod);
+        List<OpenAPIParameter> urlParameters = openAPIParser.getParameters(url, httpMethod);
         String requestSchema = openAPIParser.getRequestSchema(url, httpMethod);
         Set<String> responseCodes = openAPIParser.getResponseCodes(url, httpMethod);
 
-        List<String> urlParameters = new ArrayList<>();
-        for (OpenAPIParameter parameter : urlParameterList) {
-            urlParameters.add(parameter.getName());
-        }
-
-        List<String> requestParameters = new ArrayList<>();
-        if (requestSchema != null) {
-            for (OpenAPISchemaProperty openAPISchemaProperty : schemas.get(requestSchema)) {
-                requestParameters.add(openAPISchemaProperty.getName());
-            }
-        }
-
         List<OpenAPIResponse> responses = new ArrayList<>();
         for (String code : responseCodes) {
-            String schema = openAPIParser.getResponseSchemaName(url, httpMethod, code);
+            String schemaName = openAPIParser.getResponseSchemaName(url, httpMethod, code);
             String type = openAPIParser.getResponseSchemaType(url, httpMethod, code);
             String description = openAPIParser.getResponseDescription(url, httpMethod, code);
-            responses.add(new OpenAPIResponse(code, schema, type, description));
+            responses.add(new OpenAPIResponse(code, schemaName, type, description, schemas.get(schemaName)));
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, schemas.get(requestSchema), responses);
     }
 
     public void generateAppPage(String outputDir, List<Page> pages) throws IOException, TemplateException {

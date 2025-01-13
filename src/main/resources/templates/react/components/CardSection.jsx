@@ -1,13 +1,13 @@
 import RecursiveKeyValuePair from "./RecursiveKeyValuePair";
 import "./CardSection.css";
 
-const CardSection = ({ responseData, responseSchema, styles = {} }) => {
+const CardSection = ({ responseData, responseSchema, displayNames, styles = {} }) => {
     const renderContent = () => {
         switch (responseSchema.type) {
             case "null":
                 return (
                     <div className="single-card-container" style={styles.keyValuePair}>
-                        <RecursiveKeyValuePair data={responseData} />
+                        <RecursiveKeyValuePair data={responseData} displayNames={displayNames}/>
                     </div>
                 );
             case "array":
@@ -15,7 +15,7 @@ const CardSection = ({ responseData, responseSchema, styles = {} }) => {
                     <div className="card-array-container" style={styles.cardArrayContainer}>
                         {responseData.map((item, index) => (
                             <div key={index} className="card-array-item" style={styles.cardArrayItem}>
-                                <RecursiveKeyValuePair data={item} />
+                                <RecursiveKeyValuePair data={item} displayNames={displayNames}/>
                             </div>
                         ))}
                     </div>

@@ -4,7 +4,7 @@ import com.ravijar.core.ProjectManager;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-@Command(name = "init", description = "Initializes a new project.")
+@Command(name = "test", description = "Test the project.")
 public class TestCommand implements Runnable {
     private final ProjectManager projectManager;
 

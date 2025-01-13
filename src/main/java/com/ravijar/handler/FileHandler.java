@@ -11,7 +11,6 @@ import java.util.List;
 public class FileHandler {
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
 
-
     public void createFile(File fileDir, String fileName, String content) throws IOException {
         File file = new File(fileDir, fileName);
         if (file.createNewFile()) {
@@ -59,7 +58,6 @@ public class FileHandler {
         }
     }
 
-
     public void copyFile(File sourceFile, File destFile) {
         if (!sourceFile.exists()) {
             logger.error("Source file {} does not exist.", sourceFile.getAbsolutePath());
@@ -78,40 +76,6 @@ public class FileHandler {
         }
     }
 
-//    public void createDirectory(File baseDir, String directoryName) {
-//        File directory = new File(baseDir, directoryName);
-//        if (directory.mkdirs()) {
-//            logger.debug("{} directory created in {}.", directoryName, baseDir.getName());
-//        } else if (directory.exists()) {
-//            logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
-//        } else {
-//            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
-//        }
-//    }
-//
-//    public void createDirectoryStructure(File rootDir, String[] subDirs) {
-//        // Create the root directory if it doesn't exist
-//        if (!rootDir.exists()) {
-//            if (rootDir.mkdirs()) {
-//                logger.debug("Created root directory: {}", rootDir.getAbsolutePath());
-//            } else {
-//                logger.error("Failed to create root directory: {}", rootDir.getAbsolutePath());
-//                return;
-//            }
-//        }
-//
-//        // Create each subdirectory inside the root directory
-//        for (String subDir : subDirs) {
-//            File dir = new File(rootDir, subDir);
-//            if (!dir.exists()) {
-//                if (dir.mkdirs()) {
-//                    logger.debug("Created subdirectory: {}", dir.getAbsolutePath());
-//                } else {
-//                    logger.error("Failed to create subdirectory: {}", dir.getAbsolutePath());
-//                }
-//            }
-//        }
-//    }
 
     public void createDirectoryIfNotExists(File directory) {
         if (directory.exists()) {
@@ -137,29 +101,6 @@ public class FileHandler {
             logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
         } else {
             logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
-        }
-    }
-
-    public void copyResource(String resourcePath, File destFile) {
-        try (InputStream in = getClass().getResourceAsStream(resourcePath);
-             BufferedInputStream bufferedIn = new BufferedInputStream(in);
-             FileOutputStream fileOut = new FileOutputStream(destFile);
-             BufferedOutputStream bufferedOut = new BufferedOutputStream(fileOut)) {
-
-            if (in == null) {
-                throw new FileNotFoundException("Resource not found: " + resourcePath);
-            }
-
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = bufferedIn.read(buffer)) != -1) {
-                bufferedOut.write(buffer, 0, bytesRead);
-            }
-
-            logger.debug("Resource copied successfully from {} to {}", resourcePath, destFile.getAbsolutePath());
-
-        } catch (IOException e) {
-            logger.error("Error copying resource: {}", resourcePath, e);
         }
     }
 

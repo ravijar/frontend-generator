@@ -24,7 +24,7 @@ public class CommandHandler {
             }
 
             int exitCode = process.waitFor();
-            logger.debug("Exited with error code : {}" ,exitCode);
+            logger.debug("Exited with error code : {}", exitCode);
         } catch (IOException | InterruptedException e) {
             logger.error(e.getMessage());
         }
@@ -52,7 +52,7 @@ public class CommandHandler {
         }
 
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("npm.cmd", "create", "vite@latest", "build", "--", "--template", "react" , ".");
+        processBuilder.command("npm.cmd", "create", "vite@latest", "build", "--", "--template", "react", ".");
         processBuilder.directory(dir);
         runProcessBuilder(processBuilder);
     }
@@ -60,7 +60,7 @@ public class CommandHandler {
     public void runReactApp(String baseDir) {
         logger.info("Starting the react app...");
         File dir = checkBuildDirectory(baseDir);
-        if (dir != null){
+        if (dir != null) {
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command("npm.cmd", "run", "dev");
             processBuilder.directory(dir);
@@ -70,9 +70,9 @@ public class CommandHandler {
     }
 
     public void installNpmPackage(String baseDir, String packageName) {
-        logger.info("Installing NPM Packages...");
+        logger.info("Installing " + packageName + "...");
         File dir = checkBuildDirectory(baseDir);
-        if (dir != null){
+        if (dir != null) {
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command("npm.cmd", "install", packageName);
             processBuilder.directory(dir);
@@ -81,6 +81,7 @@ public class CommandHandler {
     }
 
     public void npmInstall(File dir) {
+        logger.info("Installing NPM Packages...");
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("npm.cmd", "install");
         processBuilder.directory(dir);

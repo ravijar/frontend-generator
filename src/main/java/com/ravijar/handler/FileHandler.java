@@ -11,6 +11,7 @@ import java.util.List;
 public class FileHandler {
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
 
+
     public void createFile(File fileDir, String fileName, String content) throws IOException {
         File file = new File(fileDir, fileName);
         if (file.createNewFile()) {
@@ -24,19 +25,20 @@ public class FileHandler {
         }
     }
 
-    public void copyAllTemplates() {
+    public void copyAllTemplates(String sourceRootPath, String destinationRootPath) {
         TemplatesConfigLoader templatesConfigLoader = new TemplatesConfigLoader();
-        List<TemplatesConfigLoader.TemplatesConfig> templatesConfigList = templatesConfigLoader.getTemplatesConfigList();
-        for (TemplatesConfigLoader.TemplatesConfig templateMappings : templatesConfigList) {
-            copyTemplates(templateMappings);
+        List<TemplatesConfigLoader.TemplateMapping> templateMappingList = templatesConfigLoader.getTemplateMappingList();
+        for (TemplatesConfigLoader.TemplateMapping templateMappings : templateMappingList) {
+            copyTemplates(templateMappings, sourceRootPath, destinationRootPath);
         }
+
     }
 
-    public void copyTemplates(TemplatesConfigLoader.TemplatesConfig mapping) {
+    public void copyTemplates(TemplatesConfigLoader.TemplateMapping mapping, String sourceRootPath, String destinationRootPath) {
         // Iterate over the templates and copy them
-        for (String template : mapping.templates) {
-            String sourcePath = mapping.sourceFolder + template + mapping.extension;
-            String destinationPath = mapping.destinationFolder + template + mapping.extension;
+        for (String template : mapping.getTemplates()) {
+            String sourcePath = sourceRootPath + mapping.getSourceFolder() + template + mapping.getExtension();
+            String destinationPath = destinationRootPath + mapping.getDestinationFolder() + template + mapping.getExtension();
 
             File sourceFile = new File(sourcePath);
             File destinationFile = new File(destinationPath);
@@ -52,39 +54,6 @@ public class FileHandler {
             }
         }
     }
-
-//
-//
-//
-//
-//        String buildSrcDir = projectName + "\\build\\src\\";
-//        String stylesDir = projectName + "\\styles\\";
-//
-//        for (String reactTemplate : reactComponentTemplates) {
-//            String resourcePath = "/templates/react/components/" + reactTemplate + ".jsx";
-//            copyResource(resourcePath, new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
-//        }
-//
-//        for (String reactTemplate : reactCommonTemplates) {
-//            String resourcePath = "/templates/react/common/" + reactTemplate + ".js";
-//            copyResource(resourcePath, new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
-//        }
-//
-//        for (String cssTemplate : cssComponentTemplates) {
-//            String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
-//            copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
-//        }
-//
-//        for (String cssTemplate : cssCommonTemplates) {
-//            String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
-//            copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
-//        }
-//
-//        for (String projectTemplate : projectTemplates) {
-//            String resourcePath = "/templates/project/" + projectTemplate;
-//            copyResource(resourcePath, new File(projectName + "\\" + projectTemplate));
-//        }
-
 
     public void copyFile(File sourceFile, File destFile) {
         if (!sourceFile.exists()) {
@@ -114,30 +83,30 @@ public class FileHandler {
 //            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
 //        }
 //    }
-
-    public void createDirectoryStructure(File rootDir, String[] subDirs) {
-        // Create the root directory if it doesn't exist
-        if (!rootDir.exists()) {
-            if (rootDir.mkdirs()) {
-                logger.debug("Created root directory: {}", rootDir.getAbsolutePath());
-            } else {
-                logger.error("Failed to create root directory: {}", rootDir.getAbsolutePath());
-                return;
-            }
-        }
-
-        // Create each subdirectory inside the root directory
-        for (String subDir : subDirs) {
-            File dir = new File(rootDir, subDir);
-            if (!dir.exists()) {
-                if (dir.mkdirs()) {
-                    logger.debug("Created subdirectory: {}", dir.getAbsolutePath());
-                } else {
-                    logger.error("Failed to create subdirectory: {}", dir.getAbsolutePath());
-                }
-            }
-        }
-    }
+//
+//    public void createDirectoryStructure(File rootDir, String[] subDirs) {
+//        // Create the root directory if it doesn't exist
+//        if (!rootDir.exists()) {
+//            if (rootDir.mkdirs()) {
+//                logger.debug("Created root directory: {}", rootDir.getAbsolutePath());
+//            } else {
+//                logger.error("Failed to create root directory: {}", rootDir.getAbsolutePath());
+//                return;
+//            }
+//        }
+//
+//        // Create each subdirectory inside the root directory
+//        for (String subDir : subDirs) {
+//            File dir = new File(rootDir, subDir);
+//            if (!dir.exists()) {
+//                if (dir.mkdirs()) {
+//                    logger.debug("Created subdirectory: {}", dir.getAbsolutePath());
+//                } else {
+//                    logger.error("Failed to create subdirectory: {}", dir.getAbsolutePath());
+//                }
+//            }
+//        }
+//    }
 
     public void createDirectoryIfNotExists(File directory) {
         if (directory.exists()) {

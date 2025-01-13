@@ -2,8 +2,8 @@
   "templateMappings": [
     {
       "name": "React Components",
-      "sourceFolder": "/templates/react/components/",
-      "destinationFolder": "build/src/components/",
+      "sourceFolder": "/react/components/",
+      "destinationFolder": "/build/src/components/",
       "extension": ".jsx",
       "templates": [
         "InputField",
@@ -18,8 +18,8 @@
     },
     {
       "name": "React Common",
-      "sourceFolder": "/templates/react/common/",
-      "destinationFolder": "build/src/common/",
+      "sourceFolder": "/react/common/",
+      "destinationFolder": "/build/src/common/",
       "extension": ".js",
       "templates": [
         "Utils"
@@ -27,8 +27,8 @@
     },
     {
       "name": "CSS Components",
-      "sourceFolder": "/templates/css/components/",
-      "destinationFolder": "styles/components/",
+      "sourceFolder": "/css/components/",
+      "destinationFolder": "/styles/components/",
       "extension": ".css",
       "templates": [
         "InputField",
@@ -44,8 +44,8 @@
     },
     {
       "name": "CSS Common",
-      "sourceFolder": "/templates/css/common/",
-      "destinationFolder": "styles/",
+      "sourceFolder": "/css/common/",
+      "destinationFolder": "/styles/",
       "extension": ".css",
       "templates": [
         "App",
@@ -54,8 +54,8 @@
     },
     {
       "name": "Project Templates",
-      "sourceFolder": "/templates/project/",
-      "destinationFolder": "",
+      "sourceFolder": "/project/",
+      "destinationFolder": "/",
       "extension": "",
       "templates": [
         "openapi.yaml",

@@ -1,17 +1,20 @@
 package com.ravijar.handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class TemplatesConfigLoader {
-    private static final String TEMPLATE_FILE_PATH = "../resources/templates.json";
+    private static final String TEMPLATE_FILE_PATH = "src/main/resources/templates.json";
     @Getter
-    private List<TemplatesConfig> templatesConfigList;
+    private List<TemplateMapping> templateMappingList;
     private ObjectMapper objectMapper;
 
     public TemplatesConfigLoader() {
@@ -21,22 +24,29 @@ public class TemplatesConfigLoader {
 
     private void loadTemplatesConfig() {
         try {
-            templatesConfigList = objectMapper.readValue(
-                    new File(TEMPLATE_FILE_PATH),
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, TemplatesConfig.class)
-            );
+            TemplatesConfig templatesConfig = objectMapper.readValue(new File(TEMPLATE_FILE_PATH), TemplatesConfig.class);
+            templateMappingList = templatesConfig.getTemplateMappings();
         } catch (IOException e) {
             throw new RuntimeException("Error reading or parsing the templates file", e);
         }
     }
 
+    @Setter
+    @Getter
+    @ToString
     public static class TemplatesConfig {
-        public String name;
-        public String sourceFolder;
-        public String destinationFolder;
-        public String extension;
-        public List<String> templates;
+        private List<TemplateMapping> templateMappings;
     }
 
+    @Getter
+    @Setter
+    @ToString
+    public static class TemplateMapping {
+        private String name;
+        private String sourceFolder;
+        private String destinationFolder;
+        private String extension;
+        private List<String> templates;
+    }
 
 }

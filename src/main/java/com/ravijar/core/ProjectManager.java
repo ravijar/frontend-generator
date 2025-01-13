@@ -34,6 +34,8 @@ public class ProjectManager {
     private final ConfigHandler configHandler;
     private final String[] npmPackages = {"react-router-dom"};
 
+    private static final String TEMPLATE_SOURCE_ROOT_PATH = "src/main/resources/templates";
+
     public ProjectManager() {
         this.fileHandler = new FileHandler();
         this.commandHandler = new CommandHandler();
@@ -134,7 +136,7 @@ public class ProjectManager {
             this.commandHandler.installNpmPackage(projectName, npmPackage);
         }
 
-        fileHandler.copyAllTemplates();
+        fileHandler.copyAllTemplates(TEMPLATE_SOURCE_ROOT_PATH,projectName+"/build");
 
         logger.info("Project initialized successfully.");
     }

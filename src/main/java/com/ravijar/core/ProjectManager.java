@@ -6,6 +6,7 @@ import com.ravijar.generator.ReactGenerator;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.ConfigHandler;
 import com.ravijar.handler.FileHandler;
+import com.ravijar.handler.TemplatesConfigLoader;
 import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.parser.XMLParser;
 import com.ravijar.model.PageDTO;
@@ -32,14 +33,11 @@ public class ProjectManager {
     private final CommandHandler commandHandler;
     private final ConfigHandler configHandler;
 
-    private final String[] projectTemplates = {"openapi.yaml", "pages.xml"};
-    private final String[] reactComponentTemplates = {"InputField", "KeyValuePair", "RecursiveKeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection"};
-    private final String[] reactCommonTemplates = {"Utils"};
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
-    private final String[] cssCommonTemplates = {"App", "index"};
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
     private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
     private final String[] npmPackages = {"react-router-dom"};
+    private static final String SOURCE_ROOT_PATH="templates";
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -53,37 +51,6 @@ public class ProjectManager {
         }
         setProjectName(this.configHandler.readProperty("projectName"));
         return true;
-    }
-
-    private void copyTemplateFiles() {
-        String buildSrcDir = projectName + "\\build\\src\\";
-        String stylesDir = projectName + "\\styles\\";
-
-        for (String reactTemplate : reactComponentTemplates) {
-            String resourcePath = "/templates/react/components/" + reactTemplate + ".jsx";
-            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "components\\" + reactTemplate + ".jsx"));
-        }
-
-        for (String reactTemplate : reactCommonTemplates) {
-            String resourcePath = "/templates/react/common/" + reactTemplate + ".js";
-            fileHandler.copyResource(resourcePath, new File(buildSrcDir + "common\\" + reactTemplate + ".js"));
-        }
-
-        for (String cssTemplate : cssComponentTemplates) {
-            String resourcePath = "/templates/css/components/" + cssTemplate + ".css";
-            fileHandler.copyResource(resourcePath, new File(stylesDir + "components\\" + cssTemplate + ".css"));
-        }
-
-        for (String cssTemplate : cssCommonTemplates) {
-            String resourcePath = "/templates/css/common/" + cssTemplate + ".css";
-            fileHandler.copyResource(resourcePath, new File(stylesDir + cssTemplate + ".css"));
-        }
-
-        for (String projectTemplate : projectTemplates) {
-            String resourcePath = "/templates/project/" + projectTemplate;
-            fileHandler.copyResource(resourcePath, new File(projectName + "\\" + projectTemplate));
-        }
-
     }
 
     public boolean generatFrontend() {
@@ -190,7 +157,7 @@ public class ProjectManager {
             this.fileHandler.createSubDirectory(projectDir, subDir);
         }
 
-        copyTemplateFiles();
+        fileHandler.copyAllTemplates(SOURCE_ROOT_PATH,projectName);
 
         logger.info("✔ Project initialized successfully!");
     }

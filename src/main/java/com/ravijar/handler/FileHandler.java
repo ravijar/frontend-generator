@@ -6,9 +6,11 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 public class FileHandler {
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
+
 
     public void createFile(File fileDir, String fileName, String content) throws IOException {
         File file = new File(fileDir, fileName);
@@ -16,10 +18,40 @@ public class FileHandler {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(content);
             }
-            logger.debug("{} created in {}." ,fileName, fileDir.getName());
+            logger.debug("{} created in {}.", fileName, fileDir.getName());
 
         } else {
-            logger.warn("{} already exists in {}." ,fileName, fileDir.getName());
+            logger.warn("{} already exists in {}.", fileName, fileDir.getName());
+        }
+    }
+
+    public void copyAllTemplates(String sourceRootPath, String destinationRootPath) {
+        TemplatesConfigLoader templatesConfigLoader = new TemplatesConfigLoader();
+        List<TemplatesConfigLoader.TemplateMapping> templateMappingList = templatesConfigLoader.getTemplateMappingList();
+        for (TemplatesConfigLoader.TemplateMapping templateMappings : templateMappingList) {
+            copyTemplates(templateMappings, sourceRootPath, destinationRootPath);
+        }
+
+    }
+
+    public void copyTemplates(TemplatesConfigLoader.TemplateMapping mapping, String sourceRootPath, String destinationRootPath) {
+        // Iterate over the templates and copy them
+        for (String template : mapping.getTemplates()) {
+            String sourcePath = sourceRootPath + mapping.getSourceFolder() + template + mapping.getExtension();
+            String destinationPath = destinationRootPath + mapping.getDestinationFolder() + template + mapping.getExtension();
+
+            File sourceFile = new File(sourcePath);
+            File destinationFile = new File(destinationPath);
+
+            try {
+                // Create parent directories for the destination if they don't exist
+                destinationFile.getParentFile().mkdirs();
+
+                Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                logger.debug("Copied: " + sourcePath + " to " + destinationPath);
+            } catch (IOException e) {
+                logger.error("Error copying directory from " + sourcePath + "to" + destinationPath, e.getMessage());
+            }
         }
     }
 
@@ -41,16 +73,40 @@ public class FileHandler {
         }
     }
 
-    public void createSubDirectory(File baseDir, String directoryName) {
-        File directory = new File(baseDir, directoryName);
-        if (directory.mkdirs()) {
-            logger.debug("{} directory created in {}.", directoryName, baseDir.getName());
-        } else if (directory.exists()) {
-            logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
-        } else {
-            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
-        }
-    }
+//    public void createDirectory(File baseDir, String directoryName) {
+//        File directory = new File(baseDir, directoryName);
+//        if (directory.mkdirs()) {
+//            logger.debug("{} directory created in {}.", directoryName, baseDir.getName());
+//        } else if (directory.exists()) {
+//            logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
+//        } else {
+//            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
+//        }
+//    }
+//
+//    public void createDirectoryStructure(File rootDir, String[] subDirs) {
+//        // Create the root directory if it doesn't exist
+//        if (!rootDir.exists()) {
+//            if (rootDir.mkdirs()) {
+//                logger.debug("Created root directory: {}", rootDir.getAbsolutePath());
+//            } else {
+//                logger.error("Failed to create root directory: {}", rootDir.getAbsolutePath());
+//                return;
+//            }
+//        }
+//
+//        // Create each subdirectory inside the root directory
+//        for (String subDir : subDirs) {
+//            File dir = new File(rootDir, subDir);
+//            if (!dir.exists()) {
+//                if (dir.mkdirs()) {
+//                    logger.debug("Created subdirectory: {}", dir.getAbsolutePath());
+//                } else {
+//                    logger.error("Failed to create subdirectory: {}", dir.getAbsolutePath());
+//                }
+//            }
+//        }
+//    }
 
     public void createDirectoryIfNotExists(File directory) {
         if (directory.exists()) {
@@ -65,6 +121,17 @@ public class FileHandler {
             } else {
                 logger.error("Failed to create directory {}.", directory.getAbsolutePath());
             }
+        }
+    }
+
+    public void createSubDirectory(File baseDir, String directoryName) {
+        File directory = new File(baseDir, directoryName);
+        if (directory.mkdirs()) {
+            logger.info("{} directory created in {}.", directoryName, baseDir.getName());
+        } else if (directory.exists()) {
+            logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
+        } else {
+            logger.error("Failed to create {} directory in {}.", directoryName, baseDir.getName());
         }
     }
 

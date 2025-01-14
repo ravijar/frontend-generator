@@ -1,19 +1,30 @@
-<#assign heroSectionTemplate = "/react/components/call/HeroSection.ftl">
-<#assign searchBarTemplate = "/react/components/call/SearchBar.ftl">
-<#assign buttonTemplate = "/react/components/call/Button.ftl">
-<#assign formTemplate = "/react/components/call/Form.ftl">
-<#assign cardSectionTemplate = "/react/components/call/CardSection.ftl">
-<#assign alertTemplate = "/react/components/call/Alert.ftl">
+<#assign responses = "/react/constants/Responses.ftl">
 
-<#assign fetchTemplate = "/react/logic/Fetch.ftl">
-<#assign navigateTemplate = "/react/logic/Navigate.ftl">
-<#assign handleChangeTemplate = "/react/logic/HandleChange.ftl">
-<#assign handleSubmitTemplate = "/react/logic/HandleSubmit.ftl">
+<#assign useState = "/react/hooks/UseState.ftl">
+<#assign useEffect = "/react/hooks/UseEffect.ftl">
 
-<#assign useStateTemplate = "/react/hooks/UseState.ftl">
-<#assign useEffectTemplate = "/react/hooks/UseEffect.ftl">
+<#assign fetch = "/react/logic/Fetch.ftl">
+<#assign navigate = "/react/logic/Navigate.ftl">
+<#assign handleChange = "/react/logic/HandleChange.ftl">
+<#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
 
-<#assign responsesTemplate = "/react/constants/Responses.ftl">
+<#assign searchBarState = "/react/components/state/SearchBar.ftl">
+<#assign formState = "/react/components/state/Form.ftl">
+<#assign containerState = "/react/components/state/Container.ftl">
+
+<#assign containerEffect = "/react/components/effect/Container.ftl">
+
+<#assign searchBarLogic = "/react/components/logic/SearchBar.ftl">
+<#assign buttonLogic = "/react/components/logic/Button.ftl">
+<#assign formLogic = "/react/components/logic/Form.ftl">
+<#assign containerLogic = "/react/components/logic/Container.ftl">
+
+<#assign heroSectionCall = "/react/components/call/HeroSection.ftl">
+<#assign searchBarCall = "/react/components/call/SearchBar.ftl">
+<#assign buttonCall = "/react/components/call/Button.ftl">
+<#assign formCall = "/react/components/call/Form.ftl">
+<#assign cardSectionCall = "/react/components/call/CardSection.ftl">
+<#assign alertCall = "/react/components/call/Alert.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
@@ -36,7 +47,7 @@ import styles from "../custom_styles/${data.name?cap_first}";
 <#assign indentValue = 0>
 <#list data.components as component>
     <#assign resource = (component.resource)!>
-    <#include responsesTemplate>
+    <#include responses>
 </#list>
 
 export default function ${data.name?cap_first}() {
@@ -52,42 +63,13 @@ export default function ${data.name?cap_first}() {
         <#assign resource = (component.resource)!>
         <#switch body.type>
             <#case "SearchBar">
-                <#assign state = "${component.id}${resource.urlParameters[0].name?cap_first}">
-                <#include useStateTemplate>
-                <#assign state = "${component.id}${resource.urlParameters[0].name?cap_first}Error">
-                <#include useStateTemplate>
-                <#assign state = "${component.id}FetchResponse">
-                <#include useStateTemplate>
-                <#assign state = "${component.id}Fetched">
-                <#include useStateTemplate>
+                <#include searchBarState>
             <#break>
             <#case "Form">
-                <#list resource.urlParameters as parameter>
-                    <#assign state = "${component.id}${parameter.name?cap_first}">
-                    <#include useStateTemplate>
-                    <#assign state = "${component.id}${parameter.name?cap_first}Error">
-                    <#include useStateTemplate>
-                </#list>
-                <#list resource.requestProperties as property>
-                    <#assign state = "${component.id}${property.name?cap_first}">
-                    <#include useStateTemplate>
-                    <#assign state = "${component.id}${property.name?cap_first}Error">
-                    <#include useStateTemplate>
-                </#list>
-                <#assign state = "${component.id}FetchResponse">
-                <#include useStateTemplate>
-                <#assign state = "${component.id}Fetched">
-                <#include useStateTemplate>
-                <#if body.result.component.type == "Alert">
-                    <#assign state = "${component.id}ShowAlert">
-                    <#include useStateTemplate>
-                </#if>
+                <#include formState>
             <#break>
             <#case "Container">
-                <#assign state = "${component.id}FetchResponse">
-                <#include useStateTemplate>
-                <#assign state = "${component.id}Fetched">
-                <#include useStateTemplate>
+                <#include containerState>
             <#break>
         </#switch>
     </#list>
@@ -98,7 +80,7 @@ export default function ${data.name?cap_first}() {
     <#assign body = component.body>
     <#switch body.type>
         <#case "Container">
-            <#include useEffectTemplate>
+            <#include containerEffect>
         <#break>
     </#switch>
     </#list>
@@ -110,29 +92,16 @@ export default function ${data.name?cap_first}() {
         <#assign resource = (component.resource)!>
         <#switch body.type>
             <#case "SearchBar">
-                <#assign value = "${component.id}${resource.urlParameters[0].name?cap_first}">
-                <#include handleChangeTemplate>
-                <#include fetchTemplate>
-                <#include handleSubmitTemplate>
+                <#include searchBarLogic>
             <#break>
             <#case "Button">
-                <#include navigateTemplate>
+                <#include buttonLogic>
             <#break>
             <#case "Form">
-                <#list resource.urlParameters as parameter>
-                    <#assign value = "${component.id}${parameter.name?cap_first}">
-                    <#include handleChangeTemplate>
-                </#list>
-                <#list resource.requestProperties as property>
-                    <#assign value = "${component.id}${property.name?cap_first}">
-                    <#include handleChangeTemplate>
-                </#list>
-                <#include fetchTemplate>
-                <#include handleSubmitTemplate>
+                <#include formLogic>
             <#break>
             <#case "Container">
-                <#assign indent = 1>
-                <#include fetchTemplate>
+                <#include containerLogic>
             <#break>
         </#switch>
     </#list>
@@ -146,26 +115,26 @@ export default function ${data.name?cap_first}() {
                 <#assign resource = (component.resource)!>
                 <#switch body.type>
                     <#case "HeroSection">
-                        <#include heroSectionTemplate>
+                        <#include heroSectionCall>
                     <#break>
                     <#case "SearchBar">
-                        <#include searchBarTemplate>
+                        <#include searchBarCall>
                         <#if body.result.component.type == "CardSection">
-                            <#include cardSectionTemplate>
+                            <#include cardSectionCall>
                         </#if>
                     <#break>
                     <#case "Button">
-                        <#include buttonTemplate>
+                        <#include buttonCall>
                      <#break>
                     <#case "Form">
-                        <#include formTemplate>
+                        <#include formCall>
                         <#if body.result.component.type == "Alert">
-                            <#include alertTemplate>
+                            <#include alertCall>
                         </#if>
                     <#break>
                     <#case "Container">
                         <#if body.result.component.type == "CardSection">
-                            <#include cardSectionTemplate>
+                            <#include cardSectionCall>
                         </#if>
                     <#break>
                 </#switch>

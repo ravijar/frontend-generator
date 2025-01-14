@@ -1,5 +1,3 @@
-<#assign buttonTemplate = "/react/components/call/Button.ftl">
-
 <#assign indent = ""?left_pad(indentValue * 4)>
 ${indent}<div className="${component.styleId}-result-container">
 ${indent}    {${component.id}Fetched && (
@@ -15,7 +13,7 @@ ${indent}       >
             <#switch subComponent.type>
                 <#case "Button">
                     <#assign body = subComponent>
-                    <#include buttonTemplate>
+                    <#include buttonCall>
                 <#break>
             </#switch>
         </#list>

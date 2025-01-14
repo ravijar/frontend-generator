@@ -9,9 +9,11 @@ ${indent}            type: <#if response.type??>"${response.type}"<#else>null</#
 ${indent}        },
 ${indent}        description: <#if response.description??>"${response.description}"<#else>null</#if>,
 ${indent}        displayNames: {
+            <#if response.schemaProperties??>
                  <#list response.schemaProperties as property>
 ${indent}            ${property.name}: "${property.displayName}",
                  </#list>
+            </#if>
 ${indent}        },
 ${indent}    }<#if response_has_next>,</#if>
         </#list>

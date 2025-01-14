@@ -154,41 +154,29 @@ The configuration file is an XML document containing <pages> as the root element
     - `id`: Unique identifier for the component.
       - Exception: The `CardSection` component inside a `<result>` tag does not require an `id`.
   - Supported Component Types:
-    - `HeroSection`:
-      - Purpose: Provides a visually static section with text and images.
+    - `HeroSection`: Provides a visually static section with text and images.
       - Functionality: Includes `<text>` for content and `<image>` for visuals.
-    - `Button`:
-      - Purpose: Provides navigation.
+    - `Button`: Provides navigation.
       - Functionality: Uses `<text>` for the label and `<route>` for frontend navigation.
-    - `Container`:
-      - Purpose: Fetches and displays data using an API resource.
+    - `Container`: Fetches and displays data using an API resource.
       - Functionality: Includes `<resource>` for API mapping and `<result>` for defining the component type for the result. Comes with a useEffect hook with no dependencies.
-    - `Form`:
-      - Purpose: Captures and submits user data to an API.
+    - `Form`: Captures and submits user data to an API.
       - Functionality: Uses `<resource>` for API submission, `<submit>` for button labeling, and optionally `<result>` to display output.
-    - `SearchBar`:
-      - Purpose: Allows users to search and view results.
+    - `SearchBar`: Allows users to search and view results.
       - Functionality: Uses `<resource>` for API queries and `<result>` to display the search results.
-    - `CardSection`:
-      - Purpose: Displays fetched data in a card layout.
+    - `CardSection`: Displays fetched data in a card layout.
       - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
 
 4. Child Tags
-  - `<resource>` :
-     - **Purpose**: Defines an API resource to be accessed by the component.
+  - `<resource>` : Defines an API resource to be accessed by the component.
      - **Attributes**:
-      - `method`: HTTP method (e.g., `GET`, `POST`).
-  - `<route>` :
-     - **Purpose**: Defines frontend routing for navigation.
-  - `<result>` :
-     - **Purpose**: Defines the data fetched by an API call and specifies the component used to display the data.
+        - `method`: HTTP method (e.g., `GET`, `POST`).
+  - `<route>` : Defines frontend routing for navigation.
+  - `<result>` : Defines the data fetched by an API call and specifies the component used to display the data.
      - The `CardSection` component is used to display the fetched data.
-  - `<image>` :
-     - **Purpose**: Defines an image URL for a visual element within a component.
-  - `<submit>` :
-     - **Purpose**: Defines the label for a form submission button.
-  - `<text>` :
-     - **Purpose**: Defines the textual content for a component.
+  - `<image>` : Defines an image URL for a visual element within a component.
+  - `<submit>` : Defines the label for a form submission button.
+  - `<text>` : Defines the textual content for a component.
   
  An example Page Configuration File:
 ```
@@ -245,80 +233,105 @@ styles/
 ##### Customization Options
 1. `components/` Folder:
   - **Purpose**: Contains predefined CSS files for individual components (e.g., `Alert.css`, `InputField.css`, `Button.css`).
-  - Customization:
+  - **Customization**:
     - Users can modify the styles in these files without changing the class names.
     - This ensures the core functionality of the components remains intact while allowing visual customization.
 
-2. `pages/` Folder:
-  - Enables **page-specific styling** through .js files.
-  - Customization:
-    - Users can create a style file for each page in the format `PageNameStyles.js`.
-    - For example, if a page `CreatePet.jsx` exists in the generated frontend, the user can create a corresponding `CreatePetStyles.js` file in this folder.
-  - Styling Example:
+2. `custom_styles/` Folder:
+  - **Purpose**: Enables page-specific styling through `.js` files.
+  - **Pre-Populated Classes**:
+    - For each page, `.js` files—named after the corresponding page—are automatically populated with empty style classes for components, using their component IDs from the Pages Configuration File.
+    - **camelCase** is used for class names in `.js` files (e.g., `createPetForm`, `seeAllPetsButton`).
+  - **Example Structure**: `CreatePet.js`
     ```
     const styles = {
-      pageContainer: {
-        maxWidth: '700px',
-        margin: '0 auto',
-        padding: '20px',
-        backgroundColor: '#f7f9fc',
-      },
-      titleBar: {
-        backgroundColor: '#3498db',
-        color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        textAlign: 'center',
-      },
-    };
-
-    export default styles;
-    ```
-  - Naming Convention:
-    - Use camelCase for class names in `.js` files (e.g., `pageContainer`).
-    - These correspond to kebab-case class names in CSS files (e.g., `page-container`).
-  - Integrating Prebuilt Component Styles:
-    - Page-specific files can incorporate styles from prebuilt components using their names.
-    - Example:
-      ```
-      const styles = {
-          inputField: {
-              container: {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  marginBottom: '20px',
+        createPetForm : {
+            formContainer : {
+                // Custom styling here
+            },
+            formInputs : {
+               // Custom styling here
+            },
+            inputField : {
+              container : {
+                  // Custom styling here
               },
-              label: {
-                  marginBottom: '10px',
-                  fontWeight: '600',
-                  color: '#2c3e50',
+              label : {
+                  // Custom styling here
               },
               input: {
-                  padding: '14px',
-                  fontSize: '16px',
-                  border: '1px solid #ccd1d9',
-                  borderRadius: '6px',
-                  backgroundColor: '#f9f9f9',
+                  // Custom styling here
               },
-          },
-      };
-      
-      export default styles;
-      ```
-      
-3. `index.css` File:
-  - Provides a central location for global styles applicable across the entire frontend.
-  - Users can define overarching styles for the application here.
+              error: {
+                  // Custom styling here
+              },
+            },
+            createPetForm : {
+              customButton : {
+                  // Custom styling here  
+              },
+            },
+        },
+        seeAllPetsButton: {
+            customButton: {
+                // Custom styling here
+            },
+        },
+    };
+    
+    export default styles;
+    ```
+
+3. `pages/` Folder:
+  - **Purpose**: Adjusting the positioning of the components on the page using .css files.
+  - **Pre-Populated Classes**:
+    - Each .css file—named after the respective page—is automatically populated with classes for the components on that page.
+    - The **camelCase** component IDs from the Pages Configuration File are converted to **kebab-case** and suffixed with `-container`.
+  - Example Structure: `CreatePet.css`
+    ```
+    .page-container {
+    }
+    
+    .create-pet-form-container {
+        z-index: 1;
+        position: absolute;
+        top: 60px;
+        left: 46%;
+    }
+    
+    .see-all-pets-button-container {
+        z-index: 1;
+        position: absolute;
+        bottom: 50px;
+        left: 45%;
+    }
+    ```
 
 ### 3: Generate Frontend Code
-- After adding the input files, execute the following command to generate the required React code:
+- After adding the input files, you can use the `build` command to generate the required frontend components, client-side API code, and styles. Below are the available options for the `build` command:
+  -Build Command Variants:
+    - i. `build`:
+      - Executes both `build --api` and `build --code`.
+      - Generates the client-side API based on the OpenAPI Specification in `openapi.yaml`.
+      - Creates React components and pages as defined in `pages.xml`.
   ```
   java -jar FrontendGenerator-<version>.jar build
   ```
-- This command will:
-  - Create the frontend components for the pages defined in `pages.xml`.
-  - Generate client-side API code based on the OpenAPI Specification in `openapi.yaml`.
-  - Populate the `build/` folder with the complete React project, ready for development or deployment.
+    - ii. `build --api` :
+      - Generates the client-side API based on the OpenAPI Specification in `openapi.yaml`.
+  ```
+  java -jar FrontendGenerator-<version>.jar build --api
+  ```
+    - iii. `build --code` :
+      - Creates React components and pages as defined in `pages.xml`.
+  ```
+  java -jar FrontendGenerator-<version>.jar build --code
+  ```      
+    - iv. `build --styles` :
+      - Applies user-defined styles from the styles/ folder to the generated project.
+  ```
+  java -jar FrontendGenerator-<version>.jar build --styles
+  ```  
 
 ### 4: Run the Application
 - To preview and test the generated frontend, execute:

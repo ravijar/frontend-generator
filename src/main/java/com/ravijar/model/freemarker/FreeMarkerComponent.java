@@ -1,17 +1,13 @@
 package com.ravijar.model.freemarker;
 
-import com.ravijar.model.openapi.OpenAPIResource;
-import com.ravijar.model.xml.component.Component;
 import lombok.*;
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
-public class FreeMarkerComponent {
+public abstract class FreeMarkerComponent {
+    private String type;
     private String id;
     private String styleId;
-    private Component body;
-    private OpenAPIResource resource;
 }

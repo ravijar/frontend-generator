@@ -1,25 +1,16 @@
 package com.ravijar.generator;
 
-import com.ravijar.helper.OpenAPIConverter;
+import com.ravijar.model.freemarker.*;
 import com.ravijar.model.openapi.OpenAPIParameter;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
+import com.ravijar.model.xml.component.*;
 import com.ravijar.parser.OpenAPIParser;
-import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
-import com.ravijar.model.freemarker.FreeMarkerPage;
-import com.ravijar.model.openapi.OpenAPIResource;
-import com.ravijar.model.freemarker.FreeMarkerComponent;
-import com.ravijar.model.openapi.OpenAPIResponse;
 import com.ravijar.model.xml.Page;
-import com.ravijar.model.xml.Resource;
-import com.ravijar.model.xml.component.Component;
-import com.ravijar.model.xml.component.Container;
-import com.ravijar.model.xml.component.Form;
-import com.ravijar.model.xml.component.SearchBar;
+import com.ravijar.populator.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.PathItem;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,26 +30,6 @@ public class ReactGenerator {
         this.jsGenerator = new JSGenerator(cfg);
         this.openAPIParser = openAPIParser;
         this.schemas = openAPIParser.getSchemas();
-    }
-
-    private OpenAPIResource getResourceData(Resource resource) {
-        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(resource.getMethod());
-        String url = resource.getUrl();
-
-        String apiFunctionName = openAPIParser.getOperationId(url, httpMethod);
-        List<OpenAPIParameter> urlParameters = openAPIParser.getParameters(url, httpMethod);
-        String requestSchema = openAPIParser.getRequestSchema(url, httpMethod);
-        Set<String> responseCodes = openAPIParser.getResponseCodes(url, httpMethod);
-
-        List<OpenAPIResponse> responses = new ArrayList<>();
-        for (String code : responseCodes) {
-            String schemaName = openAPIParser.getResponseSchemaName(url, httpMethod, code);
-            String type = openAPIParser.getResponseSchemaType(url, httpMethod, code);
-            String description = openAPIParser.getResponseDescription(url, httpMethod, code);
-            responses.add(new OpenAPIResponse(code, schemaName, type, description, schemas.get(schemaName)));
-        }
-
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, schemas.get(requestSchema), responses);
     }
 
     public void generateAppPage(String outputDir, List<Page> pages) throws IOException, TemplateException {
@@ -111,45 +82,30 @@ public class ReactGenerator {
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for (Component component : page.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = null;
-            Resource resource;
-            String styleId = StringConverter.toKebabCase(component.getId());
+            FreeMarkerComponent freeMarkerComponent;
             switch (component.getType()) {
-                case "HeroSection", "Button":
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            null
-                    );
-                    break;
-                case "SearchBar":
-                    resource = ((SearchBar) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            getResourceData(resource)
-                    );
-                    break;
-                case "Form":
-                    resource = ((Form) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            getResourceData(resource)
-                    );
+                case "HeroSection" -> {
+                    freeMarkerComponent = new FreeMarkerHeroSection();
+                    new HeroSectionPopulator(openAPIParser).populate((HeroSection) component, (FreeMarkerHeroSection) freeMarkerComponent);
+                }
+                case "Button" -> {
+                    freeMarkerComponent = new FreeMarkerButton();
+                    new ButtonPopulator(openAPIParser).populate((Button) component, (FreeMarkerButton) freeMarkerComponent);
+                }
+                case "SearchBar" -> {
+                    freeMarkerComponent = new FreeMarkerSearchBar();
+                    new SearchBarPopulator(openAPIParser).populate((SearchBar) component, (FreeMarkerSearchBar) freeMarkerComponent);
+                }
+                case "Form" -> {
+                    freeMarkerComponent = new FreeMarkerForm();
+                    new FormPopulator(openAPIParser).populate((Form) component, (FreeMarkerForm) freeMarkerComponent);
                     generateForm(componentOutputDir, freeMarkerComponent);
-                    break;
-                case "Container":
-                    resource = ((Container) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            getResourceData(resource));
-                    break;
+                }
+                case "Container" -> {
+                    freeMarkerComponent = new FreeMarkerContainer();
+                    new ContainerPopulator(openAPIParser).populate((Container) component, (FreeMarkerContainer) freeMarkerComponent);
+                }
+                default -> freeMarkerComponent = null;
             }
             freeMarkerComponents.add(freeMarkerComponent);
         }

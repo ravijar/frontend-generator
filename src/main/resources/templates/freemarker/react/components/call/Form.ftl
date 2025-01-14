@@ -1,4 +1,4 @@
-<#assign indent = ""?left_pad(indent * 4)>
+<#assign indent = ""?left_pad(indentValue * 4)>
 ${indent}<div className="${component.styleId}-container">
 ${indent}    <${component.id?cap_first}
 ${indent}        ${component.id}HandleSubmit={${component.id}HandleSubmit}

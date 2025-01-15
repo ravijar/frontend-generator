@@ -8,3 +8,4 @@ ${indent}${component.id} : {
     <#assign indent = ""?left_pad(indentValue * 4)>
 </#if>
 ${indent}},
+<#include nestStyle>

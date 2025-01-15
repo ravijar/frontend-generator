@@ -28,6 +28,7 @@
 <#assign alertCall = "/react/components/call/Alert.ftl">
 <#assign containerCall = "/react/components/call/Container.ftl">
 <#assign resultCall = "/react/components/call/Result.ftl">
+<#assign nestCall = "/react/components/call/Nest.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";

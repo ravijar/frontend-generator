@@ -2,7 +2,7 @@
 ${indent}<div className="${component.styleId}-container">
 ${indent}   <Button
 ${indent}       text="${component.text}"
-${indent}       onClick={${component.id}Navigate}
+${indent}       onClick={() => navigate("${component.route}")}
 ${indent}       styles={styles.${component.id}}
 ${indent}   />
 ${indent}</div>

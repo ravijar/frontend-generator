@@ -7,6 +7,7 @@
 <#assign containerStyle = "/js/styles/components/Container.ftl">
 <#assign inputFieldStyle = "/js/styles/components/InputField.ftl">
 <#assign keyValuePairStyle = "/js/styles/components/KeyValuePair.ftl">
+<#assign nestStyle = "/js/styles/components/Nest.ftl">
 const styles = {
 <#assign indentValue = 1>
 <#list page.components as component>

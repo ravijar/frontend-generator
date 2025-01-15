@@ -15,9 +15,7 @@
 .child-container {
     display: flex;
     flex-direction: row;
-    margin-bottom: 16px;
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 5px;
     border-radius: 4px;
 }
 
@@ -30,4 +28,5 @@
 .child-value {
     flex: 1;
     color: #555;
+    text-align: right;
 }

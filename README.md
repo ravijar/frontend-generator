@@ -1,6 +1,6 @@
 # Automatic Frontend Generation Framework
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 [![Java](https://img.shields.io/badge/Java-17-brightgreen)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![React](https://img.shields.io/badge/React-18.3.1-blue)](https://reactjs.org/)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0.x%20%7C%203.1.0-orange)](https://www.openapis.org/)
@@ -36,7 +36,7 @@ By leveraging the OAS as a central standard, the **Automatic Frontend Generation
 ### Input Files
 The framework requires the following input files to function:
 - **[OpenAPI Specification](#i-openapi-specification)**: The OpenAPI Specification used as input must be tailored to include specific extensions and configurations required by the framework.
-- **[Pages Configuration File](#ii-pages-configuration-file)**: Maps API endpoints to frontend pages.
+- **[Pages Configuration File](#ii-pages-configuration-file)**: Defines the structure, layout, and components of the frontend pages, including API endpoints and navigation details.
 - **[User Customization Files](#iii-user-customization-files)**: Predefined and customizable styles for components and pages.
 
 #### Download and Build the Framework
@@ -49,7 +49,7 @@ The framework requires the following input files to function:
   ```
   java -jar FrontendGenerator-<version>.jar init <ProjectName>
   ```
-- This will create a new directory named ProjectName (or Untitled by default if no name is provided) with the following structure:
+- This will create a new directory named ProjectName with the following structure. This will create a config.properties file in the directory of the FrontendGenerator.jar file and the user should not edit or delete this file:
   ```
   ProjectName/
   ├── build/
@@ -67,28 +67,15 @@ ii. `styles/` Folder:
 
 iii. `openapi.yaml` File:
    - A null file created for the user to add their OpenAPI Specification.
-   - Define your API endpoints, request/response schemas, and other specifications in this file.
 
 iv. `pages.xml` File:
    - A null file for defining the structure of the pages in the frontend.
-   - Specify the resource URL, resource method, and configurations for each page.
 
 
 ### 2: Add Input Files
 #### i. OpenAPI Specification
 The framework requires specific custom extensions in the OpenAPI Specification for it to function correctly and leverage its full capabilities. Below is an explanation of each required extension, where it must be included, and its purpose:
 
-- `x-pageTitle` extension:
-  - **Where it must be included**: Inside API operations.
-  - **Purpose**: Specifies the title of the frontend page corresponding to the API operation.
-  - **Example**: The generated page for the `GET /pets` endpoint will have the title "All Pets". 
-    ```
-    /pets:
-      get:
-        summary: Get all pets
-        operationId: getAllPets
-        x-pageTitle: All Pets
-    ```
 
 - `x-displayName` extension:
   - **Where it must be included**: Inside parameters (path or query) and schema properties.
@@ -114,19 +101,6 @@ The framework requires specific custom extensions in the OpenAPI Specification f
             name:
               type: string
               x-displayName: Name
-    ```
-
-- `x-nextPages` extension:
-  - **Where it must be included**: Inside API operations.
-  - **Purpose**: Defines the next pages in the navigation flow after interacting with the current page.
-  - **Example**: After fetching the pet list (`200` response), users can navigate to pages for viewing pet details (`GetPetById`) or creating a new pet (`CreatePet`).   
-    ```
-    responses:
-      '200':
-        description: A list of pets
-        x-nextPages:
-          - GetPetById
-          - CreatePet
     ```
 
 ##### Special Note:
@@ -155,32 +129,93 @@ The framework does not support defining schemas directly inside the paths object
   ```
 
 #### ii. Pages Configuration File
-The Page Configuration File defines the mapping between API endpoints and the frontend pages to be generated. It specifies details such as the API resource URL, HTTP method, and the corresponding page name.
-##### Supported Features
-1. `<page>` element:
-  - Represents a single page to be generated in the frontend.
-  - Each page maps to a specific API endpoint and HTTP method.
-  - Example:
-    ```
-    <page resource-url="/pets" resource-method="GET">GetAllPets</page>
-    ```
-2. Attributes:
-  - `resource-url`: Specifies the API endpoint for which the page is generated.
-      - Example: `/pets` or `/pets/{id}`.
-  - `resource-method: Indicates the HTTP method used for the API operation.
-      - Supported Methods: `GET`, `POST`, `DELETE`, etc.
-      - Case-insensitive.
-  - Content (Text): The name of the page that will be generated in the React application.
-      - Example: `GetAllPets` or `CreatePet`.
+The Pages Configuration File defines the structure and layout of the frontend pages to be generated. This includes support for components, routes, and navigation bars, offering greater flexibility and customization.
+
+#### Structure
+The configuration file is an XML document containing <pages> as the root element. Each <page> represents a single frontend page, containing its properties and components.
+
+##### Tags and Attribites
+1. `<pages>` Tag:
+  - Root element for the configuration file.
+  - Contains single/multiple `<page>` tags.
+
+2. `<page>` Tag:
+  - Represents a single page in the frontend.
+  - **Attributes:**
+    - name: The name of the page (e.g., "Home", "Pets").
+    - route: The URL path for the page (e.g., /home, /pets).
+    - navbar: Specifies whether the page is included on the navigation bar (true or false).
+  - Contains single/multiple <component> tags.
+
+3. `<component>` Tag:
+  - Defines a UI component to be included on the page.
+  - **Attributes:**
+    - `type`: The type of component (e.g., HeroSection, Button, Form).
+    - `id`: Unique identifier for the component.
+      - Exception: The `CardSection` component inside a `<result>` tag does not require an `id`.
+  - Supported Component Types:
+    - `HeroSection`: Provides a visually static section with text and images.
+      - Functionality: Includes `<text>` for content and `<image>` for visuals.
+    - `Button`: Provides navigation.
+      - Functionality: Uses `<text>` for the label and `<route>` for frontend navigation.
+    - `Container`: Fetches and displays data using an API resource.
+      - Functionality: Includes `<resource>` for API mapping and `<result>` for defining the component type for the result. Comes with a useEffect hook with no dependencies.
+    - `Form`: Captures and submits user data to an API.
+      - Functionality: Uses `<resource>` for API submission, `<submit>` for button labeling, and optionally `<result>` to display output.
+    - `SearchBar`: Allows users to search and view results.
+      - Functionality: Uses `<resource>` for API queries and `<result>` to display the search results.
+    - `CardSection`: Displays fetched data in a card layout.
+      - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
+
+4. Child Tags
+  - `<resource>` : Defines an API resource to be accessed by the component.
+     - **Attributes**:
+        - `method`: HTTP method (e.g., `GET`, `POST`).
+  - `<route>` : Defines frontend routing for navigation.
+  - `<result>` : Defines the data fetched by an API call and specifies the component used to display the data.
+     - The `CardSection` component is used to display the fetched data.
+  - `<image>` : Defines an image URL for a visual element within a component.
+  - `<submit>` : Defines the label for a form submission button.
+  - `<text>` : Defines the textual content for a component.
   
  An example Page Configuration File:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <pages>
-    <page resource-url="/pets" resource-method="GET">GetAllPets</page>
-    <page resource-url="/pets" resource-method="POST">CreatePet</page>
-    <page resource-url="/pets/{id}" resource-method="GET">GetPetById</page>
-    <page resource-url="/pets/{id}" resource-method="DELETE">DeletePet</page>
+    <page name="Home" route="/home" navbar="true">
+        <component type="HeroSection" id="homeNavbar">
+            <text>Petstore</text>
+            <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
+
+    <page name="Pets" route="/pets" navbar="true">
+        <component type="Container" id="petsContainer">
+            <resource method="GET">/pets</resource>
+            <result>
+                <component type="CardSection"/>
+            </result>
+        </component>
+        <component type="Button" id="createPetButton">
+            <text>Add New Pet</text>
+            <route>/createPet</route>
+        </component>
+    </page>
+
+    <page name="CreatePet" route="/createPet" navbar="true">
+        <component type="Form" id="createPetForm">
+            <resource method="POST">/pets</resource>
+            <submit>Add Pet</submit>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
 </pages>
 ```
 
@@ -190,88 +225,113 @@ The styles folder is organized as follows:
 ```
 styles/
 ├── components/
-│ ├── Alert.css
-│ ├── InputField.css
-│ ├── KeyValuePair.css
-│ └── Page.css
+├── custom_styles/ 
 ├── pages/
-└── index.css
+├── index.css
+└── App.css
 ```
 ##### Customization Options
 1. `components/` Folder:
-  - Contains predefined CSS files for individual components such as `Alert.css`, `InputField.css`, and `KeyValuePair.css`.
-  - Customization: Users can alter the styles in these files without changing the class names. This ensures the functionality of the components remains intact while allowing for appearance modifications.
+  - **Purpose**: Contains predefined CSS files for individual components (e.g., `Alert.css`, `InputField.css`, `Button.css`).
+  - **Customization**:
+    - Users can modify the styles in these files without changing the class names.
+    - This ensures the core functionality of the components remains intact while allowing visual customization.
 
-2. `pages/` Folder:
-  - Enables **page-specific styling** through .js files.
-  - Customization:
-    - Users can create a style file for each page in the format `PageNameStyles.js`.
-    - For example, if a page `CreatePet.jsx` exists in the generated frontend, the user can create a corresponding `CreatePetStyles.js` file in this folder.
-  - Styling Example:
+2. `custom_styles/` Folder:
+  - **Purpose**: Enables page-specific styling through `.js` files.
+  - **Pre-Populated Classes**:
+    - For each page, `.js` files—named after the corresponding page—are automatically populated with empty style classes for components, using their component IDs from the Pages Configuration File.
+    - **camelCase** is used for class names in `.js` files (e.g., `createPetForm`, `seeAllPetsButton`).
+  - **Example Structure**: `CreatePet.js`
     ```
     const styles = {
-      pageContainer: {
-        maxWidth: '700px',
-        margin: '0 auto',
-        padding: '20px',
-        backgroundColor: '#f7f9fc',
-      },
-      titleBar: {
-        backgroundColor: '#3498db',
-        color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        textAlign: 'center',
-      },
-    };
-
-    export default styles;
-    ```
-  - Naming Convention:
-    - Use camelCase for class names in `.js` files (e.g., `pageContainer`).
-    - These correspond to kebab-case class names in CSS files (e.g., `page-container`).
-  - Integrating Prebuilt Component Styles:
-    - Page-specific files can incorporate styles from prebuilt components using their names.
-    - Example:
-      ```
-      const styles = {
-          inputField: {
-              container: {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  marginBottom: '20px',
+        createPetForm : {
+            formContainer : {
+                // Custom styling here
+            },
+            formInputs : {
+               // Custom styling here
+            },
+            inputField : {
+              container : {
+                  // Custom styling here
               },
-              label: {
-                  marginBottom: '10px',
-                  fontWeight: '600',
-                  color: '#2c3e50',
+              label : {
+                  // Custom styling here
               },
               input: {
-                  padding: '14px',
-                  fontSize: '16px',
-                  border: '1px solid #ccd1d9',
-                  borderRadius: '6px',
-                  backgroundColor: '#f9f9f9',
+                  // Custom styling here
               },
-          },
-      };
-      
-      export default styles;
-      ```
-      
-3. `index.css` File:
-  - Provides a central location for global styles applicable across the entire frontend.
-  - Users can define overarching styles for the application here.
+              error: {
+                  // Custom styling here
+              },
+            },
+            createPetForm : {
+              customButton : {
+                  // Custom styling here  
+              },
+            },
+        },
+        seeAllPetsButton: {
+            customButton: {
+                // Custom styling here
+            },
+        },
+    };
+    
+    export default styles;
+    ```
+
+3. `pages/` Folder:
+  - **Purpose**: Adjusting the positioning of the components on the page using .css files.
+  - **Pre-Populated Classes**:
+    - Each .css file—named after the respective page—is automatically populated with classes for the components on that page.
+    - The **camelCase** component IDs from the Pages Configuration File are converted to **kebab-case** and suffixed with `-container`.
+  - Example Structure: `CreatePet.css`
+    ```
+    .page-container {
+    }
+    
+    .create-pet-form-container {
+        z-index: 1;
+        position: absolute;
+        top: 60px;
+        left: 46%;
+    }
+    
+    .see-all-pets-button-container {
+        z-index: 1;
+        position: absolute;
+        bottom: 50px;
+        left: 45%;
+    }
+    ```
 
 ### 3: Generate Frontend Code
-- After adding the input files, execute the following command to generate the required React code:
+- After adding the input files, you can use the `build` command to generate the required frontend components, client-side API code, and styles. Below are the available options for the `build` command:
+  -Build Command Variants:
+    - i. `build`:
+      - Executes both `build --api` and `build --code`.
+      - Generates the client-side API based on the OpenAPI Specification in `openapi.yaml`.
+      - Creates React components and pages as defined in `pages.xml`.
   ```
   java -jar FrontendGenerator-<version>.jar build
   ```
-- This command will:
-  - Create the frontend components for the pages defined in `pages.xml`.
-  - Generate client-side API code based on the OpenAPI Specification in `openapi.yaml`.
-  - Populate the `build/` folder with the complete React project, ready for development or deployment.
+    - ii. `build --api` :
+      - Generates the client-side API based on the OpenAPI Specification in `openapi.yaml`.
+  ```
+  java -jar FrontendGenerator-<version>.jar build --api
+  ```
+    - iii. `build --code` :
+      - Creates React components and pages as defined in `pages.xml`.
+  ```
+  java -jar FrontendGenerator-<version>.jar build --code
+  ```      
+    - iv. `build --styles` :
+      - Applies user-defined styles from the styles/ folder to the generated project.
+  ```
+  java -jar FrontendGenerator-<version>.jar build --styles
+  ```  
 
 ### 4: Run the Application
 - To preview and test the generated frontend, execute:

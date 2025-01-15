@@ -7,6 +7,14 @@
   <version>0.1.0</version>
   <url>http://maven.apache.org</url>
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -20,7 +28,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.ravijar.App</mainClass>
+                  <mainClass>com.ravijar.core.AppCLI</mainClass>
                 </transformer>
               </transformers>
             </configuration>

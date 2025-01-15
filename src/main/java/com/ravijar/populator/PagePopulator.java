@@ -1,7 +1,8 @@
 package com.ravijar.populator;
 
-import com.ravijar.helper.PopulatorSwitch;
-import com.ravijar.model.freemarker.*;
+import com.ravijar.helper.PopulatorHelper;
+import com.ravijar.model.freemarker.FreeMarkerComponent;
+import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.xml.Page;
 import com.ravijar.model.xml.component.*;
 import com.ravijar.parser.OpenAPIParser;
@@ -23,7 +24,9 @@ public class PagePopulator {
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for(Component component : source.getComponents()) {
-            freeMarkerComponents.add(new PopulatorSwitch(openAPIParser).switchComponent(component));
+            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
+            freeMarkerComponent.setRole("parent");
+            freeMarkerComponents.add(freeMarkerComponent);
         }
         target.setComponents(freeMarkerComponents);
     }

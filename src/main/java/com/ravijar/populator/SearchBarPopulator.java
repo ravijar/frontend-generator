@@ -1,6 +1,8 @@
 package com.ravijar.populator;
 
+import com.ravijar.helper.PopulatorHelper;
 import com.ravijar.model.freemarker.FreeMarkerCardSection;
+import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.freemarker.FreeMarkerSearchBar;
 import com.ravijar.model.xml.component.CardSection;
 import com.ravijar.model.xml.component.SearchBar;
@@ -15,12 +17,8 @@ public class SearchBarPopulator extends ComponentPopulator{
         populateComponent(source, target);
         target.setResource(openAPIParser.getResourceData(source.getResource()));
 
-        switch (source.getResult().getComponent().getType()) {
-            case "CardSection":
-                FreeMarkerCardSection freeMarkerCardSection = new FreeMarkerCardSection();
-                new CardSectionPopulator(openAPIParser).populate((CardSection) source.getResult().getComponent(), freeMarkerCardSection);
-                target.setResultComponent(freeMarkerCardSection);
-                break;
-        }
+        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent());
+        freeMarkerComponent.setRole("result");
+        target.setResultComponent(freeMarkerComponent);
     }
 }

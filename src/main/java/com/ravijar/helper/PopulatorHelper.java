@@ -5,10 +5,10 @@ import com.ravijar.model.xml.component.*;
 import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.populator.*;
 
-public class PopulatorSwitch {
+public class PopulatorHelper {
     private OpenAPIParser openAPIParser;
 
-    public PopulatorSwitch(OpenAPIParser openAPIParser) {
+    public PopulatorHelper(OpenAPIParser openAPIParser) {
         this.openAPIParser = openAPIParser;
     }
 

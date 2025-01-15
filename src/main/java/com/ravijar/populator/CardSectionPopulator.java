@@ -1,6 +1,6 @@
 package com.ravijar.populator;
 
-import com.ravijar.helper.PopulatorSwitch;
+import com.ravijar.helper.PopulatorHelper;
 import com.ravijar.model.freemarker.FreeMarkerCardSection;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.xml.component.CardSection;
@@ -21,7 +21,9 @@ public class CardSectionPopulator extends ComponentPopulator{
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for(Component component : source.getComponents()) {
-            freeMarkerComponents.add(new PopulatorSwitch(openAPIParser).switchComponent(component));
+            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
+            freeMarkerComponent.setRole("child");
+            freeMarkerComponents.add(freeMarkerComponent);
         }
         target.setSubComponents(freeMarkerComponents);
     }

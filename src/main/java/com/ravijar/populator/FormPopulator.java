@@ -1,6 +1,7 @@
 package com.ravijar.populator;
 
-import com.ravijar.helper.PopulatorSwitch;
+import com.ravijar.helper.PopulatorHelper;
+import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.freemarker.FreeMarkerForm;
 import com.ravijar.model.xml.component.Form;
 import com.ravijar.parser.OpenAPIParser;
@@ -14,6 +15,9 @@ public class FormPopulator extends ComponentPopulator{
         populateComponent(source, target);
         target.setResource(openAPIParser.getResourceData(source.getResource()));
         target.setSubmitText(source.getSubmit().getName());
-        target.setResultComponent(new PopulatorSwitch(openAPIParser).switchComponent(source.getResult().getComponent()));
+
+        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent());
+        freeMarkerComponent.setRole("result");
+        target.setResultComponent(freeMarkerComponent);
     }
 }

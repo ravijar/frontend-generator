@@ -3,11 +3,10 @@ package com.ravijar.generator;
 import com.ravijar.model.freemarker.*;
 import com.ravijar.model.openapi.OpenAPIParameter;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
-import com.ravijar.model.xml.component.*;
 import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.model.*;
 import com.ravijar.model.xml.Page;
-import com.ravijar.populator.*;
+import com.ravijar.populator.PagePopulator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -79,38 +78,15 @@ public class ReactGenerator {
     public void generatePage(String pageOutputDir, String componentOutputDir, String userStylesDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
+        FreeMarkerPage freeMarkerPage = new FreeMarkerPage();
+        new PagePopulator(openAPIParser).populate(page, freeMarkerPage);
 
-        for (Component component : page.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent;
-            switch (component.getType()) {
-                case "HeroSection" -> {
-                    freeMarkerComponent = new FreeMarkerHeroSection();
-                    new HeroSectionPopulator(openAPIParser).populate((HeroSection) component, (FreeMarkerHeroSection) freeMarkerComponent);
-                }
-                case "Button" -> {
-                    freeMarkerComponent = new FreeMarkerButton();
-                    new ButtonPopulator(openAPIParser).populate((Button) component, (FreeMarkerButton) freeMarkerComponent);
-                }
-                case "SearchBar" -> {
-                    freeMarkerComponent = new FreeMarkerSearchBar();
-                    new SearchBarPopulator(openAPIParser).populate((SearchBar) component, (FreeMarkerSearchBar) freeMarkerComponent);
-                }
-                case "Form" -> {
-                    freeMarkerComponent = new FreeMarkerForm();
-                    new FormPopulator(openAPIParser).populate((Form) component, (FreeMarkerForm) freeMarkerComponent);
-                    generateForm(componentOutputDir, freeMarkerComponent);
-                }
-                case "Container" -> {
-                    freeMarkerComponent = new FreeMarkerContainer();
-                    new ContainerPopulator(openAPIParser).populate((Container) component, (FreeMarkerContainer) freeMarkerComponent);
-                }
-                default -> freeMarkerComponent = null;
+        for (FreeMarkerComponent component : freeMarkerPage.getComponents()) {
+            if (component.getType().equals("Form")) {
+                generateForm(componentOutputDir, component);
             }
-            freeMarkerComponents.add(freeMarkerComponent);
         }
 
-        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
         dataModel.put("data", freeMarkerPage);
 
         Template template = cfg.getTemplate("react/pages/Page.ftl");

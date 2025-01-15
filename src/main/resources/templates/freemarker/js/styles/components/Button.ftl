@@ -1,5 +1,5 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}${body.id} : {
+${indent}${component.id} : {
 ${indent}    customButton : {
 
 ${indent}    },

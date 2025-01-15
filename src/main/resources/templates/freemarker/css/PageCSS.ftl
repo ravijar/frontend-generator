@@ -2,9 +2,9 @@
 
 }
 
-<#list data.components as component>
+<#list page.components as component>
 .${component.styleId}-container {
-    <#switch component.body.type>
+    <#switch component.type>
         <#case "SearchBar">
     z-index: 1;
     position: absolute;
@@ -25,19 +25,19 @@
         <#break>
     </#switch>
 }
-<#switch component.body.type>
+<#switch component.type>
     <#case "SearchBar">
-.${component.styleId}-result-container {
+.${component.resultComponent.styleId}-container {
 
 }
     <#break>
     <#case "Container">
-.${component.styleId}-result-container {
+.${component.resultComponent.styleId}-container {
 
 }
     <#break>
     <#case "Form">
-.${component.styleId}-result-container {
+.${component.resultComponent.styleId}-container {
 
 }
     <#break>

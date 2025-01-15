@@ -38,7 +38,7 @@ public class ReactGenerator {
         for (Page page : pages) {
             freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
         }
-        dataModel.put("data", freeMarkerPages);
+        dataModel.put("pages", freeMarkerPages);
 
         Template template = cfg.getTemplate("react/pages/App.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
@@ -55,7 +55,7 @@ public class ReactGenerator {
                 freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
             }
         }
-        dataModel.put("data", freeMarkerPages);
+        dataModel.put("pages", freeMarkerPages);
 
         Template template = cfg.getTemplate("react/components/generate/NavBar.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
@@ -67,7 +67,7 @@ public class ReactGenerator {
         String formName = component.getId().substring(0, 1).toUpperCase() + component.getId().substring(1);
 
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("data", component);
+        dataModel.put("component", component);
 
         Template template = cfg.getTemplate("react/components/generate/Form.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
@@ -87,7 +87,7 @@ public class ReactGenerator {
             }
         }
 
-        dataModel.put("data", freeMarkerPage);
+        dataModel.put("page", freeMarkerPage);
 
         Template template = cfg.getTemplate("react/pages/Page.ftl");
         try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {

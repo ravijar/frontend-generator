@@ -1,5 +1,5 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}alert : {
+${indent}${component.id} : {
 ${indent}    alert : {
 
 ${indent}    },

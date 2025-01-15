@@ -1,31 +1,33 @@
-<#assign buttonTemplate = "/js/styles/components/Button.ftl">
-<#assign cardSectionTemplate = "/js/styles/components/CardSection.ftl">
-<#assign formTemplate = "/js/styles/components/Form.ftl">
-<#assign heroSectionTemplate = "/js/styles/components/HeroSection.ftl">
-<#assign searchBarTemplate = "/js/styles/components/SearchBar.ftl">
-<#assign containerTemplate = "/js/styles/components/Container.ftl">
+<#assign alertStyle = "/js/styles/components/Alert.ftl">
+<#assign buttonStyle = "/js/styles/components/Button.ftl">
+<#assign cardSectionStyle = "/js/styles/components/CardSection.ftl">
+<#assign formStyle = "/js/styles/components/Form.ftl">
+<#assign heroSectionStyle = "/js/styles/components/HeroSection.ftl">
+<#assign searchBarStyle = "/js/styles/components/SearchBar.ftl">
+<#assign containerStyle = "/js/styles/components/Container.ftl">
+<#assign inputFieldStyle = "/js/styles/components/InputField.ftl">
+<#assign keyValuePairStyle = "/js/styles/components/KeyValuePair.ftl">
 const styles = {
 <#assign indentValue = 1>
-<#list data.components as component>
-    <#assign body = component.body>
-    <#switch body.type>
+<#list page.components as component>
+    <#switch component.type>
         <#case "Button">
-            <#include buttonTemplate>
+            <#include buttonStyle>
         <#break>
         <#case "CardSection">
-            <#include cardSectionTemplate>
+            <#include cardSectionStyle>
         <#break>
         <#case "Form">
-            <#include formTemplate>
+            <#include formStyle>
         <#break>
         <#case "HeroSection">
-            <#include heroSectionTemplate>
+            <#include heroSectionStyle>
         <#break>
         <#case "SearchBar">
-            <#include searchBarTemplate>
+            <#include searchBarStyle>
         <#break>
         <#case "Container">
-            <#include containerTemplate>
+            <#include containerStyle>
         <#break>
     </#switch>
 </#list>

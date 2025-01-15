@@ -1,7 +1,7 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-<#if resource?? && resource.responses??>
+<#if component.resource?? && component.resource.responses??>
 ${indent}const ${component.id}Responses = {
-        <#list resource.responses as response>
+        <#list component.resource.responses as response>
 ${indent}    "${response.code}": {
 ${indent}        responseSchema: {
 ${indent}            name: <#if response.schemaName??>"${response.schemaName}"<#else>null</#if>,

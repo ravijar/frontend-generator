@@ -1,8 +1,8 @@
-<#list resource.urlParameters as parameter>
+<#list component.resource.urlParameters as parameter>
     <#assign value = "${component.id}${parameter.name?cap_first}">
     <#include handleChange>
 </#list>
-<#list resource.requestProperties as property>
+<#list component.resource.requestProperties as property>
     <#assign value = "${component.id}${property.name?cap_first}">
     <#include handleChange>
 </#list>

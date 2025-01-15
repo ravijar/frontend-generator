@@ -33,24 +33,24 @@ import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
-<#list data.components as component>
-    <#switch component.body.type>
+<#list page.components as component>
+    <#switch component.type>
         <#case "Form">
 import ${component.id?cap_first} from "../components/${component.id?cap_first}";
         <#break>
     </#switch>
 </#list>
-import "./${data.name?cap_first}.css";
-import styles from "../custom_styles/${data.name?cap_first}";
+import "./${page.name?cap_first}.css";
+import styles from "../custom_styles/${page.name?cap_first}";
 
 <#-- Creating Constants -->
 <#assign indentValue = 0>
-<#list data.components as component>
+<#list page.components as component>
     <#assign resource = (component.resource)!>
     <#include responses>
 </#list>
 
-export default function ${data.name?cap_first}() {
+export default function ${page.name?cap_first}() {
     const navigate = useNavigate();
 
     const configuration = createConfiguration();
@@ -58,10 +58,8 @@ export default function ${data.name?cap_first}() {
 
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
-    <#list data.components as component>
-        <#assign body = component.body>
-        <#assign resource = (component.resource)!>
-        <#switch body.type>
+    <#list page.components as component>
+        <#switch component.type>
             <#case "SearchBar">
                 <#include searchBarState>
             <#break>
@@ -76,9 +74,8 @@ export default function ${data.name?cap_first}() {
 
     <#-- Creating Component UseEffects -->
     <#assign indentValue = 1>
-    <#list data.components as component>
-    <#assign body = component.body>
-    <#switch body.type>
+    <#list page.components as component>
+    <#switch component.type>
         <#case "Container">
             <#include containerEffect>
         <#break>
@@ -87,10 +84,8 @@ export default function ${data.name?cap_first}() {
 
     <#-- Creating Component Logic -->
     <#assign indentValue = 1>
-    <#list data.components as component>
-        <#assign body = component.body>
-        <#assign resource = (component.resource)!>
-        <#switch body.type>
+    <#list page.components as component>
+        <#switch component.type>
             <#case "SearchBar">
                 <#include searchBarLogic>
             <#break>
@@ -110,16 +105,14 @@ export default function ${data.name?cap_first}() {
         <div className = "page-container">
             <#-- Calling Components -->
             <#assign indentValue = 3>
-            <#list data.components as component>
-                <#assign body = component.body>
-                <#assign resource = (component.resource)!>
-                <#switch body.type>
+            <#list page.components as component>
+                <#switch component.type>
                     <#case "HeroSection">
                         <#include heroSectionCall>
                     <#break>
                     <#case "SearchBar">
                         <#include searchBarCall>
-                        <#if body.result.component.type == "CardSection">
+                        <#if component.resultComponent.type == "CardSection">
                             <#include cardSectionCall>
                         </#if>
                     <#break>
@@ -128,12 +121,12 @@ export default function ${data.name?cap_first}() {
                      <#break>
                     <#case "Form">
                         <#include formCall>
-                        <#if body.result.component.type == "Alert">
+                        <#if component.resultComponent.type == "Alert">
                             <#include alertCall>
                         </#if>
                     <#break>
                     <#case "Container">
-                        <#if body.result.component.type == "CardSection">
+                        <#if component.resultComponent.type == "CardSection">
                             <#include cardSectionCall>
                         </#if>
                     <#break>

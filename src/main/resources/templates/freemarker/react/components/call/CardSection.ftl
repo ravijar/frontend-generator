@@ -7,12 +7,11 @@ ${indent}           responseSchema={${component.id}Responses[${component.id}Fetc
 ${indent}           displayNames={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.displayNames}
 ${indent}           styles={styles.${component.id}.cardSection}
 ${indent}       >
-    <#if body.result.component.components??>
+    <#if component.resultComponent.subComponents??>
         <#assign indentValue = indentValue + 3>
-        <#list body.result.component.components as subComponent>
-            <#switch subComponent.type>
+        <#list component.resultComponent.subComponents as component>
+            <#switch component.type>
                 <#case "Button">
-                    <#assign body = subComponent>
                     <#include buttonCall>
                 <#break>
             </#switch>

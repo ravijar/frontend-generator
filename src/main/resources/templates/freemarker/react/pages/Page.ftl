@@ -11,6 +11,7 @@
 <#assign searchBarState = "/react/components/state/SearchBar.ftl">
 <#assign formState = "/react/components/state/Form.ftl">
 <#assign containerState = "/react/components/state/Container.ftl">
+<#assign resultState = "/react/components/state/Result.ftl">
 
 <#assign containerEffect = "/react/components/effect/Container.ftl">
 
@@ -25,6 +26,8 @@
 <#assign formCall = "/react/components/call/Form.ftl">
 <#assign cardSectionCall = "/react/components/call/CardSection.ftl">
 <#assign alertCall = "/react/components/call/Alert.ftl">
+<#assign containerCall = "/react/components/call/Container.ftl">
+<#assign resultCall = "/react/components/call/Result.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
@@ -37,7 +40,7 @@ import Alert from "../components/Alert";
     <#switch component.type>
         <#case "Form">
 import ${component.id?cap_first} from "../components/${component.id?cap_first}";
-        <#break>
+            <#break>
     </#switch>
 </#list>
 import "./${page.name?cap_first}.css";
@@ -46,7 +49,6 @@ import styles from "../custom_styles/${page.name?cap_first}";
 <#-- Creating Constants -->
 <#assign indentValue = 0>
 <#list page.components as component>
-    <#assign resource = (component.resource)!>
     <#include responses>
 </#list>
 
@@ -62,13 +64,13 @@ export default function ${page.name?cap_first}() {
         <#switch component.type>
             <#case "SearchBar">
                 <#include searchBarState>
-            <#break>
+                <#break>
             <#case "Form">
                 <#include formState>
-            <#break>
+                <#break>
             <#case "Container">
                 <#include containerState>
-            <#break>
+                <#break>
         </#switch>
     </#list>
 
@@ -78,7 +80,7 @@ export default function ${page.name?cap_first}() {
     <#switch component.type>
         <#case "Container">
             <#include containerEffect>
-        <#break>
+            <#break>
     </#switch>
     </#list>
 
@@ -88,16 +90,16 @@ export default function ${page.name?cap_first}() {
         <#switch component.type>
             <#case "SearchBar">
                 <#include searchBarLogic>
-            <#break>
+                <#break>
             <#case "Button">
                 <#include buttonLogic>
-            <#break>
+                <#break>
             <#case "Form">
                 <#include formLogic>
-            <#break>
+                <#break>
             <#case "Container">
                 <#include containerLogic>
-            <#break>
+                <#break>
         </#switch>
     </#list>
 
@@ -109,27 +111,19 @@ export default function ${page.name?cap_first}() {
                 <#switch component.type>
                     <#case "HeroSection">
                         <#include heroSectionCall>
-                    <#break>
+                        <#break>
                     <#case "SearchBar">
                         <#include searchBarCall>
-                        <#if component.resultComponent.type == "CardSection">
-                            <#include cardSectionCall>
-                        </#if>
-                    <#break>
+                        <#break>
                     <#case "Button">
                         <#include buttonCall>
-                     <#break>
+                        <#break>
                     <#case "Form">
                         <#include formCall>
-                        <#if component.resultComponent.type == "Alert">
-                            <#include alertCall>
-                        </#if>
-                    <#break>
+                        <#break>
                     <#case "Container">
-                        <#if component.resultComponent.type == "CardSection">
-                            <#include cardSectionCall>
-                        </#if>
-                    <#break>
+                        <#include containerCall>
+                        <#break>
                 </#switch>
             </#list>
         </div>

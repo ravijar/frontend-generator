@@ -13,7 +13,7 @@ ${indent}       >
             <#switch component.type>
                 <#case "Button">
                     <#include buttonCall>
-                <#break>
+                    <#break>
             </#switch>
         </#list>
         <#assign indentValue = indentValue - 3>
@@ -22,4 +22,3 @@ ${indent}       >
 ${indent}       </CardSection>
 ${indent}    )}
 ${indent}</div>
-

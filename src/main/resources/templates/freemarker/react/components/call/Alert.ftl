@@ -10,4 +10,3 @@ ${indent}           styles={styles.${component.id}.alert}
 ${indent}        />
 ${indent}    )}
 ${indent}</div>
-

@@ -7,4 +7,4 @@ ${indent}       onQueryChange={${component.id}${component.resource.urlParameters
 ${indent}       styles={styles.${component.id}}
 ${indent}   />
 ${indent}</div>
-
+<#include resultCall>

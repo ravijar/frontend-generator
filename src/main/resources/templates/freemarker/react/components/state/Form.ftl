@@ -14,7 +14,4 @@
 <#include useState>
 <#assign state = "${component.id}Fetched">
 <#include useState>
-<#if component.resultComponent.type == "Alert">
-    <#assign state = "${component.id}ShowAlert">
-    <#include useState>
-</#if>
+<#include resultState>

@@ -6,4 +6,3 @@ ${indent}       onClick={${component.id}Navigate}
 ${indent}       styles={styles.${component.id}}
 ${indent}   />
 ${indent}</div>
-

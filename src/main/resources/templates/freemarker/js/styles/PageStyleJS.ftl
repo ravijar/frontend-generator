@@ -13,22 +13,22 @@ const styles = {
     <#switch component.type>
         <#case "Button">
             <#include buttonStyle>
-        <#break>
+            <#break>
         <#case "CardSection">
             <#include cardSectionStyle>
-        <#break>
+            <#break>
         <#case "Form">
             <#include formStyle>
-        <#break>
+            <#break>
         <#case "HeroSection">
             <#include heroSectionStyle>
-        <#break>
+            <#break>
         <#case "SearchBar">
             <#include searchBarStyle>
-        <#break>
+            <#break>
         <#case "Container">
             <#include containerStyle>
-        <#break>
+            <#break>
     </#switch>
 </#list>
 };

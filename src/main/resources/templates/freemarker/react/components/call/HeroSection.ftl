@@ -6,4 +6,3 @@ ${indent}       textContent="${component.text}"
 ${indent}       styles={styles.${component.id}}
 ${indent}   />
 ${indent}</div>
-

@@ -10,19 +10,19 @@
     position: absolute;
     top: 60px;
     right: 30px;
-        <#break>
+            <#break>
         <#case "Button">
     z-index: 1;
     position: absolute;
     bottom: 50px;
     left: 45%;
-        <#break>
+            <#break>
         <#case "Form">
     z-index: 1;
     position: absolute;
     top: 60px;
     left:35%
-        <#break>
+            <#break>
     </#switch>
 }
 <#switch component.type>
@@ -30,17 +30,17 @@
 .${component.resultComponent.styleId}-container {
 
 }
-    <#break>
+        <#break>
     <#case "Container">
 .${component.resultComponent.styleId}-container {
 
 }
-    <#break>
+        <#break>
     <#case "Form">
 .${component.resultComponent.styleId}-container {
 
 }
-    <#break>
+        <#break>
 </#switch>
 </#list>
 

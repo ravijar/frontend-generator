@@ -1,8 +1,5 @@
-<#assign inputFieldTemplate = "/js/styles/components/InputField.ftl">
-<#assign buttonTemplate = "/js/styles/components/Button.ftl">
-<#assign alertTemplate = "/js/styles/components/Alert.ftl">
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}${body.id} : {
+${indent}${component.id} : {
 ${indent}    formContainer : {
 
 ${indent}    },
@@ -10,14 +7,15 @@ ${indent}    formInputs : {
 
 ${indent}    },
 <#assign indentValue = indentValue + 1>
-<#include inputFieldTemplate>
-<#include buttonTemplate>
+<#include inputFieldStyle>
+<#include buttonStyle>
 <#assign indentValue = indentValue - 1>
 <#assign indent = ""?left_pad(indentValue * 4)>
-<#if body.result.component.type == "Alert">
+<#if component.resultComponent.type == "Alert">
     <#assign indentValue = indentValue + 1>
-    <#include alertTemplate>
+    <#include alertStyle>
     <#assign indentValue = indentValue - 1>
     <#assign indent = ""?left_pad(indentValue * 4)>
 </#if>
 ${indent}},
+<#include nestStyle>

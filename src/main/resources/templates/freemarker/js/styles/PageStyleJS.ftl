@@ -1,37 +1,35 @@
-<#assign buttonTemplate = "/js/styles/components/Button.ftl">
-<#assign cardSectionTemplate = "/js/styles/components/CardSection.ftl">
-<#assign formTemplate = "/js/styles/components/Form.ftl">
-<#assign heroSectionTemplate = "/js/styles/components/HeroSection.ftl">
-<#assign searchBarTemplate = "/js/styles/components/SearchBar.ftl">
-<#assign containerTemplate = "/js/styles/components/Container.ftl">
+<#assign alertStyle = "/js/styles/components/Alert.ftl">
+<#assign buttonStyle = "/js/styles/components/Button.ftl">
+<#assign cardSectionStyle = "/js/styles/components/CardSection.ftl">
+<#assign formStyle = "/js/styles/components/Form.ftl">
+<#assign heroSectionStyle = "/js/styles/components/HeroSection.ftl">
+<#assign searchBarStyle = "/js/styles/components/SearchBar.ftl">
+<#assign containerStyle = "/js/styles/components/Container.ftl">
+<#assign inputFieldStyle = "/js/styles/components/InputField.ftl">
+<#assign keyValuePairStyle = "/js/styles/components/KeyValuePair.ftl">
+<#assign nestStyle = "/js/styles/components/Nest.ftl">
 const styles = {
-<#list data.components as component>
-    <#assign body = component.body>
-    <#switch body.type>
+<#assign indentValue = 1>
+<#list page.components as component>
+    <#switch component.type>
         <#case "Button">
-            <#assign indentValue = 1>
-            <#include buttonTemplate>
-        <#break>
+            <#include buttonStyle>
+            <#break>
         <#case "CardSection">
-            <#assign indentValue = 1>
-            <#include cardSectionTemplate>
-        <#break>
+            <#include cardSectionStyle>
+            <#break>
         <#case "Form">
-            <#assign indentValue = 1>
-            <#include formTemplate>
-        <#break>
+            <#include formStyle>
+            <#break>
         <#case "HeroSection">
-            <#assign indentValue = 1>
-            <#include heroSectionTemplate>
-        <#break>
+            <#include heroSectionStyle>
+            <#break>
         <#case "SearchBar">
-            <#assign indentValue = 1>
-            <#include searchBarTemplate>
-        <#break>
+            <#include searchBarStyle>
+            <#break>
         <#case "Container">
-            <#assign indentValue = 1>
-            <#include containerTemplate>
-        <#break>
+            <#include containerStyle>
+            <#break>
     </#switch>
 </#list>
 };

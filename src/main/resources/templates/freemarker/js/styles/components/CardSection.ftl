@@ -1,6 +1,5 @@
-<#assign keyValuePairTemplate = "/js/styles/components/KeyValuePair.ftl">
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}cardSection : {
+${indent}${component.resultComponent.id} : {
 ${indent}    cardArrayContainer : {
 
 ${indent}    },
@@ -11,7 +10,7 @@ ${indent}    singleCardContainer : {
 
 ${indent}    },
 <#assign indentValue = indentValue + 1>
-<#include keyValuePairTemplate>
+<#include keyValuePairStyle>
 <#assign indentValue = indentValue - 1>
 <#assign indent = ""?left_pad(indentValue * 4)>
 ${indent}},

@@ -2,45 +2,45 @@
 
 }
 
-<#list data.components as component>
+<#list page.components as component>
 .${component.styleId}-container {
-    <#switch component.body.type>
+    <#switch component.type>
         <#case "SearchBar">
     z-index: 1;
     position: absolute;
     top: 60px;
     right: 30px;
-        <#break>
+            <#break>
         <#case "Button">
     z-index: 1;
     position: absolute;
     bottom: 50px;
     left: 45%;
-        <#break>
+            <#break>
         <#case "Form">
     z-index: 1;
     position: absolute;
     top: 60px;
     left:35%
-        <#break>
+            <#break>
     </#switch>
 }
-<#switch component.body.type>
+<#switch component.type>
     <#case "SearchBar">
-.${component.styleId}-result-container {
+.${component.resultComponent.styleId}-container {
 
 }
-    <#break>
+        <#break>
     <#case "Container">
-.${component.styleId}-result-container {
+.${component.resultComponent.styleId}-container {
 
 }
-    <#break>
+        <#break>
     <#case "Form">
-        .${component.styleId}-result-container {
+.${component.resultComponent.styleId}-container {
 
-        }
-    <#break>
+}
+        <#break>
 </#switch>
 </#list>
 

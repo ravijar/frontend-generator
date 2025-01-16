@@ -1,4 +1,4 @@
-<#assign indent = ""?left_pad(indent * 4)>
+<#assign indent = ""?left_pad(indentValue * 4)>
 ${indent}const ${value}HandleChange = (value) => {
 ${indent}    set${value?cap_first}(value);
 ${indent}    if (value.trim() === '') {

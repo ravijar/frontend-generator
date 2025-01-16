@@ -16,7 +16,6 @@
 <#assign containerEffect = "/react/components/effect/Container.ftl">
 
 <#assign searchBarLogic = "/react/components/logic/SearchBar.ftl">
-<#assign buttonLogic = "/react/components/logic/Button.ftl">
 <#assign formLogic = "/react/components/logic/Form.ftl">
 <#assign containerLogic = "/react/components/logic/Container.ftl">
 
@@ -61,8 +60,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
-    <#list page.components as component>
-        <#switch component.type>
+    <#list page.components as parentComponent>
+        <#assign component = parentComponent>
+        <#switch parentComponent.type>
             <#case "SearchBar">
                 <#include searchBarState>
                 <#break>
@@ -77,8 +77,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseEffects -->
     <#assign indentValue = 1>
-    <#list page.components as component>
-    <#switch component.type>
+    <#list page.components as parentComponent>
+    <#assign component = parentComponent>
+    <#switch parentComponent.type>
         <#case "Container">
             <#include containerEffect>
             <#break>
@@ -87,13 +88,11 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component Logic -->
     <#assign indentValue = 1>
-    <#list page.components as component>
-        <#switch component.type>
+    <#list page.components as parentComponent>
+        <#assign component = parentComponent>
+        <#switch parentComponent.type>
             <#case "SearchBar">
                 <#include searchBarLogic>
-                <#break>
-            <#case "Button">
-                <#include buttonLogic>
                 <#break>
             <#case "Form">
                 <#include formLogic>
@@ -108,8 +107,9 @@ export default function ${page.name?cap_first}() {
         <div className = "page-container">
             <#-- Calling Components -->
             <#assign indentValue = 3>
-            <#list page.components as component>
-                <#switch component.type>
+            <#list page.components as parentComponent>
+                <#assign component = parentComponent>
+                <#switch parentComponent.type>
                     <#case "HeroSection">
                         <#include heroSectionCall>
                         <#break>

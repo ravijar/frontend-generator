@@ -1,4 +1,6 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
+<#switch component.role>
+    <#case "parent">
 ${indent}<div className="${component.styleId}-container">
 ${indent}    <${component.id?cap_first}
 ${indent}        ${component.id}HandleSubmit={${component.id}HandleSubmit}
@@ -16,3 +18,5 @@ ${indent}        styles = {styles.${component.id}}
 ${indent}    />
 ${indent}</div>
 <#include resultCall>
+        <#break>
+</#switch>

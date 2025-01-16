@@ -1,5 +1,7 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}<div className="${component.styleId}-result-container">
+<#switch component.role>
+    <#case "parent">
+${indent}<div className="${component.resultComponent.styleId}-container">
 ${indent}    {${component.id}ShowAlert && (
 ${indent}        <Alert
 ${indent}           statusCode={${component.id}FetchResponse?.httpStatusCode}
@@ -10,3 +12,5 @@ ${indent}           styles={styles.${component.id}.alert}
 ${indent}        />
 ${indent}    )}
 ${indent}</div>
+        <#break>
+</#switch>

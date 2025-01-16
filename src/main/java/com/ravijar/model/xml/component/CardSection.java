@@ -14,7 +14,7 @@ import java.util.List;
 public class CardSection extends Component {
     @JacksonXmlProperty(localName = "component")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Component> components;
+    private List<Component> subComponents;
 
     public CardSection() {
         this.setType("CardSection");

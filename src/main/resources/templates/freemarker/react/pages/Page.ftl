@@ -8,16 +8,22 @@
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
 
+<#assign heroSectionState = "/react/components/state/HeroSection.ftl">
 <#assign searchBarState = "/react/components/state/SearchBar.ftl">
 <#assign formState = "/react/components/state/Form.ftl">
 <#assign containerState = "/react/components/state/Container.ftl">
 <#assign resultState = "/react/components/state/Result.ftl">
+<#assign nestState = "/react/components/state/Nest.ftl">
 
+<#assign heroSectionEffect = "/react/components/effect/HeroSection.ftl">
 <#assign containerEffect = "/react/components/effect/Container.ftl">
+<#assign nestEffect = "/react/components/effect/Nest.ftl">
 
+<#assign heroSectionLogic = "/react/components/logic/HeroSection.ftl">
 <#assign searchBarLogic = "/react/components/logic/SearchBar.ftl">
 <#assign formLogic = "/react/components/logic/Form.ftl">
 <#assign containerLogic = "/react/components/logic/Container.ftl">
+<#assign nestLogic = "/react/components/logic/Nest.ftl">
 
 <#assign heroSectionCall = "/react/components/call/HeroSection.ftl">
 <#assign searchBarCall = "/react/components/call/SearchBar.ftl">
@@ -63,6 +69,9 @@ export default function ${page.name?cap_first}() {
     <#list page.components as parentComponent>
         <#assign component = parentComponent>
         <#switch parentComponent.type>
+            <#case "HeroSection">
+                <#include heroSectionState>
+                <#break>
             <#case "SearchBar">
                 <#include searchBarState>
                 <#break>
@@ -80,6 +89,9 @@ export default function ${page.name?cap_first}() {
     <#list page.components as parentComponent>
     <#assign component = parentComponent>
     <#switch parentComponent.type>
+        <#case "HeroSection">
+            <#include heroSectionEffect>
+            <#break>
         <#case "Container">
             <#include containerEffect>
             <#break>
@@ -91,6 +103,9 @@ export default function ${page.name?cap_first}() {
     <#list page.components as parentComponent>
         <#assign component = parentComponent>
         <#switch parentComponent.type>
+            <#case "HeroSection">
+                <#include heroSectionLogic>
+                <#break>
             <#case "SearchBar">
                 <#include searchBarLogic>
                 <#break>

@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <!-- Enable Jansi for colorized console output -->
         <Property name="log4j.skipJansi">false</Property>
     </Properties>
 
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=magenta}"
+                    pattern="[%highlight{%level}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=magenta}] %msg%n"
                     disableAnsi="false"
             />
-        </Console>
-g
-        <Console name="EntryConsole" target="SYSTEM_OUT">
-                <PatternLayout pattern="%m%n"/>
         </Console>
 
         <File name="File" fileName="logs/application.log" append="true">
@@ -26,7 +21,7 @@ g
 
     <Loggers>
         <Logger name="entryLogger" additivity="false">
-            <AppenderRef ref="EntryConsole"/>
+            <AppenderRef ref="Console"/>
         </Logger>
 
         <Root level="trace">

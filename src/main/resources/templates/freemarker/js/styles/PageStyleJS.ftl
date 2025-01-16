@@ -8,10 +8,12 @@
 <#assign inputFieldStyle = "/js/styles/components/InputField.ftl">
 <#assign keyValuePairStyle = "/js/styles/components/KeyValuePair.ftl">
 <#assign nestStyle = "/js/styles/components/Nest.ftl">
+<#assign resultStyle = "/js/styles/components/Result.ftl">
 const styles = {
 <#assign indentValue = 1>
-<#list page.components as component>
-    <#switch component.type>
+<#list page.components as parentComponent>
+    <#assign component = parentComponent>
+    <#switch parentComponent.type>
         <#case "Button">
             <#include buttonStyle>
             <#break>

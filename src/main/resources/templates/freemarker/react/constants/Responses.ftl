@@ -19,3 +19,9 @@ ${indent}    }<#if response_has_next>,</#if>
         </#list>
 ${indent}};
 </#if>
+<#if component.subComponents??>
+    <#list component.subComponents as component>
+        <#include responses>
+    </#list>
+</#if>
+

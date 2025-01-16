@@ -6,7 +6,6 @@ import com.ravijar.generator.ReactGenerator;
 import com.ravijar.handler.CommandHandler;
 import com.ravijar.handler.ConfigHandler;
 import com.ravijar.handler.FileHandler;
-import com.ravijar.handler.TemplatesConfigLoader;
 import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.parser.XMLParser;
 import com.ravijar.model.PageDTO;
@@ -90,7 +89,7 @@ public class ProjectManager {
             }
             reactGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
             reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
-            addUserStyles();
+            applyUserStyles();
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
         }
@@ -115,7 +114,7 @@ public class ProjectManager {
         return true;
     }
 
-    public boolean addUserStyles() {
+    public boolean applyUserStyles() {
         if(!updateProjectName()) return false;
 
         logger.info("Applying User Styles... ");
@@ -129,7 +128,7 @@ public class ProjectManager {
         fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
         fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
 
-        logger.info("✔ Build Complete!");
+        logger.info("✔ User Styles Applied Successfully!");
 
         return true;
     }

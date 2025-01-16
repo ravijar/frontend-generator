@@ -20,7 +20,7 @@ public class CommandHandler {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                logger.debug(line);
+                logger.info(line);
             }
 
             int exitCode = process.waitFor();

@@ -350,7 +350,7 @@ public class OpenAPIParser {
         Map<String, Object> extensions = apiResponse.getExtensions();
 
         if (extensions == null || !extensions.containsKey("x-nextPages")) {
-            logger.info("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
+            logger.debug("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
             return Collections.emptyList();
         }
 

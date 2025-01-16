@@ -23,7 +23,7 @@ public class ConfigHandler {
         File configFile = new File(filePath);
 
         if (configFile.exists()) {
-            logger.info("Configuration file '{}' already exists.", filePath);
+            logger.warn("Configuration file '{}' already exists.", filePath);
             return;
         }
 
@@ -32,7 +32,7 @@ public class ConfigHandler {
 
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             properties.store(fos, "Project Configuration");
-            logger.info("Configuration file '{}' created successfully.", filePath);
+            logger.debug("Configuration file '{}' created successfully.", filePath);
         } catch (IOException e) {
             logger.error("Failed to create configuration file '{}': {}", filePath, e.getMessage());
         }
@@ -54,7 +54,7 @@ public class ConfigHandler {
 
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             properties.store(fos, "Project Configuration");
-            logger.info("Property '{}' updated to '{}' in config.properties.", key, value);
+            logger.debug("Property '{}' updated to '{}' in config.properties.", key, value);
         } catch (IOException e) {
             logger.error("Failed to save properties to config file: {}", e.getMessage());
         }
@@ -76,7 +76,7 @@ public class ConfigHandler {
                 logger.warn("Property '{}' not found in config.properties.", key);
                 return null;
             }
-            logger.info("Property '{}' loaded with value '{}'.", key, value);
+            logger.debug("Property '{}' loaded with value '{}'.", key, value);
             return value;
         } catch (IOException e) {
             logger.error("Failed to read property '{}' from config file: {}", key, e.getMessage());

@@ -19,7 +19,7 @@ public class ClientAPIGenerator {
 
         if (!outputDir.exists()) {
             if (outputDir.mkdirs()) {
-                logger.info("Created output directory: {}", outputDir.getAbsolutePath());
+                logger.debug("Created output directory: {}", outputDir.getAbsolutePath());
             } else {
                 logger.error("Failed to create output directory: {}", outputDir.getAbsolutePath());
                 return;
@@ -36,11 +36,11 @@ public class ClientAPIGenerator {
             generator.opts(configurator.toClientOptInput()).generate();
 
             CommandHandler commandHandler = new CommandHandler();
-            logger.info("Installing client API dependencies...");
+            logger.debug("Installing client API dependencies...");
             commandHandler.npmInstall(outputDir);
-            logger.info("Client API dependencies installed!");
+            logger.debug("Client API dependencies installed!");
 
-            logger.info("Client API successfully generated for language: {}", language);
+            logger.debug("Client API successfully generated for language: {}", language);
         } catch (Exception e) {
             logger.error("Error during client API generation: {}", e.getMessage(), e);
         }

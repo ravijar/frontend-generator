@@ -1,5 +1,6 @@
 <#switch component.role>
     <#case "parent">
+    <#case "child">
         <#list component.resource.urlParameters as parameter>
             <#assign state = "${component.id}${parameter.name?cap_first}">
             <#include useState>

@@ -20,10 +20,12 @@ public class CardSectionPopulator extends ComponentPopulator{
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
-        for(Component component : source.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
-            freeMarkerComponent.setRole("child");
-            freeMarkerComponents.add(freeMarkerComponent);
+        if(source.getSubComponents() != null) {
+            for(Component component : source.getSubComponents()) {
+                FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
+                freeMarkerComponent.setRole("child");
+                freeMarkerComponents.add(freeMarkerComponent);
+            }
         }
         target.setSubComponents(freeMarkerComponents);
     }

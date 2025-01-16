@@ -1,6 +1,7 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
 <#switch component.role>
     <#case "parent">
+    <#case "child">
 ${indent}<div className="${component.styleId}-container">
 ${indent}   <SearchBar
 ${indent}       searchQuery={${component.id}${component.resource.urlParameters[0].name?cap_first}}

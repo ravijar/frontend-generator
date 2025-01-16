@@ -1,6 +1,6 @@
 import './HeroSection.css';
 
-const HeroSection = ({ backgroundImage, textContent, styles = {} }) => {
+const HeroSection = ({ backgroundImage, textContent, styles = {}, children }) => {
     return (
         <div
             className="hero-section"
@@ -13,6 +13,7 @@ const HeroSection = ({ backgroundImage, textContent, styles = {} }) => {
             <div className="hero-content" style={styles.heroContent}>
                 <h1>{textContent}</h1>
             </div>
+            {children}
         </div>
     );
 };

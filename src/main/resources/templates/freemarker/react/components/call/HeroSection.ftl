@@ -6,7 +6,9 @@ ${indent}   <HeroSection
 ${indent}       backgroundImage="${component.image}"
 ${indent}       textContent="${component.text}"
 ${indent}       styles={styles.${component.id}}
-${indent}   />
+${indent}   >
+            <#include nestCall>
+${indent}   </HeroSection>
 ${indent}</div>
         <#break>
 </#switch>

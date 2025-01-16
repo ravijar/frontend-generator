@@ -10,3 +10,5 @@ ${indent}    heroContent : {
 
 ${indent}    },
 ${indent}},
+<#include nestStyle>
+

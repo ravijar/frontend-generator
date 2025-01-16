@@ -8,7 +8,7 @@ ${indent}       <CardSection
 ${indent}           responseData={${component.id}FetchResponse?.data}
 ${indent}           responseSchema={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.responseSchema}
 ${indent}           displayNames={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.displayNames}
-${indent}           styles={styles.${component.id}.cardSection}
+${indent}           styles={styles.${component.resultComponent.id}}
 ${indent}       >
                 <#assign component = component.resultComponent>
                 <#include nestCall>

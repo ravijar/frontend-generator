@@ -25,3 +25,4 @@ ${indent}    alertProgressBar : {
 
 ${indent}    },
 ${indent}},
+

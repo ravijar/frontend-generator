@@ -1,12 +1,19 @@
-<#if component.resultComponent.subComponents??>
-    <#assign indentValue = indentValue + 1>
-    <#list component.resultComponent.subComponents as component>
-        <#switch component.type>
+<#if component.subComponents??>
+    <#list component.subComponents as subComponent>
+        <#assign component = subComponent>
+        <#switch subComponent.type>
             <#case "Button">
                 <#include buttonStyle>
                 <#break>
+            <#case "SearchBar">
+                <#include searchBarStyle>
+                <#break>
+            <#case "Form">
+                <#include formStyle>
+                <#break>
+            <#case "Container">
+                <#include containerStyle>
+                <#break>
         </#switch>
     </#list>
-    <#assign indentValue = indentValue - 1>
-    <#assign indent = ""?left_pad(indentValue * 4)>
 </#if>

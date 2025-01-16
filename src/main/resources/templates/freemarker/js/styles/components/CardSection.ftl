@@ -14,3 +14,5 @@ ${indent}    },
 <#assign indentValue = indentValue - 1>
 <#assign indent = ""?left_pad(indentValue * 4)>
 ${indent}},
+<#include nestStyle>
+

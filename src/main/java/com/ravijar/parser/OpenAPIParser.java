@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OpenAPIParser {
     private static final Logger logger = LogManager.getLogger(OpenAPIParser.class);
@@ -289,6 +290,10 @@ public class OpenAPIParser {
         if (requestParameters == null) {
             requestParameters = new ArrayList<>();
         }
+
+        // Remove any requestParameter with the same name as a urlParameter
+        Set<String> urlParameterNames = urlParameters.stream().map(OpenAPIParameter::getName).collect(Collectors.toSet());
+        requestParameters.removeIf(param -> urlParameterNames.contains(param.getName()));
 
         List<OpenAPIResponse> responses = new ArrayList<>();
         for (String code : responseCodes) {

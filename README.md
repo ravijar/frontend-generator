@@ -47,9 +47,13 @@ The framework requires the following input files to function:
 ### 1. Run the Initialization Command
 - Use the following command to initialize the project:
   ```
-  java -jar FrontendGenerator-<version>.jar init <ProjectName>
+  java -jar FrontendGenerator-0.2.0.jar init --name <ProjectName>
   ```
-- This will create a new directory named ProjectName with the following structure. This will create a config.properties file in the directory of the FrontendGenerator.jar file and the user should not edit or delete this file:
+  Alternatively, you can use the shorthand version:
+  ```
+  java -jar FrontendGenerator-0.2.0.jar init -n <ProjectName>
+  ```
+- This will create a new directory named ProjectName with the following structure. This will create a config.properties file in the directory of the `FrontendGenerator.jar` file and the user should not edit or delete this file:
   ```
   ProjectName/
   ├── build/
@@ -152,10 +156,10 @@ The configuration file is an XML document containing <pages> as the root element
   - **Attributes:**
     - `type`: The type of component (e.g., HeroSection, Button, Form).
     - `id`: Unique identifier for the component.
-      - Exception: The `CardSection` component inside a `<result>` tag does not require an `id`.
   - Supported Component Types:
     - `HeroSection`: Provides a visually static section with text and images.
       - Functionality: Includes `<text>` for content and `<image>` for visuals.
+      - Nesting: Can nest `Button`, `SearchBar`, and `Container` components.
     - `Button`: Provides navigation.
       - Functionality: Uses `<text>` for the label and `<route>` for frontend navigation.
     - `Container`: Fetches and displays data using an API resource.
@@ -166,6 +170,9 @@ The configuration file is an XML document containing <pages> as the root element
       - Functionality: Uses `<resource>` for API queries and `<result>` to display the search results.
     - `CardSection`: Displays fetched data in a card layout.
       - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
+      - Nesting: Can nest `<Button>` components.
+    - `Alert`: Display alerts or messages.
+      - Functionality: Exclusively used within a `<result>` tag.
 
 4. Child Tags
   - `<resource>` : Defines an API resource to be accessed by the component.
@@ -308,35 +315,28 @@ styles/
     ```
 
 ### 3: Generate Frontend Code
-- After adding the input files, you can use the `build` command to generate the required frontend components, client-side API code, and styles. Below are the available options for the `build` command:
-  -Build Command Variants:
-    - i. `build`:
-      - Executes both `build --api` and `build --code`.
-      - Generates the client-side API based on the OpenAPI Specification in `openapi.yaml`.
-      - Creates React components and pages as defined in `pages.xml`.
-  ```
-  java -jar FrontendGenerator-<version>.jar build
-  ```
-    - ii. `build --api` :
+- After adding the input files, you can use the `generate` and `apply` commands to create the required frontend components, client-side API code, and styles. Below are the available options:
+  -Command Variants:
+    - i. `generate --api` :
       - Generates the client-side API based on the OpenAPI Specification in `openapi.yaml`.
   ```
-  java -jar FrontendGenerator-<version>.jar build --api
+  java -jar FrontendGenerator-0.2.0.jar generate --api
   ```
-    - iii. `build --code` :
-      - Creates React components and pages as defined in `pages.xml`.
+    - ii. `generate --frontend` :
+      - Generates React components and pages based on the configurations in `pages.xml`.
+  ```
+  java -jar FrontendGenerator-0.2.0.jar generate --frontend
+  ```      
+    - iii. `apply --styles` :
+      - Applies user-defined styles from the styles folder to the generated project.
   ```
   java -jar FrontendGenerator-<version>.jar build --code
-  ```      
-    - iv. `build --styles` :
-      - Applies user-defined styles from the styles/ folder to the generated project.
-  ```
-  java -jar FrontendGenerator-<version>.jar build --styles
   ```  
 
 ### 4: Run the Application
 - To preview and test the generated frontend, execute:
   ```
-  java -jar FrontendGenerator-<version>.jar run
+  java -jar FrontendGenerator-0.2.0.jar run
   ```
 - This will launch a local server and allow you to interact with the generated frontend in your browser.
 

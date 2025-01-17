@@ -284,6 +284,12 @@ public class OpenAPIParser {
         String requestSchema = getRequestSchema(url, httpMethod);
         Set<String> responseCodes = getResponseCodes(url, httpMethod);
 
+        List<OpenAPISchemaProperty> requestParameters;
+        requestParameters = getSchemas().get(requestSchema);
+        if (requestParameters == null) {
+            requestParameters = new ArrayList<>();
+        }
+
         List<OpenAPIResponse> responses = new ArrayList<>();
         for (String code : responseCodes) {
             String schemaName = getResponseSchemaName(url, httpMethod, code);
@@ -292,7 +298,7 @@ public class OpenAPIParser {
             responses.add(new OpenAPIResponse(code, schemaName, type, description, getSchemas().get(schemaName)));
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, getSchemas().get(requestSchema), responses);
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
     }
 
     @Deprecated

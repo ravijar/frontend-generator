@@ -9,7 +9,7 @@ ${indent}    },
 ${indent}    heroContent : {
 
 ${indent}    },
-${indent}    .childrenContainer : {
+${indent}    childrenContainer : {
 
 ${indent}    },
 ${indent}},

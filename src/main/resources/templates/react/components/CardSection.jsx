@@ -8,7 +8,7 @@ const CardSection = ({ responseData, responseSchema, displayNames, styles = {}, 
                 return (
                     <div className="single-card-container" style={styles.keyValuePair}>
                         <RecursiveKeyValuePair data={responseData} displayNames={displayNames}/>
-                        <div className="children-container">
+                        <div className="children-container" style={styles.childrenContainer}>
                             {children}
                         </div>
                     </div>
@@ -19,7 +19,7 @@ const CardSection = ({ responseData, responseSchema, displayNames, styles = {}, 
                         {responseData.map((item, index) => (
                             <div key={index} className="card-array-item" style={styles.cardArrayItem}>
                                 <RecursiveKeyValuePair data={item} displayNames={displayNames}/>
-                                <div className="children-container">
+                                <div className="children-container" style={styles.childrenContainer}>
                                     {children}
                                 </div>
                             </div>

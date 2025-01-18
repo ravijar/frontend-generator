@@ -80,13 +80,13 @@ public class FileHandler {
     public void createDirectoryIfNotExists(File directory) {
         if (directory.exists()) {
             if (directory.isDirectory()) {
-                logger.info("Directory {} already exists.", directory.getAbsolutePath());
+                logger.debug("Directory {} already exists.", directory.getAbsolutePath());
             } else {
                 logger.error("{} exists but is not a directory.", directory.getAbsolutePath());
             }
         } else {
             if (directory.mkdirs()) {
-                logger.info("Directory {} created successfully.", directory.getAbsolutePath());
+                logger.debug("Directory {} created successfully.", directory.getAbsolutePath());
             } else {
                 logger.error("Failed to create directory {}.", directory.getAbsolutePath());
             }
@@ -96,7 +96,7 @@ public class FileHandler {
     public void createSubDirectory(File baseDir, String directoryName) {
         File directory = new File(baseDir, directoryName);
         if (directory.mkdirs()) {
-            logger.info("{} directory created in {}.", directoryName, baseDir.getName());
+            logger.debug("{} directory created in {}.", directoryName, baseDir.getName());
         } else if (directory.exists()) {
             logger.warn("{} directory already exists in {}.", directoryName, baseDir.getName());
         } else {

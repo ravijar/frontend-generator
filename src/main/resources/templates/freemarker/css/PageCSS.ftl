@@ -3,6 +3,7 @@
 
 }
 
-<#list page.components as component>
+<#list page.components as parentComponent>
+    <#assign component = parentComponent>
     <#include nestStyle>
 </#list>

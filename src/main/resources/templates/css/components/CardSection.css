@@ -30,3 +30,11 @@
     flex-direction: column;
     width: 180px;
 }
+
+.children-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}

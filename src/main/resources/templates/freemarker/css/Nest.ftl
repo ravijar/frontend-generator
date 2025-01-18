@@ -28,9 +28,16 @@
 
 }
 
+    <#if component.resultComponent.subComponents??>
+        <#list component.resultComponent.subComponents as restultSubComponent>
+            <#assign component = restultSubComponent>
+            <#include nestStyle>
+        </#list>
+    </#if>
 </#if>
 <#if component.subComponents??>
-    <#list component.subComponents as component>
+    <#list component.subComponents as subComponent>
+        <#assign component = subComponent>
         <#include nestStyle>
     </#list>
 </#if>

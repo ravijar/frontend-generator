@@ -9,6 +9,9 @@ ${indent}    },
 ${indent}    heroContent : {
 
 ${indent}    },
+${indent}    .childrenContainer : {
+
+${indent}    },
 ${indent}},
 <#include nestStyle>
 

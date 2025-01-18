@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OpenAPIParser {
     private static final Logger logger = LogManager.getLogger(OpenAPIParser.class);
@@ -284,6 +285,16 @@ public class OpenAPIParser {
         String requestSchema = getRequestSchema(url, httpMethod);
         Set<String> responseCodes = getResponseCodes(url, httpMethod);
 
+        List<OpenAPISchemaProperty> requestParameters;
+        requestParameters = getSchemas().get(requestSchema);
+        if (requestParameters == null) {
+            requestParameters = new ArrayList<>();
+        }
+
+        // Remove any requestParameter with the same name as a urlParameter
+        Set<String> urlParameterNames = urlParameters.stream().map(OpenAPIParameter::getName).collect(Collectors.toSet());
+        requestParameters.removeIf(param -> urlParameterNames.contains(param.getName()));
+
         List<OpenAPIResponse> responses = new ArrayList<>();
         for (String code : responseCodes) {
             String schemaName = getResponseSchemaName(url, httpMethod, code);
@@ -292,7 +303,7 @@ public class OpenAPIParser {
             responses.add(new OpenAPIResponse(code, schemaName, type, description, getSchemas().get(schemaName)));
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, getSchemas().get(requestSchema), responses);
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
     }
 
     @Deprecated
@@ -350,7 +361,7 @@ public class OpenAPIParser {
         Map<String, Object> extensions = apiResponse.getExtensions();
 
         if (extensions == null || !extensions.containsKey("x-nextPages")) {
-            logger.info("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
+            logger.debug("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
             return Collections.emptyList();
         }
 

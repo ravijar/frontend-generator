@@ -13,7 +13,9 @@ const HeroSection = ({ backgroundImage, textContent, styles = {}, children }) =>
             <div className="hero-content" style={styles.heroContent}>
                 <h1>{textContent}</h1>
             </div>
-            {children}
+            <div className="children-container">
+                {children}
+            </div>
         </div>
     );
 };

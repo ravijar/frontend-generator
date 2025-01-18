@@ -9,7 +9,7 @@ ${indent}    },
 ${indent}    singleCardContainer : {
 
 ${indent}    },
-${indent}    .childrenContainer : {
+${indent}    childrenContainer : {
 
 ${indent}    },
 <#assign indentValue = indentValue + 1>

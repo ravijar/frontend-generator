@@ -7,10 +7,14 @@
     right: 30px;
         <#break>
     <#case "Button">
+        <#switch component.role>
+            <#case "parent">
     z-index: 1;
     position: absolute;
     bottom: 50px;
     left: 45%;
+                <#break>
+        </#switch>
         <#break>
     <#case "Form">
     z-index: 1;

@@ -1,8 +1,12 @@
 package com.ravijar.parser;
 
+import com.ravijar.helper.OpenAPIConverter;
 import com.ravijar.model.PageDTO;
 import com.ravijar.model.openapi.OpenAPIParameter;
+import com.ravijar.model.openapi.OpenAPIResource;
+import com.ravijar.model.openapi.OpenAPIResponse;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
+import com.ravijar.model.xml.Resource;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -18,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OpenAPIParser {
     private static final Logger logger = LogManager.getLogger(OpenAPIParser.class);
@@ -271,6 +276,36 @@ public class OpenAPIParser {
         return responses.keySet();
     }
 
+    public OpenAPIResource getResourceData(Resource resource) {
+        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(resource.getMethod());
+        String url = resource.getUrl();
+
+        String apiFunctionName = getOperationId(url, httpMethod);
+        List<OpenAPIParameter> urlParameters = getParameters(url, httpMethod);
+        String requestSchema = getRequestSchema(url, httpMethod);
+        Set<String> responseCodes = getResponseCodes(url, httpMethod);
+
+        List<OpenAPISchemaProperty> requestParameters;
+        requestParameters = getSchemas().get(requestSchema);
+        if (requestParameters == null) {
+            requestParameters = new ArrayList<>();
+        }
+
+        // Remove any requestParameter with the same name as a urlParameter
+        Set<String> urlParameterNames = urlParameters.stream().map(OpenAPIParameter::getName).collect(Collectors.toSet());
+        requestParameters.removeIf(param -> urlParameterNames.contains(param.getName()));
+
+        List<OpenAPIResponse> responses = new ArrayList<>();
+        for (String code : responseCodes) {
+            String schemaName = getResponseSchemaName(url, httpMethod, code);
+            String type = getResponseSchemaType(url, httpMethod, code);
+            String description = getResponseDescription(url, httpMethod, code);
+            responses.add(new OpenAPIResponse(code, schemaName, type, description, getSchemas().get(schemaName)));
+        }
+
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
+    }
+
     @Deprecated
     private String getBaseUrl() {
         List<Server> servers = openAPIData.getServers();
@@ -326,7 +361,7 @@ public class OpenAPIParser {
         Map<String, Object> extensions = apiResponse.getExtensions();
 
         if (extensions == null || !extensions.containsKey("x-nextPages")) {
-            logger.info("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
+            logger.debug("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
             return Collections.emptyList();
         }
 

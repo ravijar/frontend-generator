@@ -7,7 +7,7 @@ export default function NavBar() {
     return (
         <nav className="navbar">
             <ul className="navbar-links">
-<#list data as page>
+<#list pages as page>
                 <li className={location.pathname === "${page.route}" ? "active" : ""}>
                     <Link to="${page.route}">${page.name}</Link>
                 </li>

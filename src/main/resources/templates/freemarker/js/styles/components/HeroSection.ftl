@@ -1,5 +1,5 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}${body.id} : {
+${indent}${component.id} : {
 ${indent}    heroSection : {
 
 ${indent}    },
@@ -9,4 +9,9 @@ ${indent}    },
 ${indent}    heroContent : {
 
 ${indent}    },
+${indent}    .childrenContainer : {
+
+${indent}    },
 ${indent}},
+<#include nestStyle>
+

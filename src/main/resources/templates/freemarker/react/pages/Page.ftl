@@ -1,19 +1,39 @@
-<#assign heroSectionTemplatePath = "/react/components/call/HeroSection.ftl">
-<#assign searchBarTemplatePath = "/react/components/call/SearchBar.ftl">
-<#assign buttonTemplatePath = "/react/components/call/Button.ftl">
-<#assign formTemplatePath = "/react/components/call/Form.ftl">
-<#assign cardSectionTemplatePath = "/react/components/call/CardSection.ftl">
-<#assign alertTemplatePath = "/react/components/call/Alert.ftl">
+<#assign responses = "/react/constants/Responses.ftl">
 
-<#assign fetchTemplatePath = "/react/logic/Fetch.ftl">
-<#assign navigateTemplatePath = "/react/logic/Navigate.ftl">
-<#assign handleChangeTemplatePath = "/react/logic/HandleChange.ftl">
-<#assign handleSubmitTemplatePath = "/react/logic/HandleSubmit.ftl">
+<#assign useState = "/react/hooks/UseState.ftl">
+<#assign useEffect = "/react/hooks/UseEffect.ftl">
 
-<#assign useStateTemplatePath = "/react/hooks/UseState.ftl">
-<#assign useEffectTemplatePath = "/react/hooks/UseEffect.ftl">
+<#assign fetch = "/react/logic/Fetch.ftl">
+<#assign navigate = "/react/logic/Navigate.ftl">
+<#assign handleChange = "/react/logic/HandleChange.ftl">
+<#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
 
-<#assign responsesTemplatePath = "/react/constants/Responses.ftl">
+<#assign heroSectionState = "/react/components/state/HeroSection.ftl">
+<#assign searchBarState = "/react/components/state/SearchBar.ftl">
+<#assign formState = "/react/components/state/Form.ftl">
+<#assign containerState = "/react/components/state/Container.ftl">
+<#assign resultState = "/react/components/state/Result.ftl">
+<#assign nestState = "/react/components/state/Nest.ftl">
+
+<#assign heroSectionEffect = "/react/components/effect/HeroSection.ftl">
+<#assign containerEffect = "/react/components/effect/Container.ftl">
+<#assign nestEffect = "/react/components/effect/Nest.ftl">
+
+<#assign heroSectionLogic = "/react/components/logic/HeroSection.ftl">
+<#assign searchBarLogic = "/react/components/logic/SearchBar.ftl">
+<#assign formLogic = "/react/components/logic/Form.ftl">
+<#assign containerLogic = "/react/components/logic/Container.ftl">
+<#assign nestLogic = "/react/components/logic/Nest.ftl">
+
+<#assign heroSectionCall = "/react/components/call/HeroSection.ftl">
+<#assign searchBarCall = "/react/components/call/SearchBar.ftl">
+<#assign buttonCall = "/react/components/call/Button.ftl">
+<#assign formCall = "/react/components/call/Form.ftl">
+<#assign cardSectionCall = "/react/components/call/CardSection.ftl">
+<#assign alertCall = "/react/components/call/Alert.ftl">
+<#assign containerCall = "/react/components/call/Container.ftl">
+<#assign resultCall = "/react/components/call/Result.ftl">
+<#assign nestCall = "/react/components/call/Nest.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
@@ -22,177 +42,104 @@ import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
-<#list data.components as component>
-    <#switch component.body.type>
+<#list page.components as component>
+    <#switch component.type>
         <#case "Form">
 import ${component.id?cap_first} from "../components/${component.id?cap_first}";
-        <#break>
+            <#break>
     </#switch>
 </#list>
-import "./${data.name?cap_first}.css";
-import styles from "../custom_styles/${data.name?cap_first}";
+import "./${page.name?cap_first}.css";
+import styles from "../custom_styles/${page.name?cap_first}";
 
 <#-- Creating Constants -->
-<#list data.components as component>
-    <#assign resource = (component.resource)!>
-    <#assign indent = 0>
-    <#include responsesTemplatePath>
+<#assign indentValue = 0>
+<#list page.components as component>
+    <#include responses>
 </#list>
 
-export default function ${data.name?cap_first}() {
+export default function ${page.name?cap_first}() {
     const navigate = useNavigate();
 
     const configuration = createConfiguration();
     const clientApi = new DefaultApi(configuration);
 
     <#-- Creating Component UseStates -->
-    <#list data.components as component>
-        <#assign body = component.body>
-        <#assign resource = (component.resource)!>
-        <#switch body.type>
+    <#assign indentValue = 1>
+    <#list page.components as parentComponent>
+        <#assign component = parentComponent>
+        <#switch parentComponent.type>
+            <#case "HeroSection">
+                <#include heroSectionState>
+                <#break>
             <#case "SearchBar">
-                <#assign state = "${component.id}${resource.urlParameters[0].name?cap_first}">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-                <#assign state = "${component.id}${resource.urlParameters[0].name?cap_first}Error">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-                <#assign state = "${component.id}FetchResponse">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-                <#assign state = "${component.id}Fetched">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-            <#break>
+                <#include searchBarState>
+                <#break>
             <#case "Form">
-                <#list resource.urlParameters as parameter>
-                    <#assign state = "${component.id}${parameter.name?cap_first}">
-                    <#assign indent = 1>
-                    <#include useStateTemplatePath>
-                    <#assign state = "${component.id}${parameter.name?cap_first}Error">
-                    <#assign indent = 1>
-                    <#include useStateTemplatePath>
-                </#list>
-                <#list resource.requestProperties as property>
-                    <#assign state = "${component.id}${property.name?cap_first}">
-                    <#assign indent = 1>
-                    <#include useStateTemplatePath>
-                    <#assign state = "${component.id}${property.name?cap_first}Error">
-                    <#assign indent = 1>
-                    <#include useStateTemplatePath>
-                </#list>
-                <#assign state = "${component.id}FetchResponse">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-                <#assign state = "${component.id}Fetched">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-                <#if body.result.component.type == "Alert">
-                    <#assign state = "${component.id}ShowAlert">
-                    <#assign indent = 1>
-                    <#include useStateTemplatePath>
-                </#if>
-            <#break>
+                <#include formState>
+                <#break>
             <#case "Container">
-                <#assign state = "${component.id}FetchResponse">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-                <#assign state = "${component.id}Fetched">
-                <#assign indent = 1>
-                <#include useStateTemplatePath>
-            <#break>
+                <#include containerState>
+                <#break>
         </#switch>
     </#list>
 
     <#-- Creating Component UseEffects -->
-    <#list data.components as component>
-    <#assign body = component.body>
-    <#switch body.type>
+    <#assign indentValue = 1>
+    <#list page.components as parentComponent>
+    <#assign component = parentComponent>
+    <#switch parentComponent.type>
+        <#case "HeroSection">
+            <#include heroSectionEffect>
+            <#break>
         <#case "Container">
-            <#assign indent = 1>
-            <#include useEffectTemplatePath>
-        <#break>
+            <#include containerEffect>
+            <#break>
     </#switch>
     </#list>
 
     <#-- Creating Component Logic -->
-    <#list data.components as component>
-        <#assign body = component.body>
-        <#assign resource = (component.resource)!>
-        <#switch body.type>
+    <#assign indentValue = 1>
+    <#list page.components as parentComponent>
+        <#assign component = parentComponent>
+        <#switch parentComponent.type>
+            <#case "HeroSection">
+                <#include heroSectionLogic>
+                <#break>
             <#case "SearchBar">
-                <#assign value = "${component.id}${resource.urlParameters[0].name?cap_first}">
-                <#assign indent = 1>
-                <#include handleChangeTemplatePath>
-                <#assign indent = 1>
-                <#include fetchTemplatePath>
-                <#assign indent = 1>
-                <#include handleSubmitTemplatePath>
-            <#break>
-            <#case "Button">
-                <#assign indent = 1>
-                <#include navigateTemplatePath>
-            <#break>
+                <#include searchBarLogic>
+                <#break>
             <#case "Form">
-                <#list resource.urlParameters as parameter>
-                    <#assign value = "${component.id}${parameter.name?cap_first}">
-                    <#assign indent = 1>
-                    <#include handleChangeTemplatePath>
-                </#list>
-                <#list resource.requestProperties as property>
-                    <#assign value = "${component.id}${property.name?cap_first}">
-                    <#assign indent = 1>
-                    <#include handleChangeTemplatePath>
-                </#list>
-                <#assign indent = 1>
-                <#include fetchTemplatePath>
-                <#assign indent = 1>
-                <#include handleSubmitTemplatePath>
-            <#break>
+                <#include formLogic>
+                <#break>
             <#case "Container">
-                <#assign indent = 1>
-                <#include fetchTemplatePath>
-            <#break>
+                <#include containerLogic>
+                <#break>
         </#switch>
     </#list>
 
     return (
         <div className = "page-container">
             <#-- Calling Components -->
-            <#list data.components as component>
-                <#assign body = component.body>
-                <#assign resource = (component.resource)!>
-                <#switch body.type>
+            <#assign indentValue = 3>
+            <#list page.components as parentComponent>
+                <#assign component = parentComponent>
+                <#switch parentComponent.type>
                     <#case "HeroSection">
-                        <#assign indent = 3>
-                        <#include heroSectionTemplatePath>
-                    <#break>
+                        <#include heroSectionCall>
+                        <#break>
                     <#case "SearchBar">
-                        <#assign indent = 3>
-                        <#include searchBarTemplatePath>
-                        <#if body.result.component.type == "CardSection">
-                            <#assign indent = 3>
-                            <#include cardSectionTemplatePath>
-                        </#if>
-                    <#break>
+                        <#include searchBarCall>
+                        <#break>
                     <#case "Button">
-                        <#assign indent = 3>
-                        <#include buttonTemplatePath>
-                     <#break>
+                        <#include buttonCall>
+                        <#break>
                     <#case "Form">
-                        <#assign indent = 3>
-                        <#include formTemplatePath>
-                        <#if body.result.component.type == "Alert">
-                            <#assign indent = 3>
-                            <#include alertTemplatePath>
-                        </#if>
-                    <#break>
+                        <#include formCall>
+                        <#break>
                     <#case "Container">
-                        <#if body.result.component.type == "CardSection">
-                            <#assign indent = 3>
-                            <#include cardSectionTemplatePath>
-                        </#if>
-                    <#break>
+                        <#include containerCall>
+                        <#break>
                 </#switch>
             </#list>
         </div>

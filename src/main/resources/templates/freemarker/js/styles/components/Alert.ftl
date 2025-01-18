@@ -1,5 +1,5 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-${indent}alert : {
+${indent}${component.resultComponent.id} : {
 ${indent}    alert : {
 
 ${indent}    },
@@ -25,3 +25,4 @@ ${indent}    alertProgressBar : {
 
 ${indent}    },
 ${indent}},
+

@@ -20,7 +20,7 @@ public class CSSGenerator {
 
     public void generatePageCSS(String outputDir, FreeMarkerPage page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("data", page);
+        dataModel.put("page", page);
 
         Template template = cfg.getTemplate("css/PageCSS.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + page.getName() + ".css")) {

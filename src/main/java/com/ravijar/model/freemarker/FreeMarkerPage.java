@@ -5,10 +5,10 @@ import lombok.*;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 public class FreeMarkerPage {
     private String name;
     private String route;

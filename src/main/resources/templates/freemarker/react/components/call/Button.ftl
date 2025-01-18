@@ -1,9 +1,13 @@
-<#assign indent = ""?left_pad(indent * 4)>
+<#assign indent = ""?left_pad(indentValue * 4)>
+<#switch component.role>
+    <#case "parent">
+    <#case "child">
 ${indent}<div className="${component.styleId}-container">
 ${indent}   <Button
-${indent}       text="${body.text.body}"
-${indent}       onClick={${component.id}Navigate}
+${indent}       text="${component.text}"
+${indent}       onClick={() => navigate("${component.route}")}
 ${indent}       styles={styles.${component.id}}
 ${indent}   />
 ${indent}</div>
-
+        <#break>
+</#switch>

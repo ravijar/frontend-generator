@@ -1,25 +1,15 @@
 package com.ravijar.generator;
 
-import com.ravijar.helper.OpenAPIConverter;
+import com.ravijar.model.freemarker.*;
 import com.ravijar.model.openapi.OpenAPIParameter;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
 import com.ravijar.parser.OpenAPIParser;
-import com.ravijar.helper.StringConverter;
 import com.ravijar.model.*;
-import com.ravijar.model.freemarker.FreeMarkerPage;
-import com.ravijar.model.openapi.OpenAPIResource;
-import com.ravijar.model.freemarker.FreeMarkerComponent;
-import com.ravijar.model.openapi.OpenAPIResponse;
 import com.ravijar.model.xml.Page;
-import com.ravijar.model.xml.Resource;
-import com.ravijar.model.xml.component.Component;
-import com.ravijar.model.xml.component.Container;
-import com.ravijar.model.xml.component.Form;
-import com.ravijar.model.xml.component.SearchBar;
+import com.ravijar.populator.PagePopulator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.swagger.v3.oas.models.PathItem;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,26 +31,6 @@ public class ReactGenerator {
         this.schemas = openAPIParser.getSchemas();
     }
 
-    private OpenAPIResource getResourceData(Resource resource) {
-        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(resource.getMethod());
-        String url = resource.getUrl();
-
-        String apiFunctionName = openAPIParser.getOperationId(url, httpMethod);
-        List<OpenAPIParameter> urlParameters = openAPIParser.getParameters(url, httpMethod);
-        String requestSchema = openAPIParser.getRequestSchema(url, httpMethod);
-        Set<String> responseCodes = openAPIParser.getResponseCodes(url, httpMethod);
-
-        List<OpenAPIResponse> responses = new ArrayList<>();
-        for (String code : responseCodes) {
-            String schemaName = openAPIParser.getResponseSchemaName(url, httpMethod, code);
-            String type = openAPIParser.getResponseSchemaType(url, httpMethod, code);
-            String description = openAPIParser.getResponseDescription(url, httpMethod, code);
-            responses.add(new OpenAPIResponse(code, schemaName, type, description, schemas.get(schemaName)));
-        }
-
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, schemas.get(requestSchema), responses);
-    }
-
     public void generateAppPage(String outputDir, List<Page> pages) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
@@ -68,7 +38,7 @@ public class ReactGenerator {
         for (Page page : pages) {
             freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
         }
-        dataModel.put("data", freeMarkerPages);
+        dataModel.put("pages", freeMarkerPages);
 
         Template template = cfg.getTemplate("react/pages/App.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/App.jsx")) {
@@ -85,7 +55,7 @@ public class ReactGenerator {
                 freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
             }
         }
-        dataModel.put("data", freeMarkerPages);
+        dataModel.put("pages", freeMarkerPages);
 
         Template template = cfg.getTemplate("react/components/generate/NavBar.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
@@ -97,7 +67,7 @@ public class ReactGenerator {
         String formName = component.getId().substring(0, 1).toUpperCase() + component.getId().substring(1);
 
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("data", component);
+        dataModel.put("component", component);
 
         Template template = cfg.getTemplate("react/components/generate/Form.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
@@ -108,54 +78,16 @@ public class ReactGenerator {
     public void generatePage(String pageOutputDir, String componentOutputDir, String userStylesDir, Page page) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
+        FreeMarkerPage freeMarkerPage = new FreeMarkerPage();
+        new PagePopulator(openAPIParser).populate(page, freeMarkerPage);
 
-        for (Component component : page.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = null;
-            Resource resource;
-            String styleId = StringConverter.toKebabCase(component.getId());
-            switch (component.getType()) {
-                case "HeroSection", "Button":
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            null
-                    );
-                    break;
-                case "SearchBar":
-                    resource = ((SearchBar) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            getResourceData(resource)
-                    );
-                    break;
-                case "Form":
-                    resource = ((Form) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            getResourceData(resource)
-                    );
-                    generateForm(componentOutputDir, freeMarkerComponent);
-                    break;
-                case "Container":
-                    resource = ((Container) component).getResource();
-                    freeMarkerComponent = new FreeMarkerComponent(
-                            component.getId(),
-                            styleId,
-                            component,
-                            getResourceData(resource));
-                    break;
+        for (FreeMarkerComponent component : freeMarkerPage.getComponents()) {
+            if (component.getType().equals("Form")) {
+                generateForm(componentOutputDir, component);
             }
-            freeMarkerComponents.add(freeMarkerComponent);
         }
 
-        FreeMarkerPage freeMarkerPage = new FreeMarkerPage(page.getName(), page.getRoute(), freeMarkerComponents);
-        dataModel.put("data", freeMarkerPage);
+        dataModel.put("page", freeMarkerPage);
 
         Template template = cfg.getTemplate("react/pages/Page.ftl");
         try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {

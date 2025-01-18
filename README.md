@@ -190,13 +190,13 @@ The configuration file is an XML document containing <pages> as the root element
 <?xml version="1.0" encoding="UTF-8"?>
 <pages>
     <page name="Home" route="/home" navbar="true">
-        <component type="HeroSection" id="homeNavbar">
+        <component type="HeroSection" id="heroSection">
             <text>Petstore</text>
             <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
-        </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
+            <component type="Button" id="seeAllPetsButton">
+                <text>See All Pets</text>
+                <route>/pets</route>
+            </component>
         </component>
     </page>
 
@@ -204,7 +204,16 @@ The configuration file is an XML document containing <pages> as the root element
         <component type="Container" id="petsContainer">
             <resource method="GET">/pets</resource>
             <result>
-                <component type="CardSection"/>
+                <component type="CardSection" id="petsContainerCardSection">
+                    <component type="Button" id="updatePetButton">
+                        <text>Update</text>
+                        <route>/updatePet</route>
+                    </component>
+                    <component type="Button" id="deletePetButton">
+                        <text>Delete</text>
+                        <route>/deletePet</route>
+                    </component>
+                </component>
             </result>
         </component>
         <component type="Button" id="createPetButton">
@@ -213,10 +222,41 @@ The configuration file is an XML document containing <pages> as the root element
         </component>
     </page>
 
-    <page name="CreatePet" route="/createPet" navbar="true">
+    <page name="CreatePet" route="/createPet" navbar="false">
         <component type="Form" id="createPetForm">
             <resource method="POST">/pets</resource>
             <submit>Add Pet</submit>
+            <result>
+                <component type="Alert" id="createPetFormAlert"/>
+            </result>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
+
+    <page name="UpdatePet" route="/updatePet" navbar="false">
+        <component type="Form" id="updatePetForm">
+            <resource method="PUT">/pets/{id}</resource>
+            <submit>Update Pet</submit>
+            <result>
+                <component type="Alert" id="updatePetFormAlert"/>
+            </result>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
+
+    <page name="DeletePet" route="/deletePet" navbar="false">
+        <component type="Form" id="deletePetForm">
+            <resource method="DELETE">/pets/{id}</resource>
+            <submit>Delete Pet</submit>
+            <result>
+                <component type="Alert" id="deletePetFormAlert"/>
+            </result>
         </component>
         <component type="Button" id="seeAllPetsButton">
             <text>See All Pets</text>

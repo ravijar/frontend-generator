@@ -9,6 +9,9 @@ ${indent}    },
 ${indent}    singleCardContainer : {
 
 ${indent}    },
+${indent}    .childrenContainer : {
+
+${indent}    },
 <#assign indentValue = indentValue + 1>
 <#include keyValuePairStyle>
 <#assign indentValue = indentValue - 1>

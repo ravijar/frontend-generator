@@ -106,7 +106,7 @@ public class OpenAPIParser {
         }
 
         if (apiResponse.getContent() == null || apiResponse.getContent().isEmpty()) {
-            logger.error("Response content not found for path in OpenAPI specification: {} {} {}", path, method, responseType);
+            logger.warn("Response content not found for path in OpenAPI specification: {} {} {}", path, method, responseType);
             return null;
         }
 
@@ -173,13 +173,13 @@ public class OpenAPIParser {
         }
 
         if (operation.getRequestBody() == null) {
-            logger.error("No request body found for path and method: {} {}", method, path);
+            logger.warn("No request body found for path and method: {} {}", method, path);
             return null;
         }
 
         Map<String, MediaType> content = operation.getRequestBody().getContent();
         if (content == null || content.isEmpty()) {
-            logger.error("No content found for request body: {} {}", method, path);
+            logger.warn("No content found for request body: {} {}", method, path);
             return null;
         }
 
@@ -198,7 +198,7 @@ public class OpenAPIParser {
     public String getResponseSchemaName(String path, PathItem.HttpMethod method, String responseType) {
         Schema schema = getResponseSchema(path, method, responseType);
         if(schema == null) {
-            logger.error("No Content found for response type: {} {} {}", responseType, method, path);
+            logger.warn("No Content found for response type: {} {} {}", responseType, method, path);
             return null;
         }
         String ref = schema.get$ref();
@@ -210,7 +210,7 @@ public class OpenAPIParser {
                     return getSchemaFromRef(ref);
                 }
             }
-            logger.error("No Ref found for response type: {} {} {}", responseType, method, path);
+            logger.warn("No Ref found for response type: {} {} {}", responseType, method, path);
             return null;
         }
         return getSchemaFromRef(ref);
@@ -219,7 +219,7 @@ public class OpenAPIParser {
     public String getResponseSchemaType(String path, PathItem.HttpMethod method, String responseType) {
         Schema schema = getResponseSchema(path, method, responseType);
         if(schema == null) {
-            logger.error("No content found for response type: {} {} {}", responseType, method, path);
+            logger.warn("No content found for response type: {} {} {}", responseType, method, path);
             return null;
         }
         if(schema.getTypes() == null) {

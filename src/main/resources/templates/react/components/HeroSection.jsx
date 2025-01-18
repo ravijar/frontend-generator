@@ -13,7 +13,7 @@ const HeroSection = ({ backgroundImage, textContent, styles = {}, children }) =>
             <div className="hero-content" style={styles.heroContent}>
                 <h1>{textContent}</h1>
             </div>
-            <div className="children-container">
+            <div className="children-container" style={styles.childrenContainer}>
                 {children}
             </div>
         </div>

@@ -265,7 +265,8 @@ The configuration file is an XML document containing <pages> as the root element
     </page>
 </pages>
 ```
-** Example Generated Homepage:**
+
+ **Example Generated Homepage:**
 ![generated-homepage.jpg](docs/resources/images/generated-homepage.jpg)
 
 #### iii. User Customization Files

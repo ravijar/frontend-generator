@@ -1,5 +1,6 @@
 import RecursiveKeyValuePair from "./RecursiveKeyValuePair";
 import "./CardSection.css";
+import {Children, cloneElement, isValidElement} from "react";
 
 const CardSection = ({ responseData, responseSchema, displayNames, styles = {}, children }) => {
     const renderContent = () => {
@@ -17,10 +18,20 @@ const CardSection = ({ responseData, responseSchema, displayNames, styles = {}, 
                 return (
                     <div className="card-array-container" style={styles.cardArrayContainer}>
                         {responseData.map((item, index) => (
-                            <div key={index} className="card-array-item" style={styles.cardArrayItem}>
+                            <div key={item.id} className="card-array-item" style={styles.cardArrayItem}>
                                 <RecursiveKeyValuePair data={item} displayNames={displayNames}/>
                                 <div className="children-container" style={styles.childrenContainer}>
-                                    {children}
+                                    {Children.map(children, (child) =>
+                                        isValidElement(child)
+                                            ? cloneElement(child, {
+                                                children: Children.map(child.props.children, (nestedChild) =>
+                                                    isValidElement(nestedChild)
+                                                        ? cloneElement(nestedChild, { id: item.id })
+                                                        : nestedChild
+                                                ),
+                                            })
+                                            : child
+                                    )}
                                 </div>
                             </div>
                         ))}

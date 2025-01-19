@@ -1,12 +1,17 @@
 import React from "react";
 import "./Button.css";
 
-const Button = ({ text, onClick, type = "button", styles = {} }) => {
+const Button = ({ text, onClick = () => {}, type = "button", styles = {}, id }) => {
     return (
-        <button className="custom-button" type={type} onClick={onClick} style={styles.customButton}>
+        <button
+            className="custom-button"
+            type={type}
+            onClick={() => onClick(id)}
+            style={styles.customButton}
+        >
             {text}
         </button>
     );
-}
+};
 
-export default Button
+export default Button;

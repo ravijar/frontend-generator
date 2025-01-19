@@ -21,6 +21,7 @@
 <#assign containerState = "/react/components/Container/State.ftl">
 
 <#assign formCall = "/react/components/Form/Call.ftl">
+<#assign formEffect = "/react/components/Form/Effect.ftl">
 <#assign formLogic = "/react/components/Form/Logic.ftl">
 <#assign formState = "/react/components/Form/State.ftl">
 
@@ -41,7 +42,7 @@
 <#assign nestLogic = "/react/components/common/nest/Logic.ftl">
 <#assign nestState = "/react/components/common/nest/State.ftl">
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
@@ -66,6 +67,7 @@ import styles from "../custom_styles/${page.name?cap_first}";
 
 export default function ${page.name?cap_first}() {
     const navigate = useNavigate();
+    <#if page.urlParameter??>const { ${page.urlParameter} } = useParams();</#if>
 
     const configuration = createConfiguration();
     const clientApi = new DefaultApi(configuration);
@@ -100,6 +102,9 @@ export default function ${page.name?cap_first}() {
             <#break>
         <#case "Container">
             <#include containerEffect>
+            <#break>
+        <#case "Form">
+            <#include formEffect>
             <#break>
     </#switch>
     </#list>

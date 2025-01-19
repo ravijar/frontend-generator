@@ -1,5 +1,6 @@
 package com.ravijar.generator;
 
+import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.*;
 import com.ravijar.model.openapi.OpenAPIParameter;
 import com.ravijar.model.openapi.OpenAPISchemaProperty;
@@ -36,7 +37,13 @@ public class ReactGenerator {
 
         List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
         for (Page page : pages) {
-            freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+            freeMarkerPages.add(new FreeMarkerPage(
+                    page.getName(),
+                    page.getRoute(),
+                    StringHelper.toColonRoute(page.getRoute()),
+                    StringHelper.extractUrlParameter(page.getRoute()),
+                    null
+            ));
         }
         dataModel.put("pages", freeMarkerPages);
 
@@ -52,7 +59,13 @@ public class ReactGenerator {
         List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
         for (Page page : pages) {
             if (page.isNavbar()) {
-                freeMarkerPages.add(new FreeMarkerPage(page.getName(), page.getRoute(), null));
+                freeMarkerPages.add(new FreeMarkerPage(
+                        page.getName(),
+                        page.getRoute(),
+                        StringHelper.toColonRoute(page.getRoute()),
+                        StringHelper.extractUrlParameter(page.getRoute()),
+                        null
+                ));
             }
         }
         dataModel.put("pages", freeMarkerPages);

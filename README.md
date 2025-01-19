@@ -185,7 +185,7 @@ The configuration file is an XML document containing <pages> as the root element
   - `<submit>` : Defines the label for a form submission button.
   - `<text>` : Defines the textual content for a component.
   
- An example Page Configuration File:
+ **Example Page Configuration File:**
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <pages>
@@ -265,6 +265,8 @@ The configuration file is an XML document containing <pages> as the root element
     </page>
 </pages>
 ```
+** Example Generated Homepage:**
+![generated-homepage.jpg](resources/generated-homepage.jpg)
 
 #### iii. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.

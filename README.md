@@ -266,7 +266,7 @@ The configuration file is an XML document containing <pages> as the root element
 </pages>
 ```
 ** Example Generated Homepage:**
-![generated-homepage.jpg](resources/generated-homepage.jpg)
+![generated-homepage.jpg](docs/resources/images/generated-homepage.jpg)
 
 #### iii. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.
@@ -372,7 +372,7 @@ styles/
     - iii. `apply --styles` :
       - Applies user-defined styles from the styles folder to the generated project.
   ```
-  java -jar FrontendGenerator-<version>.jar build --code
+  java -jar FrontendGenerator-0.2.0.jar apply --styles
   ```  
 
 ### 4: Run the Application
@@ -389,11 +389,9 @@ styles/
 ### 6: View Available Commands
 - To view all available commands and their usage, run:
   ```
-  java -jar FrontendGenerator-<version>.jar help
+  java -jar FrontendGenerator-0.2.0.jar --help
   ```
 - This will display detailed information about the commands you can use and their respective options.
-
-
 
 
 

@@ -9,6 +9,7 @@
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
+<#assign alertState = "/react/components/Alert/State.ftl">
 
 <#assign buttonCall = "/react/components/Button/Call.ftl">
 

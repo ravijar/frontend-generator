@@ -57,7 +57,7 @@ public class ReactGenerator {
         }
         dataModel.put("pages", freeMarkerPages);
 
-        Template template = cfg.getTemplate("react/components/generate/NavBar.ftl");
+        Template template = cfg.getTemplate("react/components/NavBar/Generate.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
             template.process(dataModel, fileWriter);
         }
@@ -69,7 +69,7 @@ public class ReactGenerator {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("component", component);
 
-        Template template = cfg.getTemplate("react/components/generate/Form.ftl");
+        Template template = cfg.getTemplate("react/components/Form/Generate.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/" + formName + ".jsx")) {
             template.process(dataModel, fileWriter);
         }

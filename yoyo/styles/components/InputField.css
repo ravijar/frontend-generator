@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    border-radius: 20px;
+}
+
+.label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.input {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    transition: border-color 0.3s;
+}
+
+.error {
+    margin-top: 8px;
+    color: #d9534f;
+    font-size: 14px;
+}

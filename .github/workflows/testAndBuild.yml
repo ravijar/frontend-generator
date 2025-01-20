@@ -35,13 +35,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      # - name: Build with Maven
-      #   run: mvn -B package --file pom.xml
+            # - name: Build with Maven
+            #   run: mvn -B package --file pom.xml
 
-              # Build the project using Maven (or Gradle)
+        # Build the project using Maven (or Gradle)
       - name: Build with Maven
         run: mvn clean install
-        
+
       - name: List files in the directory
         run: ls -l
 
@@ -50,6 +50,10 @@ jobs:
         run: |
           java -jar target/FrontendGenerator-0.2.0.jar
 
+      # Init Project
+      - name: Run JAR
+        run: |
+          java -jar target/FrontendGenerator-0.2.0.jar init -n TestProj
 
 
 

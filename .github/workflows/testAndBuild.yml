@@ -48,7 +48,7 @@ jobs:
       # Run the generated JAR file
       - name: Run JAR
         run: |
-          java -jar FrontendGenerator-0.2.0.jar
+          java -jar target/FrontendGenerator-0.2.0.jar
 
 
 

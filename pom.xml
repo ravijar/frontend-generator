@@ -101,7 +101,7 @@
     </dependencies>
 
     <build>
-        <testSourceDirectory>src/test/java/com/ravijar/model</testSourceDirectory>
+<!--        <testSourceDirectory>src/test/java/com/ravijar/model</testSourceDirectory>-->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

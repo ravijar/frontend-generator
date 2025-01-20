@@ -31,7 +31,6 @@ public class ProjectManager {
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
     private final ConfigHandler configHandler;
-
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
     private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
@@ -40,7 +39,7 @@ public class ProjectManager {
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
-        this.commandHandler = new CommandHandler();
+        this.commandHandler = CommandHandler.getCommandHandler();
         this.configHandler = new ConfigHandler("config.properties");
     }
 

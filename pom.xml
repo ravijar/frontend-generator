@@ -99,10 +99,17 @@
             <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
+    </dependencies>
     <build>
-<!--        <testSourceDirectory>src/test/java/com/ravijar/model</testSourceDirectory>-->
+        <!--        <testSourceDirectory>src/test/java/com/ravijar/model</testSourceDirectory>-->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -114,15 +121,6 @@
 
         <plugins>
             <plugin>
-                <dependencies>
-                    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
-                    <dependency>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.5.2</version>
-                    </dependency>
-
-                </dependencies>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>

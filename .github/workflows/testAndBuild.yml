@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "ipjayawick/github-actions" ]
+    branches: [ "non-existing-branch" ]
   pull_request:
-    branches: [ "ipjayawick/github-actions" ]
+    branches: [ "non-existing-branch" ]
 
 jobs:
   build:

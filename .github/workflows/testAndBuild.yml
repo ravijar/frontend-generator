@@ -43,7 +43,7 @@ jobs:
         run: mvn clean install
 
       - name: List files in the directory
-        run: ls -l
+        run: dir
 
       # Run the generated JAR file
       - name: Run JAR
@@ -54,6 +54,10 @@ jobs:
       - name: Run JAR
         run: |
           java -jar target/FrontendGenerator-0.2.0.jar init -n TestProj
+
+      - name: List all files and folders
+        run: |
+          dir /s 
 
 
 

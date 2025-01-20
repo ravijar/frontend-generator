@@ -1,6 +1,7 @@
 package com.ravijar.populator;
 
 import com.ravijar.helper.PopulatorHelper;
+import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.xml.Page;
@@ -20,6 +21,8 @@ public class PagePopulator {
     public void populate(Page source, FreeMarkerPage target) {
         target.setName(source.getName());
         target.setRoute(source.getRoute());
+        target.setUrlParameter(StringHelper.extractUrlParameter(source.getRoute()));
+        target.setColonRoute(StringHelper.toColonRoute(source.getRoute()));
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 

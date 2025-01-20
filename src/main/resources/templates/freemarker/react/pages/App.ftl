@@ -11,9 +11,13 @@ export default function App() {
             <NavBar />
             <Routes>
                 <Route path="/" element={<Navigate to="${pages[0].route}" replace />} />
-            <#list pages as page>
+        <#list pages as page>
+            <#if page.urlParameter??>
+                <Route path="${page.colonRoute}" element={<${page.name?cap_first}/>}/>
+            <#else>
                 <Route path="${page.route}" element={<${page.name?cap_first}/>}/>
-            </#list>
+            </#if>
+        </#list>
             </Routes>
         </BrowserRouter>
     );

@@ -12,5 +12,7 @@ import java.util.List;
 public class FreeMarkerPage {
     private String name;
     private String route;
+    private String colonRoute;
+    private String urlParameter;
     private List<FreeMarkerComponent> components;
 }

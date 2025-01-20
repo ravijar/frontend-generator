@@ -3,8 +3,7 @@
     <#case "child">
         <#switch component.resultComponent.type>
             <#case "Alert">
-                <#assign state = "${component.id}ShowAlert">
-                <#include useState>
+                <#include alertState>
                 <#break>
         </#switch>
         <#break>

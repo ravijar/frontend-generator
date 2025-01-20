@@ -1,6 +1,9 @@
 package com.ravijar.helper;
 
-public class StringConverter {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class StringHelper {
     public static String toCamelCase(String input) {
         if (input == null || input.isEmpty()) {
             return input;
@@ -40,5 +43,31 @@ public class StringConverter {
         }
 
         return result.toString();
+    }
+
+    public static String extractUrlParameter(String route) {
+        String pattern = ".*/\\{(\\w+)}";
+        Pattern regex = Pattern.compile(pattern);
+        Matcher matcher = regex.matcher(route);
+
+        if (matcher.matches() && matcher.groupCount() > 0) {
+            return matcher.group(1);
+        }
+
+        return null;
+    }
+
+    public static String toColonRoute(String route) {
+        if (route == null || route.isEmpty()) {
+            return route;
+        }
+        return route.replaceAll("\\{(\\w+)}", ":$1");
+    }
+
+    public static String toTemplateLiteralRoute(String route) {
+        if (route == null || route.isEmpty()) {
+            return route;
+        }
+        return route.replaceAll("\\{(\\w+)}", "\\${$1}");
     }
 }

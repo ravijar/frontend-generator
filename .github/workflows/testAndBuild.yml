@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "non-existing-branch" ]
+    branches: [ "ipjayawick/testing" ]
   pull_request:
-    branches: [ "non-existing-branch" ]
+    branches: [ "ipjayawick/testing" ]
 
 jobs:
   build:
@@ -38,23 +38,60 @@ jobs:
             # - name: Build with Maven
             #   run: mvn -B package --file pom.xml
 
-        # Build the project using Maven (or Gradle)
+      # Build the project using Maven (or Gradle)
       - name: Build with Maven
         run: mvn clean install
 
+      # List files and folders in root directory
       - name: List files in the directory
-        run: Get-ChildItem -Directory -Depth 1
+        run: Get-ChildItem -Depth 1
 
       # Run the generated JAR file
       - name: Run JAR
-        run: java -jar target/FrontendGenerator-0.2.0.jar
+        run: java -jar FrontendGenerator-0.2.0.jar
+        working-directory: target
 
-      # Init Project
-      - name: Run JAR
-        run: java -jar target/FrontendGenerator-0.2.0.jar init -n TestProj
+      # Initialize a Project using JAR file
+      - name: Init Project
+        run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
+        working-directory: target
 
+      # Copy open api sped and pages file
+      - name: Copy Spec files
+        run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
+        working-directory: target
+
+      # List files and folders inside Project folder
       - name: List all files and folders
-        run: Get-ChildItem -Directory -Depth 1
+        run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
+
+      # Generate Code using JAR file
+      - name: Generate frontend and api
+        run:  java -jar FrontendGenerator-0.2.0.jar generate
+        working-directory: target
+
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
+
+      # Apply Styles
+      - name: Apply styles
+        run:  java -jar FrontendGenerator-0.2.0.jar apply --styles
+        working-directory: target
+
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem -Depth 1
+        working-directory: target\TestProj\build\src
+
+#      # Run Project
+#      - name: Run Project
+#        run:  java -jar FrontendGenerator-0.2.0.jar run
+#        working-directory: target
+
+
 
 
 

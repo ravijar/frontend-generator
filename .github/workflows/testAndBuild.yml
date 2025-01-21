@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "non-existing-branch" ]
+    branches: [ "ipjayawick/testing" ]
   pull_request:
-    branches: [ "non-existing-branch" ]
+    branches: [ "ipjayawick/testing" ]
 
 jobs:
   build:
@@ -49,9 +49,13 @@ jobs:
       - name: Run JAR
         run: java -jar target/FrontendGenerator-0.2.0.jar
 
-      # Init Project
-      - name: Run JAR
+      # Initialize a Project using JAR file
+      - name: Init Project
         run: java -jar target/FrontendGenerator-0.2.0.jar init -n TestProj
+
+      #Copy open api sped and pages file
+      - name: Copy Spec files
+        run: xcopy target/sampleSpecs TestProj /E /Y
 
       - name: List all files and folders
         run: Get-ChildItem -Directory -Depth 1

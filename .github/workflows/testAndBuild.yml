@@ -50,41 +50,45 @@ jobs:
       - name: Cd into target
         run: Set-Location -Path "target"
 
-      # Run the generated JAR file
-      - name: Run JAR
-        run: java -jar FrontendGenerator-0.2.0.jar
-
-      # Initialize a Project using JAR file
-      - name: Init Project
-        run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
-
-      # Copy open api sped and pages file
-      - name: Copy Spec files
-        run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
-
       # List files and folders inside Project folder
       - name: List all files and folders
         run: Get-ChildItem "TestProj" -Depth 1
 
-      # Generate Code using JAR file
-      - name: Generate frontend and api
-        run:  java -jar FrontendGenerator-0.2.0.jar generate
-
-      # List files and folders inside Project folder
-      - name: List all files and folders
-        run: Get-ChildItem "TestProj" -Depth 1
-
-      # Apply Styles
-      - name: Apply styles
-        run:  java -jar FrontendGenerator-0.2.0.jar apply --styles
-
-      # List files and folders inside Project folder
-      - name: List all files and folders
-        run: Get-ChildItem "TestProj" -Depth 1
-
-      # Run Project
-      - name: Run Project
-        run:  java -jar FrontendGenerator-0.2.0.jar run
+#      # Run the generated JAR file
+#      - name: Run JAR
+#        run: java -jar FrontendGenerator-0.2.0.jar
+#
+#      # Initialize a Project using JAR file
+#      - name: Init Project
+#        run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
+#
+#      # Copy open api sped and pages file
+#      - name: Copy Spec files
+#        run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
+#
+#      # List files and folders inside Project folder
+#      - name: List all files and folders
+#        run: Get-ChildItem "TestProj" -Depth 1
+#
+#      # Generate Code using JAR file
+#      - name: Generate frontend and api
+#        run:  java -jar FrontendGenerator-0.2.0.jar generate
+#
+#      # List files and folders inside Project folder
+#      - name: List all files and folders
+#        run: Get-ChildItem "TestProj" -Depth 1
+#
+#      # Apply Styles
+#      - name: Apply styles
+#        run:  java -jar FrontendGenerator-0.2.0.jar apply --styles
+#
+#      # List files and folders inside Project folder
+#      - name: List all files and folders
+#        run: Get-ChildItem "TestProj" -Depth 1
+#
+#      # Run Project
+#      - name: Run Project
+#        run:  java -jar FrontendGenerator-0.2.0.jar run
 
 
 

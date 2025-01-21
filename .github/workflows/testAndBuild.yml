@@ -55,7 +55,7 @@ jobs:
 
       #Copy open api sped and pages file
       - name: Copy Spec files
-        run: xcopy target/sampleSpecs TestProj /E /Y
+        run: xcopy target\classes\sampleSpecs target\TestProj /E /Y
 
       - name: List all files and folders
         run: Get-ChildItem -Directory -Depth 1

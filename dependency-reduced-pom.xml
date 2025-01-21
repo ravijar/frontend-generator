@@ -14,6 +14,13 @@
           <include>**/*</include>
         </includes>
       </resource>
+      <resource>
+        <targetPath>sampleSpecs</targetPath>
+        <directory>sampleSpecs</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
     </resources>
     <plugins>
       <plugin>

@@ -46,49 +46,50 @@ jobs:
       - name: List files in the directory
         run: Get-ChildItem -Depth 1
 
-      # Cd to target folder
-      - name: Cd into target
-        run: Set-Location -Path "target"
+      # Run the generated JAR file
+      - name: Run JAR
+        run: java -jar FrontendGenerator-0.2.0.jar
+        working-directory: target
+
+      # Initialize a Project using JAR file
+      - name: Init Project
+        run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
+        working-directory: target
+        
+      # Copy open api sped and pages file
+      - name: Copy Spec files
+        run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
+        working-directory: target
+        
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
+
+      # Generate Code using JAR file
+      - name: Generate frontend and api
+        run:  java -jar FrontendGenerator-0.2.0.jar generate
+        working-directory: target
 
       # List files and folders inside Project folder
       - name: List all files and folders
         run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
 
-#      # Run the generated JAR file
-#      - name: Run JAR
-#        run: java -jar FrontendGenerator-0.2.0.jar
-#
-#      # Initialize a Project using JAR file
-#      - name: Init Project
-#        run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
-#
-#      # Copy open api sped and pages file
-#      - name: Copy Spec files
-#        run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
-#
-#      # List files and folders inside Project folder
-#      - name: List all files and folders
-#        run: Get-ChildItem "TestProj" -Depth 1
-#
-#      # Generate Code using JAR file
-#      - name: Generate frontend and api
-#        run:  java -jar FrontendGenerator-0.2.0.jar generate
-#
-#      # List files and folders inside Project folder
-#      - name: List all files and folders
-#        run: Get-ChildItem "TestProj" -Depth 1
-#
-#      # Apply Styles
-#      - name: Apply styles
-#        run:  java -jar FrontendGenerator-0.2.0.jar apply --styles
-#
-#      # List files and folders inside Project folder
-#      - name: List all files and folders
-#        run: Get-ChildItem "TestProj" -Depth 1
-#
-#      # Run Project
-#      - name: Run Project
-#        run:  java -jar FrontendGenerator-0.2.0.jar run
+      # Apply Styles
+      - name: Apply styles
+        run:  java -jar FrontendGenerator-0.2.0.jar apply --styles
+        working-directory: target
+
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
+
+      # Run Project
+      - name: Run Project
+        run:  java -jar FrontendGenerator-0.2.0.jar run
+        working-directory: target
 
 
 

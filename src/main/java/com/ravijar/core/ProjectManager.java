@@ -136,27 +136,27 @@ public class ProjectManager {
     public void initializeProject(String projectName) {
         logger.info("Project Initialization Started...");
 
-//        this.configHandler.createPropertiesFile(projectName);
-//        setProjectName(projectName);
-//
-//        File projectDir = new File(projectName);
-//        this.fileHandler.createDirectoryIfNotExists(projectDir);
-//
-//        for (String subDir : projectSubDirs) {
-//            this.fileHandler.createSubDirectory(projectDir, subDir);
-//        }
-//
-//        this.commandHandler.createReactApp(getProjectName());
-//
-//        for (String npmPackage : npmPackages) {
-//            this.commandHandler.installNpmPackage(projectName, npmPackage);
-//        }
-//
-//        for (String subDir : buildSubDirs) {
-//            this.fileHandler.createSubDirectory(projectDir, subDir);
-//        }
-//
-//        fileHandler.copyAllTemplates(SOURCE_ROOT_PATH,projectName);
+        this.configHandler.createPropertiesFile(projectName);
+        setProjectName(projectName);
+
+        File projectDir = new File(projectName);
+        this.fileHandler.createDirectoryIfNotExists(projectDir);
+
+        for (String subDir : projectSubDirs) {
+            this.fileHandler.createSubDirectory(projectDir, subDir);
+        }
+
+        this.commandHandler.createReactApp(getProjectName());
+
+        for (String npmPackage : npmPackages) {
+            this.commandHandler.installNpmPackage(projectName, npmPackage);
+        }
+
+        for (String subDir : buildSubDirs) {
+            this.fileHandler.createSubDirectory(projectDir, subDir);
+        }
+
+        fileHandler.copyAllTemplates(SOURCE_ROOT_PATH,projectName);
 
         logger.info("✔ Project initialized successfully!");
     }

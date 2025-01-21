@@ -55,12 +55,12 @@ jobs:
       - name: Init Project
         run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
         working-directory: target
-        
+
       # Copy open api sped and pages file
       - name: Copy Spec files
         run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
         working-directory: target
-        
+
       # List files and folders inside Project folder
       - name: List all files and folders
         run: Get-ChildItem "TestProj" -Depth 1
@@ -83,13 +83,13 @@ jobs:
 
       # List files and folders inside Project folder
       - name: List all files and folders
-        run: Get-ChildItem "TestProj" -Depth 1
-        working-directory: target
+        run: Get-ChildItem -Depth 1
+        working-directory: target\TestProj\build
 
-      # Run Project
-      - name: Run Project
-        run:  java -jar FrontendGenerator-0.2.0.jar run
-        working-directory: target
+#      # Run Project
+#      - name: Run Project
+#        run:  java -jar FrontendGenerator-0.2.0.jar run
+#        working-directory: target
 
 
 

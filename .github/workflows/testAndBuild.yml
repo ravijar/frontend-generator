@@ -83,8 +83,8 @@ jobs:
 
       # List files and folders inside Project folder
       - name: List all files and folders
-        run: Get-ChildItem -Exclude public,node_modules -Depth 1
-        working-directory: target\TestProj\build
+        run: Get-ChildItem -Depth 1
+        working-directory: target\TestProj\build\src
 
 #      # Run Project
 #      - name: Run Project

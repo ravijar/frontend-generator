@@ -16,6 +16,7 @@ export default function ${component.id?cap_first}({
     return (
         <div className="${component.styleId}-container">
             <form onSubmit={${component.id}HandleSubmit} className="form" style={styles.form}>
+                <div className="form-title">${component.title}</div>
             <#list component.resource.urlParameters as parameter>
                 <InputField
                     label="${parameter.displayName}"

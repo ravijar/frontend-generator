@@ -1,6 +1,6 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
 ${indent}inputField : {
-${indent}    container : {
+${indent}    inputGroup : {
 
 ${indent}    },
 ${indent}    label : {

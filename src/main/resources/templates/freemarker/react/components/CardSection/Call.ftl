@@ -5,10 +5,8 @@
 ${indent}<div className="${component.resultComponent.styleId}-container">
 ${indent}    {${component.id}Fetched && (
 ${indent}       <CardSection
-${indent}           responseData={${component.id}FetchResponse?.data}
-${indent}           responseSchema={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.responseSchema}
-${indent}           displayNames={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.displayNames}
 ${indent}           styles={styles.${component.resultComponent.id}}
+${indent}           items={${component.resultComponent.id}Filter()}
 ${indent}       >
                 <#assign component = component.resultComponent>
                 <#include nestCall>

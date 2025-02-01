@@ -35,7 +35,7 @@ public class SwaggerCodegenGenerator {
             }
         }
 
-        CommandHandler commandHandler = new CommandHandler();
+        CommandHandler commandHandler = CommandHandler.getCommandHandler();
         commandHandler.npmInstall(outputDir);
     }
 }

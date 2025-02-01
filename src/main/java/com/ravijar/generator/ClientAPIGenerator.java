@@ -35,7 +35,7 @@ public class ClientAPIGenerator {
             DefaultGenerator generator = new DefaultGenerator();
             generator.opts(configurator.toClientOptInput()).generate();
 
-            CommandHandler commandHandler = new CommandHandler();
+            CommandHandler commandHandler = CommandHandler.getCommandHandler();
             logger.debug("Installing client API dependencies...");
             commandHandler.npmInstall(outputDir);
             logger.debug("Client API dependencies installed!");

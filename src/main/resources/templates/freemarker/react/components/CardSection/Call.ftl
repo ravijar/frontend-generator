@@ -7,9 +7,8 @@ ${indent}    {${component.id}Fetched && (
 ${indent}       <CardSection
 ${indent}           styles={styles.${component.resultComponent.id}}
 ${indent}           items={${component.resultComponent.id}Filter()}
+${indent}           onClick={(${component.resultComponent.urlParameter}) => navigate(`${component.resultComponent.templateLiteralRoute}`)}
 ${indent}       >
-                <#assign component = component.resultComponent>
-                <#include nestCall>
 ${indent}       </CardSection>
 ${indent}    )}
 ${indent}</div>

@@ -17,12 +17,31 @@
             <result>
                 <component type="CardSection" id="petsContainerCardSection">
                     <data key="id" title="name" description="description" image="imageURL"/>
+                    <route>/pets/{id}</route>
                 </component>
             </result>
         </component>
         <component type="Button" id="createPetButton">
             <text>Add New Pet</text>
             <route>/createPet</route>
+        </component>
+    </page>
+
+    <page name="Pet" route="/pets/{id}" navbar="false">
+        <component type="Container" id="petContainer">
+            <resource method="GET">/pets/{id}</resource>
+            <result>
+                <component type="Card" id="petContainerCard">
+                    <component type="Button" id="updatePetButton">
+                        <text>Update</text>
+                        <route>/updatePet/{id}</route>
+                    </component>
+                    <component type="Button" id="deletePetButton">
+                        <text>Delete</text>
+                        <route>/deletePet/{id}</route>
+                    </component>
+                </component>
+            </result>
         </component>
     </page>
 

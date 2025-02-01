@@ -1,14 +1,9 @@
 package com.ravijar.populator;
 
-import com.ravijar.helper.PopulatorHelper;
+import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.FreeMarkerCardSection;
-import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.xml.component.CardSection;
-import com.ravijar.model.xml.component.Component;
 import com.ravijar.parser.OpenAPIParser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CardSectionPopulator extends ComponentPopulator{
     public CardSectionPopulator(OpenAPIParser openAPIParser) {
@@ -21,5 +16,8 @@ public class CardSectionPopulator extends ComponentPopulator{
         target.setCardTitle(source.getData().getTitle());
         target.setCardDescription(source.getData().getDescription());
         target.setCardImage(source.getData().getImage());
+        target.setRoute(source.getRoute().getUrl());
+        target.setTemplateLiteralRoute(StringHelper.toTemplateLiteralRoute(source.getRoute().getUrl()));
+        target.setUrlParameter(StringHelper.extractUrlParameter(source.getRoute().getUrl()));
     }
 }

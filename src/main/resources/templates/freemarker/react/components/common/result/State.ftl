@@ -5,9 +5,6 @@
             <#case "Alert">
                 <#include alertState>
                 <#break>
-            <#case "Card">
-                <#include cardState>
-                <#break>
         </#switch>
         <#break>
 </#switch>

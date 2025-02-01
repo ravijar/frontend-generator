@@ -24,9 +24,7 @@
 <#assign buttonCall = "/react/components/Button/Call.ftl">
 
 <#assign cardCall = "/react/components/Card/Call.ftl">
-<#assign cardEffect = "/react/components/Card/Effect.ftl">
 <#assign cardLogic = "/react/components/Card/Logic.ftl">
-<#assign cardState = "/react/components/Card/State.ftl">
 
 <#assign cardSectionCall = "/react/components/CardSection/Call.ftl">
 <#assign cardSectionLogic = "/react/components/CardSection/Logic.ftl">
@@ -51,7 +49,6 @@
 <#assign searchBarState = "/react/components/SearchBar/State.ftl">
 
 <#assign resultCall = "/react/components/common/result/Call.ftl">
-<#assign resultEffect = "/react/components/common/result/Effect.ftl">
 <#assign resultLogic = "/react/components/common/result/Logic.ftl">
 <#assign resultState = "/react/components/common/result/State.ftl">
 

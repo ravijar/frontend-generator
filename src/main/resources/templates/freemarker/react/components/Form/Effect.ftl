@@ -1,1 +1,1 @@
-<#include fetchOnInitEffect>
+<#include setUrlParamEffect>

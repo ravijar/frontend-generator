@@ -56,9 +56,9 @@ jobs:
         run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
         working-directory: target
 
-      # Copy open api sped and pages file
+      # Copy open api spec and pages file
       - name: Copy Spec files
-        run:  Copy-Item -Path "classes\sampleSpecs\*" -Destination "TestProj" -Recurse
+        run:  Copy-Item -Path "classes\samples\petstore\*" -Destination "TestProj" -Recurse
         working-directory: target
 
       # List files and folders inside Project folder

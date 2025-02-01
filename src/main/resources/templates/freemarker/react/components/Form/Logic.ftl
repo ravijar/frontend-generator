@@ -11,5 +11,6 @@
         </#list>
         <#include fetch>
         <#include handleSubmit>
+        <#include resultLogic>
         <#break>
 </#switch>

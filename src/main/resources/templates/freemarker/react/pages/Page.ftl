@@ -14,6 +14,7 @@
 <#assign buttonCall = "/react/components/Button/Call.ftl">
 
 <#assign cardSectionCall = "/react/components/CardSection/Call.ftl">
+<#assign cardSectionLogic = "/react/components/CardSection/Logic.ftl">
 
 <#assign containerCall = "/react/components/Container/Call.ftl">
 <#assign containerEffect = "/react/components/Container/Effect.ftl">
@@ -35,6 +36,7 @@
 <#assign searchBarState = "/react/components/SearchBar/State.ftl">
 
 <#assign resultCall = "/react/components/common/result/Call.ftl">
+<#assign resultLogic = "/react/components/common/result/Logic.ftl">
 <#assign resultState = "/react/components/common/result/State.ftl">
 
 <#assign nestCall = "/react/components/common/nest/Call.ftl">

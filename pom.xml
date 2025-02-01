@@ -46,7 +46,6 @@
             <version>2.23.1</version>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -98,7 +97,6 @@
             <version>2.4.1</version>
         </dependency>
 
-
     </dependencies>
 
     <build>
@@ -110,8 +108,8 @@
                 </includes>
             </resource>
             <resource>
-                <directory>sampleSpecs</directory>
-                <targetPath>sampleSpecs</targetPath> <!-- Root directory of the JAR -->
+                <directory>samples</directory>
+                <targetPath>samples</targetPath> <!-- Root directory of the JAR -->
                 <includes>
                     <include>**/*</include>
                 </includes>
@@ -140,8 +138,7 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.ravijar.core.AppCLI</mainClass>
                                 </transformer>
                             </transformers>
@@ -149,7 +146,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 

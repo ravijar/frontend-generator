@@ -9,5 +9,8 @@ import java.util.List;
 @Setter
 @ToString
 public class FreeMarkerCardSection extends FreeMarkerComponent{
-    private List<FreeMarkerComponent> subComponents;
+    private String cardKey;
+    private String cardTitle;
+    private String cardDescription;
+    private String cardImage;
 }

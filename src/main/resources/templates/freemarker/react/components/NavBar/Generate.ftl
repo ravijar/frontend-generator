@@ -6,13 +6,16 @@ export default function NavBar() {
 
     return (
         <nav className="navbar">
-            <ul className="navbar-links">
+            <div className="logo">LOGO</div>
+            <div className="menu">
+                <ul className="menu-links">
 <#list pages as page>
-                <li className={location.pathname === "${page.route}" ? "active" : ""}>
-                    <Link to="${page.route}">${page.name}</Link>
-                </li>
+                    <li className={location.pathname === "${page.route}" ? "active" : ""}>
+                        <Link to="${page.route}">${page.name}</Link>
+                    </li>
 </#list>
-            </ul>
+                </ul>
+            </div>
         </nav>
     );
 }

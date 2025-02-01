@@ -17,16 +17,9 @@ public class CardSectionPopulator extends ComponentPopulator{
 
     public void populate(CardSection source, FreeMarkerCardSection target) {
         populateComponent(source, target);
-
-        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
-
-        if(source.getSubComponents() != null) {
-            for(Component component : source.getSubComponents()) {
-                FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
-                freeMarkerComponent.setRole("child");
-                freeMarkerComponents.add(freeMarkerComponent);
-            }
-        }
-        target.setSubComponents(freeMarkerComponents);
+        target.setCardKey(source.getData().getKey());
+        target.setCardTitle(source.getData().getTitle());
+        target.setCardDescription(source.getData().getDescription());
+        target.setCardImage(source.getData().getImage());
     }
 }

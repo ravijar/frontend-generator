@@ -16,14 +16,7 @@
             <resource method="GET">/pets</resource>
             <result>
                 <component type="CardSection" id="petsContainerCardSection">
-                    <component type="Button" id="updatePetButton">
-                        <text>Update</text>
-                        <route>/updatePet/{id}</route>
-                    </component>
-                    <component type="Button" id="deletePetButton">
-                        <text>Delete</text>
-                        <route>/deletePet/{id}</route>
-                    </component>
+                    <data key="id" title="name" description="description" image="imageURL"/>
                 </component>
             </result>
         </component>
@@ -36,6 +29,7 @@
     <page name="CreatePet" route="/createPet" navbar="false">
         <component type="Form" id="createPetForm">
             <resource method="POST">/pets</resource>
+            <text>Create New Pet</text>
             <submit>Add Pet</submit>
             <result>
                 <component type="Alert" id="createPetFormAlert"/>
@@ -50,6 +44,7 @@
     <page name="UpdatePet" route="/updatePet/{id}" navbar="false">
         <component type="Form" id="updatePetForm">
             <resource method="PUT">/pets/{id}</resource>
+            <text>Update Pet</text>
             <submit>Update Pet</submit>
             <result>
                 <component type="Alert" id="updatePetFormAlert"/>
@@ -64,6 +59,7 @@
     <page name="DeletePet" route="/deletePet/{id}" navbar="false">
         <component type="Form" id="deletePetForm">
             <resource method="DELETE">/pets/{id}</resource>
+            <text>Delete Pet</text>
             <submit>Delete Pet</submit>
             <result>
                 <component type="Alert" id="deletePetFormAlert"/>

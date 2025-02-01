@@ -1,17 +1,32 @@
 <#assign responses = "/react/constants/Responses.ftl">
 
 <#assign useState = "/react/hooks/UseState.ftl">
-<#assign useEffect = "/react/hooks/UseEffect.ftl">
 
-<#assign fetch = "/react/logic/Fetch.ftl">
+<#assign fetchOnInitEffect = "/react/hooks/useEffect/FetchOnInit.ftl">
+<#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
+
+<#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">
+<#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
+<#assign fetchBody = "/react/logic/fetch/parts/FetchBody.ftl">
+<#assign fetchBodyUrlParam = "/react/logic/fetch/parts/FetchBodyUrlParam.ftl">
+
+<#assign fetch = "/react/logic/fetch/Fetch.ftl">
+<#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
+
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
+<#assign alertLogic = "/react/components/Alert/Logic.ftl">
 <#assign alertState = "/react/components/Alert/State.ftl">
 
 <#assign buttonCall = "/react/components/Button/Call.ftl">
+
+<#assign cardCall = "/react/components/Card/Call.ftl">
+<#assign cardEffect = "/react/components/Card/Effect.ftl">
+<#assign cardLogic = "/react/components/Card/Logic.ftl">
+<#assign cardState = "/react/components/Card/State.ftl">
 
 <#assign cardSectionCall = "/react/components/CardSection/Call.ftl">
 <#assign cardSectionLogic = "/react/components/CardSection/Logic.ftl">
@@ -36,6 +51,7 @@
 <#assign searchBarState = "/react/components/SearchBar/State.ftl">
 
 <#assign resultCall = "/react/components/common/result/Call.ftl">
+<#assign resultEffect = "/react/components/common/result/Effect.ftl">
 <#assign resultLogic = "/react/components/common/result/Logic.ftl">
 <#assign resultState = "/react/components/common/result/State.ftl">
 
@@ -49,6 +65,7 @@ import { createConfiguration, DefaultApi } from "../client_api";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
+import Card from "../components/Card";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
 <#list page.components as component>

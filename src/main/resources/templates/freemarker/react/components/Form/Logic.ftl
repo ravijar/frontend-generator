@@ -9,7 +9,6 @@
             <#assign value = "${component.id}${property.name?cap_first}">
             <#include handleChange>
         </#list>
-        <#include fetch>
         <#include handleSubmit>
         <#include resultLogic>
         <#break>

@@ -15,8 +15,8 @@
         </includes>
       </resource>
       <resource>
-        <targetPath>sampleSpecs</targetPath>
-        <directory>sampleSpecs</directory>
+        <targetPath>samples</targetPath>
+        <directory>samples</directory>
         <includes>
           <include>**/*</include>
         </includes>

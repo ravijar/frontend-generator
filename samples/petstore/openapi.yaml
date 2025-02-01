@@ -127,3 +127,11 @@ components:
           type: string
           description: Species of the pet
           x-displayName: Species
+        description:
+          type: string
+          description: Description of the pet
+          x-displayName: Description
+        imageURL:
+          type: string
+          description: Image of the pet
+          x-displayName: Image URL

@@ -32,6 +32,7 @@
             <resource method="GET">/pets/{id}</resource>
             <result>
                 <component type="Card" id="petContainerCard">
+                    <data title="name" description="description" image="imageURL"/>
                     <component type="Button" id="updatePetButton">
                         <text>Update</text>
                         <route>/updatePet/{id}</route>

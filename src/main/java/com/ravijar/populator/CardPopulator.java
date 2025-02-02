@@ -17,6 +17,9 @@ public class CardPopulator extends ComponentPopulator{
 
     public void populate(Card source, FreeMarkerCard target) {
         populateComponent(source, target);
+        target.setCardTitle(source.getData().getTitle());
+        target.setCardDescription(source.getData().getDescription());
+        target.setCardImage(source.getData().getImage());
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 

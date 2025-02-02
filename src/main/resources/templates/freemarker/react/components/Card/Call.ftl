@@ -5,7 +5,7 @@
 ${indent}<div className="${component.resultComponent.styleId}-container">
 ${indent}    {${component.id}Fetched && (
 ${indent}       <Card
-${indent}           item={${component.id}FetchResponse?.data}
+${indent}           item={${component.resultComponent.id}Filter()}
 ${indent}           displayNames={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.displayNames}
 ${indent}           styles={styles.${component.resultComponent.id}}
 ${indent}       >

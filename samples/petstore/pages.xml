@@ -4,10 +4,10 @@
         <component type="HeroSection" id="heroSection">
             <text>Petstore</text>
             <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
-            <component type="Button" id="seeAllPetsButton">
-                <text>See All Pets</text>
-                <route>/pets</route>
-            </component>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
         </component>
     </page>
 
@@ -55,10 +55,6 @@
                 <component type="Alert" id="createPetFormAlert"/>
             </result>
         </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
-        </component>
     </page>
 
     <page name="UpdatePet" route="/updatePet/{id}" navbar="false">
@@ -70,10 +66,6 @@
                 <component type="Alert" id="updatePetFormAlert"/>
             </result>
         </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
-        </component>
     </page>
 
     <page name="DeletePet" route="/deletePet/{id}" navbar="false">
@@ -84,10 +76,6 @@
             <result>
                 <component type="Alert" id="deletePetFormAlert"/>
             </result>
-        </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
         </component>
     </page>
 </pages>

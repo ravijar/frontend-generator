@@ -5,7 +5,7 @@ import {Children, cloneElement, isValidElement} from "react";
 const Card = ({ item, displayNames, styles = {}, children }) => {
     return (
         <div className="detailed-card" style={styles.detailedCard}>
-            <div className="detailed-card-img" style={styles.cardImg}>
+            <div className="detailed-card-img" style={styles.detailedCardImg}>
                 <img src={item.image} alt={item.title}></img>
             </div>
             <div className="content-container" style={styles.contentContainer}>

@@ -4,7 +4,8 @@
 ${indent}<div className="${component.styleId}-container">
 ${indent}   <HeroSection
 ${indent}       backgroundImage="${component.image}"
-${indent}       textContent="${component.text}"
+${indent}       text="${component.text}"
+${indent}       subText="${component.subtext}"
 ${indent}       styles={styles.${component.id}}
 ${indent}   >
             <#include nestCall>

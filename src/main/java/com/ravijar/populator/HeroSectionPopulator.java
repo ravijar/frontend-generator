@@ -18,7 +18,8 @@ public class HeroSectionPopulator extends ComponentPopulator{
     public void populate(HeroSection source, FreeMarkerHeroSection target) {
         populateComponent(source, target);
         target.setImage(source.getImage().getUrl());
-        target.setText(source.getText().getBody());
+        target.setText(source.getTexts().get(0).getBody());
+        target.setSubtext(source.getTexts().get(1).getBody());
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 

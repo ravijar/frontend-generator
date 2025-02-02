@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 @ToString
 public class FreeMarkerCard extends FreeMarkerComponent{
+    private String cardKey;
     private String cardTitle;
     private String cardDescription;
     private String cardImage;

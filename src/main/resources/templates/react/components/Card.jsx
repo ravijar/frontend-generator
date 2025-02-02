@@ -22,7 +22,7 @@ const Card = ({ item, displayNames, styles = {}, children }) => {
                             ? cloneElement(child, {
                                 children: Children.map(child.props.children, (nestedChild) =>
                                     isValidElement(nestedChild)
-                                        ? cloneElement(nestedChild, {id: item.id})
+                                        ? cloneElement(nestedChild, {id: item.key})
                                         : nestedChild
                                 ),
                             })

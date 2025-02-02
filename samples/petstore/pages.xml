@@ -2,7 +2,8 @@
 <pages>
     <page name="Home" route="/home" navbar="true">
         <component type="HeroSection" id="heroSection">
-            <text>Petstore</text>
+            <text>Find Your Perfect Pet &amp; Everything They Need!</text>
+            <text>From adorable companions to premium pet supplies, we&apos;ve got everything to make your pet happy!</text>
             <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
         </component>
         <component type="Button" id="seeAllPetsButton">

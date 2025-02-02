@@ -1,10 +1,10 @@
 .custom-button {
     appearance: none;
-    background-color: transparent;
+    background-color: #fff;
     border: 2px solid #1A1A1A;
-    border-radius: 5px;
+    border-radius: 10px;
     box-sizing: border-box;
-    color: #3B3B3B;
+    color: #1A1A1A;
     cursor: pointer;
     display: inline-block;
     font-family: inherit;

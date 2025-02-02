@@ -20,7 +20,7 @@
     z-index: 1;
     position: absolute;
     top: 60px;
-    left:35%
+    left:35%;
         <#break>
     <#default>
 
@@ -29,7 +29,16 @@
 
 <#if component.resultComponent??>
 .${component.resultComponent.styleId}-container {
+    <#switch component.resultComponent.type>
+        <#case "Card">
+    z-index: 1;
+    position: absolute;
+    top: 100px;
+    left:25%;
+            <#break>
+        <#default>
 
+    </#switch>
 }
 
     <#if component.resultComponent.subComponents??>

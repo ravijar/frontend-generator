@@ -8,6 +8,9 @@
             <#case "Alert">
                 <#include alertCall>
                 <#break>
+            <#case "Card">
+                <#include cardCall>
+                <#break>
         </#switch>
         <#break>
 </#switch>

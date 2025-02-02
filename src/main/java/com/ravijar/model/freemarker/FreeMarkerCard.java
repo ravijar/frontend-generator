@@ -8,12 +8,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class FreeMarkerCardSection extends FreeMarkerComponent{
+public class FreeMarkerCard extends FreeMarkerComponent{
     private String cardKey;
     private String cardTitle;
     private String cardDescription;
     private String cardImage;
-    private String route;
-    private String templateLiteralRoute;
-    private String urlParameter;
+    private List<FreeMarkerComponent> subComponents;
 }

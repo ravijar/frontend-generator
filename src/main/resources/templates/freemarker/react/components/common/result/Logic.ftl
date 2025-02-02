@@ -5,6 +5,12 @@
             <#case "CardSection">
                 <#include cardSectionLogic>
                 <#break>
+            <#case "Card">
+                <#include cardLogic>
+                <#break>
+            <#case "Alert">
+                <#include alertLogic>
+                <#break>
         </#switch>
         <#break>
 </#switch>

@@ -4,12 +4,14 @@
     <#case "child">
 ${indent}<div className="${component.resultComponent.styleId}-container">
 ${indent}    {${component.id}Fetched && (
-${indent}       <CardSection
+${indent}       <Card
+${indent}           item={${component.resultComponent.id}Filter()}
+${indent}           displayNames={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.displayNames}
 ${indent}           styles={styles.${component.resultComponent.id}}
-${indent}           items={${component.resultComponent.id}Filter()}
-${indent}           onClick={(${component.resultComponent.urlParameter}) => navigate(`${component.resultComponent.templateLiteralRoute}`)}
 ${indent}       >
-${indent}       </CardSection>
+        <#assign component = component.resultComponent>
+        <#include nestCall>
+${indent}       </Card>
 ${indent}    )}
 ${indent}</div>
         <#break>

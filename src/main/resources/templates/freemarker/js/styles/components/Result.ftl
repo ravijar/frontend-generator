@@ -5,4 +5,7 @@
     <#case "Alert">
         <#include alertStyle>
         <#break>
+    <#case "Card">
+        <#include cardStyle>
+        <#break>
 </#switch>

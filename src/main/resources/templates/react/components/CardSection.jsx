@@ -1,10 +1,14 @@
 import "./CardSection.css";
 
-const CardSection = ({ items, styles = {} }) => {
+const CardSection = ({ items, onClick, styles = {} }) => {
     return (
         <div className="card-array-container" style={styles.cardArrayContainer}>
             {items.map((item) => (
-                <div key={item.key} className="card" style={styles.card}>
+                <div key={item.key}
+                     className="card"
+                     onClick={() => onClick(item.key)}
+                     style={styles.card}
+                >
                     {item.image &&
                         <div
                             className="card-img"

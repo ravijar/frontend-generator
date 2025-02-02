@@ -2,6 +2,8 @@
 <#switch component.role>
     <#case "parent">
     <#case "child">
+        <#include fetch>
+
 ${indent}const ${component.resultComponent.id}Filter = () => {
 ${indent}   let items = [];
 ${indent}   const responseSchema = ${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.responseSchema.type;

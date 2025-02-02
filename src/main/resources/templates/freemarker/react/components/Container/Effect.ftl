@@ -1,6 +1,6 @@
 <#switch component.role>
     <#case "parent">
     <#case "child">
-        <#include useEffect>
+        <#include fetchOnInitEffect>
         <#break>
 </#switch>

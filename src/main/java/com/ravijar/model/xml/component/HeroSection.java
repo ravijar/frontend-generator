@@ -15,7 +15,8 @@ import java.util.List;
 @ToString
 public class HeroSection extends Component{
     @JacksonXmlProperty(localName = "text")
-    private Text text;
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<Text> texts;
 
     @JacksonXmlProperty(localName = "image")
     private Image image;

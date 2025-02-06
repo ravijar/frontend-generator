@@ -1,16 +1,45 @@
-.form-container {
-    background-color: #f4f4f4;
-    padding: 20px;
-    border: 1px solid #e1e1e1;
-    border-radius: 20px;
+.form {
+    min-width: 300px;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 32px 24px;
+    color: #212121;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    max-width: 250px;
-    align-self: center;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 }
 
-.form-inputs {
-    margin-bottom: 20px;
+.form .form-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 24px;
+}
+
+.form .form-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: inherit;
+    color: #fff;
+    background-color: #212121;
+    border: none;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: inherit;
+    gap: 8px;
+    margin: 12px 0;
+    cursor: pointer;
+    border-radius: 6px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
+}
+
+.form .form-submit:active {
+    scale: 0.95;
+}
+
+.form .form-submit:hover {
+    background-color: #313131;
 }

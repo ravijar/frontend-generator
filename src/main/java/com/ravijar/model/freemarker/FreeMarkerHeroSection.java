@@ -10,6 +10,7 @@ import java.util.List;
 @ToString
 public class FreeMarkerHeroSection extends FreeMarkerComponent{
     private String text;
+    private String subtext;
     private String image;
     private List<FreeMarkerComponent> subComponents;
 }

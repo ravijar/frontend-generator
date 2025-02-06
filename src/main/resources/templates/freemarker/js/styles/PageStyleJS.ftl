@@ -1,5 +1,6 @@
 <#assign alertStyle = "/js/styles/components/Alert.ftl">
 <#assign buttonStyle = "/js/styles/components/Button.ftl">
+<#assign cardStyle = "/js/styles/components/Card.ftl">
 <#assign cardSectionStyle = "/js/styles/components/CardSection.ftl">
 <#assign formStyle = "/js/styles/components/Form.ftl">
 <#assign heroSectionStyle = "/js/styles/components/HeroSection.ftl">

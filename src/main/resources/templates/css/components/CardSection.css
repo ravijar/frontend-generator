@@ -1,40 +1,53 @@
 .card-array-container {
-    background-color: #fff;
-    padding: 20px;
-    border: 1px solid #e1e1e1;
-    border-radius: 20px;
+    width: 80%;
+    background-color: inherit;
     display: flex;
     flex-direction: row;
     gap: 20px;
     flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
     max-width: 100%;
     box-sizing: border-box;
-    margin: 20px;
+    margin: 20px auto;
+    padding: 10px;
 }
 
-.card-array-item {
-    background-color: #f0f0f0;
-    padding: 10px 20px;
-    border: 1px solid #e1e1e1;
-    max-width: 200px;
+.card {
+    width: 190px;
+    height: 254px;
+    padding: .8em;
+    background: #f5f5f5;
+    position: relative;
+    overflow: visible;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.card:hover {
+    background: #f9f9f9;
+    cursor: pointer;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
+}
+
+.card-img {
+    background-color: #b1b1b1;
+    background-size: cover;
+    height: 40%;
     width: 100%;
-    border-radius: 20px;
+    border-radius: .5rem;
 }
 
-.single-card-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    width: 180px;
+.card-info {
+    padding-top: 10%;
 }
 
-.children-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
+.text-title {
+    font-weight: 600;
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+.text-body {
+    font-size: .9em;
+    padding-bottom: 10px;
 }

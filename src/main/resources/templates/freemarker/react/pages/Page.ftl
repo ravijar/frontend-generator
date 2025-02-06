@@ -16,12 +16,14 @@
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
+<#assign saveLocalStorage = "/react/logic/SaveLocalStorage.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">
 <#assign alertState = "/react/components/Alert/State.ftl">
 
 <#assign buttonCall = "/react/components/Button/Call.ftl">
+<#assign buttonLogic = "/react/components/Button/Logic.ftl">
 
 <#assign cardCall = "/react/components/Card/Call.ftl">
 <#assign cardLogic = "/react/components/Card/Logic.ftl">
@@ -141,6 +143,9 @@ export default function ${page.name?cap_first}() {
                 <#break>
             <#case "Container">
                 <#include containerLogic>
+                <#break>
+            <#case "Button">
+                <#include buttonLogic>
                 <#break>
         </#switch>
     </#list>

@@ -34,13 +34,11 @@
             <result>
                 <component type="Card" id="petContainerCard">
                     <data key="id" title="name" description="description" image="imageURL"/>
-                    <component type="Button" id="updatePetButton">
-                        <text>Update</text>
-                        <route>/updatePet/{id}</route>
-                    </component>
-                    <component type="Button" id="deletePetButton">
-                        <text>Delete</text>
-                        <route>/deletePet/{id}</route>
+                    <component type="Button" id="petAddToCartButton">
+                        <text>Add to Cart</text>
+                        <save type="localStorage">
+                            <data key="cart"/>
+                        </save>
                     </component>
                 </component>
             </result>

@@ -1,6 +1,7 @@
 <#switch component.role>
     <#case "parent">
     <#case "child">
+        <#assign resultComponent = component.resultComponent>
         <#switch component.resultComponent.type>
             <#case "CardSection">
                 <#include cardSectionCall>

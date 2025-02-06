@@ -19,7 +19,7 @@ public class GenerateCommand implements Runnable {
 
     @Command(name = "--frontend", description = "Generates Frontend Application")
     public void generateFrontend() {
-        projectManager.generatFrontend();
+        projectManager.generateFrontend();
     }
 
     @Override

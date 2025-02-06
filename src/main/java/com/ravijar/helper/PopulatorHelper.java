@@ -43,6 +43,10 @@ public class PopulatorHelper {
                 freeMarkerComponent = new FreeMarkerAlert();
                 new AlertPopulator(openAPIParser).populate((Alert) component, (FreeMarkerAlert) freeMarkerComponent);
             }
+            case "Card" -> {
+                freeMarkerComponent = new FreeMarkerCard();
+                new CardPopulator(openAPIParser).populate((Card) component, (FreeMarkerCard) freeMarkerComponent);
+            }
             default -> freeMarkerComponent = null;
         }
         return freeMarkerComponent;

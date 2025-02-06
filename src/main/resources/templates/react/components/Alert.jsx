@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck, faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import "./Alert.css";
 
 export default function Alert({ statusCode, message, onClose, duration = 5000, styles = {} }) {
@@ -51,19 +53,23 @@ export default function Alert({ statusCode, message, onClose, duration = 5000, s
             default:
                 return { ...styles.alert }
         }
-    }
+    };
 
     return (
         <div className={getAlertClassName()} style={getCustomAlertClassName()}>
             <div className="alert-content" style={styles.alertContent}>
-                {statusCode && (
-                    <div className="alert-status-code" style={styles.alertStatusCode}>
-                        {statusCode}
-                    </div>
-                )}
+                <div className="alert-icon">
+                    {type === "success" ? (
+                        <FontAwesomeIcon icon={faCircleCheck} className="alert-icon-success" />
+                    ) : (
+                        <FontAwesomeIcon icon={faCircleXmark} className="alert-icon-error" />
+                    )}
+                </div>
+
                 <div className="alert-message" style={styles.alertMessage}>
                     {message}
                 </div>
+
                 {onClose && (
                     <button className="alert-close-button" onClick={onClose} style={styles.alertCloseButton}>
                         &times;

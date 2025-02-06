@@ -11,6 +11,22 @@ import java.io.InputStreamReader;
 public class CommandHandler {
     private static final Logger logger = LogManager.getLogger(CommandHandler.class);
 
+    private static CommandHandler commandHandler;
+
+    private CommandHandler(){}
+
+    public static CommandHandler getCommandHandler(){
+        if(commandHandler==null){
+            synchronized (CommandHandler.class){
+                if(commandHandler==null){
+                    commandHandler=new CommandHandler();
+                }
+            }
+
+        }
+        return commandHandler;
+    }
+
     private void runProcessBuilder(ProcessBuilder processBuilder) {
         try {
             Process process = processBuilder.start();

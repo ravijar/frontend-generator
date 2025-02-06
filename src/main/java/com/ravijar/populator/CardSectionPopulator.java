@@ -1,14 +1,9 @@
 package com.ravijar.populator;
 
-import com.ravijar.helper.PopulatorHelper;
+import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.FreeMarkerCardSection;
-import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.xml.component.CardSection;
-import com.ravijar.model.xml.component.Component;
 import com.ravijar.parser.OpenAPIParser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CardSectionPopulator extends ComponentPopulator{
     public CardSectionPopulator(OpenAPIParser openAPIParser) {
@@ -17,16 +12,12 @@ public class CardSectionPopulator extends ComponentPopulator{
 
     public void populate(CardSection source, FreeMarkerCardSection target) {
         populateComponent(source, target);
-
-        List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
-
-        if(source.getSubComponents() != null) {
-            for(Component component : source.getSubComponents()) {
-                FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
-                freeMarkerComponent.setRole("child");
-                freeMarkerComponents.add(freeMarkerComponent);
-            }
-        }
-        target.setSubComponents(freeMarkerComponents);
+        target.setCardKey(source.getData().getKey());
+        target.setCardTitle(source.getData().getTitle());
+        target.setCardDescription(source.getData().getDescription());
+        target.setCardImage(source.getData().getImage());
+        target.setRoute(source.getRoute().getUrl());
+        target.setTemplateLiteralRoute(StringHelper.toTemplateLiteralRoute(source.getRoute().getUrl()));
+        target.setUrlParameter(StringHelper.extractUrlParameter(source.getRoute().getUrl()));
     }
 }

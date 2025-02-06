@@ -1,0 +1,99 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+            # - name: Build with Maven
+            #   run: mvn -B package --file pom.xml
+
+      # Build the project using Maven (or Gradle)
+      - name: Build with Maven
+        run: mvn clean install
+
+      # List files and folders in root directory
+      - name: List files in the directory
+        run: Get-ChildItem -Depth 1
+
+      # Run the generated JAR file
+      - name: Run JAR
+        run: java -jar FrontendGenerator-0.2.0.jar
+        working-directory: target
+
+      # Initialize a Project using JAR file
+      - name: Init Project
+        run: java -jar FrontendGenerator-0.2.0.jar init -n TestProj
+        working-directory: target
+
+      # Copy open api spec and pages file
+      - name: Copy Spec files
+        run:  Copy-Item -Path "classes\samples\petstore\*" -Destination "TestProj" -Recurse
+        working-directory: target
+
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
+
+      # Generate Code using JAR file
+      - name: Generate frontend and api
+        run:  java -jar FrontendGenerator-0.2.0.jar generate
+        working-directory: target
+
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem "TestProj" -Depth 1
+        working-directory: target
+
+      # Apply Styles
+      - name: Apply styles
+        run:  java -jar FrontendGenerator-0.2.0.jar apply --styles
+        working-directory: target
+
+      # List files and folders inside Project folder
+      - name: List all files and folders
+        run: Get-ChildItem -Depth 1
+        working-directory: target\TestProj\build\src
+
+#      # Run Project
+#      - name: Run Project
+#        run:  java -jar FrontendGenerator-0.2.0.jar run
+#        working-directory: target
+
+
+
+
+
+
+

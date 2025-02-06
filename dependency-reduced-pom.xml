@@ -14,8 +14,19 @@
           <include>**/*</include>
         </includes>
       </resource>
+      <resource>
+        <targetPath>samples</targetPath>
+        <directory>samples</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
     </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M8</version>
+      </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>

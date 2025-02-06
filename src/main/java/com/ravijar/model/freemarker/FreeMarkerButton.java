@@ -9,4 +9,6 @@ import lombok.*;
 public class FreeMarkerButton extends FreeMarkerComponent{
     private String text;
     private String route;
+    private String templateLiteralRoute;
+    private String urlParameter;
 }

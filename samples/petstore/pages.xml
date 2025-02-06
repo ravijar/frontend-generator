@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages>
+    <page name="Home" route="/home" navbar="true">
+        <component type="HeroSection" id="heroSection">
+            <text>Find Your Perfect Pet &amp; Everything They Need!</text>
+            <text>From adorable companions to premium pet supplies, we&apos;ve got everything to make your pet happy!</text>
+            <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
+
+    <page name="Pets" route="/pets" navbar="true">
+        <component type="Container" id="petsContainer">
+            <resource method="GET">/pets</resource>
+            <result>
+                <component type="CardSection" id="petsContainerCardSection">
+                    <data key="id" title="name" description="description" image="imageURL"/>
+                    <route>/pets/{id}</route>
+                </component>
+            </result>
+        </component>
+        <component type="Button" id="createPetButton">
+            <text>Add New Pet</text>
+            <route>/createPet</route>
+        </component>
+    </page>
+
+    <page name="Pet" route="/pets/{id}" navbar="false">
+        <component type="Container" id="petContainer">
+            <resource method="GET">/pets/{id}</resource>
+            <result>
+                <component type="Card" id="petContainerCard">
+                    <data key="id" title="name" description="description" image="imageURL"/>
+                    <component type="Button" id="updatePetButton">
+                        <text>Update</text>
+                        <route>/updatePet/{id}</route>
+                    </component>
+                    <component type="Button" id="deletePetButton">
+                        <text>Delete</text>
+                        <route>/deletePet/{id}</route>
+                    </component>
+                </component>
+            </result>
+        </component>
+    </page>
+
+    <page name="CreatePet" route="/createPet" navbar="false">
+        <component type="Form" id="createPetForm">
+            <resource method="POST">/pets</resource>
+            <text>Create New Pet</text>
+            <submit>Add Pet</submit>
+            <result>
+                <component type="Alert" id="createPetFormAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="UpdatePet" route="/updatePet/{id}" navbar="false">
+        <component type="Form" id="updatePetForm">
+            <resource method="PUT">/pets/{id}</resource>
+            <text>Update Pet</text>
+            <submit>Update Pet</submit>
+            <result>
+                <component type="Alert" id="updatePetFormAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="DeletePet" route="/deletePet/{id}" navbar="false">
+        <component type="Form" id="deletePetForm">
+            <resource method="DELETE">/pets/{id}</resource>
+            <text>Delete Pet</text>
+            <submit>Delete Pet</submit>
+            <result>
+                <component type="Alert" id="deletePetFormAlert"/>
+            </result>
+        </component>
+    </page>
+</pages>

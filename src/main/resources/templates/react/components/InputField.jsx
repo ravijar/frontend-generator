@@ -7,7 +7,7 @@ export default function InputField ({ label, type = 'text', value, onChange, pla
     };
 
     return (
-        <div className="container" style={styles.container}>
+        <div className="input-group" style={styles.inputGroup}>
             {label && <label className="label" style={styles.label}>{label}</label>}
             <input
                 type={type}

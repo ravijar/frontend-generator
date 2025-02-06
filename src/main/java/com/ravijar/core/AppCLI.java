@@ -17,6 +17,6 @@ public class AppCLI {
         commandLine.addSubcommand("test",new TestCommand(projectManager));
 
         int exitCode = commandLine.execute(args);
-        System.exit(exitCode);
+//        System.exit(exitCode);
     }
 }

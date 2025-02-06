@@ -3,19 +3,21 @@ ${indent}${component.resultComponent.id} : {
 ${indent}    cardArrayContainer : {
 
 ${indent}    },
-${indent}    cardArrayItem : {
+${indent}    card : {
 
 ${indent}    },
-${indent}    singleCardContainer : {
+${indent}    cardImg : {
 
 ${indent}    },
-${indent}    childrenContainer : {
+${indent}    cardInfo : {
 
 ${indent}    },
-<#assign indentValue = indentValue + 1>
-<#include keyValuePairStyle>
-<#assign indentValue = indentValue - 1>
-<#assign indent = ""?left_pad(indentValue * 4)>
+${indent}    textTitle : {
+
+${indent}    },
+${indent}    textBody : {
+
+${indent}    },
 ${indent}},
 <#assign component = component.resultComponent>
 <#include nestStyle>

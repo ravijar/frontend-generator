@@ -1,45 +1,68 @@
 <#assign responses = "/react/constants/Responses.ftl">
 
 <#assign useState = "/react/hooks/UseState.ftl">
-<#assign useEffect = "/react/hooks/UseEffect.ftl">
 
-<#assign fetch = "/react/logic/Fetch.ftl">
+<#assign fetchOnInitEffect = "/react/hooks/useEffect/FetchOnInit.ftl">
+<#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
+
+<#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">
+<#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
+<#assign fetchBody = "/react/logic/fetch/parts/FetchBody.ftl">
+<#assign fetchBodyUrlParam = "/react/logic/fetch/parts/FetchBodyUrlParam.ftl">
+
+<#assign fetch = "/react/logic/fetch/Fetch.ftl">
+<#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
+
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
 
-<#assign heroSectionState = "/react/components/state/HeroSection.ftl">
-<#assign searchBarState = "/react/components/state/SearchBar.ftl">
-<#assign formState = "/react/components/state/Form.ftl">
-<#assign containerState = "/react/components/state/Container.ftl">
-<#assign resultState = "/react/components/state/Result.ftl">
-<#assign nestState = "/react/components/state/Nest.ftl">
+<#assign alertCall = "/react/components/Alert/Call.ftl">
+<#assign alertLogic = "/react/components/Alert/Logic.ftl">
+<#assign alertState = "/react/components/Alert/State.ftl">
 
-<#assign heroSectionEffect = "/react/components/effect/HeroSection.ftl">
-<#assign containerEffect = "/react/components/effect/Container.ftl">
-<#assign nestEffect = "/react/components/effect/Nest.ftl">
+<#assign buttonCall = "/react/components/Button/Call.ftl">
 
-<#assign heroSectionLogic = "/react/components/logic/HeroSection.ftl">
-<#assign searchBarLogic = "/react/components/logic/SearchBar.ftl">
-<#assign formLogic = "/react/components/logic/Form.ftl">
-<#assign containerLogic = "/react/components/logic/Container.ftl">
-<#assign nestLogic = "/react/components/logic/Nest.ftl">
+<#assign cardCall = "/react/components/Card/Call.ftl">
+<#assign cardLogic = "/react/components/Card/Logic.ftl">
 
-<#assign heroSectionCall = "/react/components/call/HeroSection.ftl">
-<#assign searchBarCall = "/react/components/call/SearchBar.ftl">
-<#assign buttonCall = "/react/components/call/Button.ftl">
-<#assign formCall = "/react/components/call/Form.ftl">
-<#assign cardSectionCall = "/react/components/call/CardSection.ftl">
-<#assign alertCall = "/react/components/call/Alert.ftl">
-<#assign containerCall = "/react/components/call/Container.ftl">
-<#assign resultCall = "/react/components/call/Result.ftl">
-<#assign nestCall = "/react/components/call/Nest.ftl">
+<#assign cardSectionCall = "/react/components/CardSection/Call.ftl">
+<#assign cardSectionLogic = "/react/components/CardSection/Logic.ftl">
+
+<#assign containerCall = "/react/components/Container/Call.ftl">
+<#assign containerEffect = "/react/components/Container/Effect.ftl">
+<#assign containerLogic = "/react/components/Container/Logic.ftl">
+<#assign containerState = "/react/components/Container/State.ftl">
+
+<#assign formCall = "/react/components/Form/Call.ftl">
+<#assign formEffect = "/react/components/Form/Effect.ftl">
+<#assign formLogic = "/react/components/Form/Logic.ftl">
+<#assign formState = "/react/components/Form/State.ftl">
+
+<#assign heroSectionCall = "/react/components/HeroSection/Call.ftl">
+<#assign heroSectionEffect = "/react/components/HeroSection/Effect.ftl">
+<#assign heroSectionLogic = "/react/components/HeroSection/Logic.ftl">
+<#assign heroSectionState = "/react/components/HeroSection/State.ftl">
+
+<#assign searchBarCall = "/react/components/SearchBar/Call.ftl">
+<#assign searchBarLogic = "/react/components/SearchBar/Logic.ftl">
+<#assign searchBarState = "/react/components/SearchBar/State.ftl">
+
+<#assign resultCall = "/react/components/common/result/Call.ftl">
+<#assign resultLogic = "/react/components/common/result/Logic.ftl">
+<#assign resultState = "/react/components/common/result/State.ftl">
+
+<#assign nestCall = "/react/components/common/nest/Call.ftl">
+<#assign nestEffect = "/react/components/common/nest/Effect.ftl">
+<#assign nestLogic = "/react/components/common/nest/Logic.ftl">
+<#assign nestState = "/react/components/common/nest/State.ftl">
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
+import Card from "../components/Card";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
 <#list page.components as component>
@@ -60,6 +83,7 @@ import styles from "../custom_styles/${page.name?cap_first}";
 
 export default function ${page.name?cap_first}() {
     const navigate = useNavigate();
+    <#if page.urlParameter??>const { ${page.urlParameter} } = useParams();</#if>
 
     const configuration = createConfiguration();
     const clientApi = new DefaultApi(configuration);
@@ -94,6 +118,9 @@ export default function ${page.name?cap_first}() {
             <#break>
         <#case "Container">
             <#include containerEffect>
+            <#break>
+        <#case "Form">
+            <#include formEffect>
             <#break>
     </#switch>
     </#list>

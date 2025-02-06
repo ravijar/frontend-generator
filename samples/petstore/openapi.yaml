@@ -1,0 +1,137 @@
+openapi: 3.1.0
+info:
+  title: Pet Store API
+  description: API for managing pets in a pet store
+  version: 1.0.0
+servers:
+  - url: https://petstore-dev.up.railway.app/
+    description: Local development server
+
+paths:
+  /pets:
+    get:
+      summary: Get all pets
+      operationId: getAllPets
+      responses:
+        '200':
+          description: A list of pets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+
+    post:
+      summary: Create a new pet
+      operationId: createPet
+      requestBody:
+        description: Pet object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '201':
+          description: Pet created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+  /pets/{id}:
+    get:
+      summary: Get a pet by ID
+      operationId: getPetById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the pet to return
+          schema:
+            type: integer
+            format: int64
+          x-displayName: ID
+      responses:
+        '200':
+          description: Pet found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Pet not found
+
+    put:
+      summary: Update a pet by ID
+      operationId: updatePet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the pet to update
+          schema:
+            type: integer
+            format: int64
+          x-displayName: ID
+      requestBody:
+        description: Updated pet object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Pet updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Pet not found
+
+    delete:
+      summary: Delete a pet by ID
+      operationId: deletePet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the pet to delete
+          schema:
+            type: integer
+            format: int64
+          x-displayName: ID
+      responses:
+        '204':
+          description: Pet deleted successfully
+        '404':
+          description: Pet not found
+
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the pet
+          x-displayName: ID
+        name:
+          type: string
+          description: Name of the pet
+          x-displayName: Name
+        species:
+          type: string
+          description: Species of the pet
+          x-displayName: Species
+        description:
+          type: string
+          description: Description of the pet
+          x-displayName: Description
+        imageURL:
+          type: string
+          description: Image of the pet
+          x-displayName: Image URL

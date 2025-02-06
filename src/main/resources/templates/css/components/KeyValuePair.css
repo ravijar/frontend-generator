@@ -14,19 +14,19 @@
 
 .child-container {
     display: flex;
-    flex-direction: row;
-    padding: 5px;
-    border-radius: 4px;
+    flex-direction: column;
+    padding: 5px 0;
+    width: 98%;
 }
 
 .child-key {
-    font-weight: bold;
-    margin-right: 8px;
     color: #333;
+    font-weight: 550;
+    font-size: 0.8em;
 }
 
 .child-value {
     flex: 1;
     color: #555;
-    text-align: right;
+    font-size: 0.8em;
 }

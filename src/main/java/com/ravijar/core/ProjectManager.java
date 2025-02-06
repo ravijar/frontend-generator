@@ -31,16 +31,15 @@ public class ProjectManager {
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
     private final ConfigHandler configHandler;
-
     private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
     private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
-    private final String[] npmPackages = {"react-router-dom"};
+    private final String[] npmPackages = {"react-router-dom", "@fortawesome/react-fontawesome", "@fortawesome/free-regular-svg-icons"};
     private static final String SOURCE_ROOT_PATH="templates";
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
-        this.commandHandler = new CommandHandler();
+        this.commandHandler = CommandHandler.getCommandHandler();
         this.configHandler = new ConfigHandler("config.properties");
     }
 

@@ -36,6 +36,12 @@
     top: 100px;
     left:25%;
             <#break>
+        <#case "Alert">
+    z-index: 1;
+    position: absolute;
+    top: 75px;
+    right: 5px;
+            <#break>
         <#default>
 
     </#switch>

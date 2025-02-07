@@ -131,6 +131,8 @@ The framework does not support defining schemas directly inside the paths object
           species:
             type: string
   ```
+**Example Open API Specification:**
+[Petstore OpenAPI Specification](samples/petstore/openapi.yaml)
 
 #### ii. Pages Configuration File
 The Pages Configuration File defines the structure and layout of the frontend pages to be generated. This includes support for components, routes, and navigation bars, offering greater flexibility and customization.
@@ -185,88 +187,10 @@ The configuration file is an XML document containing <pages> as the root element
   - `<submit>` : Defines the label for a form submission button.
   - `<text>` : Defines the textual content for a component.
   
- **Example Page Configuration File:**
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<pages>
-    <page name="Home" route="/home" navbar="true">
-        <component type="HeroSection" id="heroSection">
-            <text>Petstore</text>
-            <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
-            <component type="Button" id="seeAllPetsButton">
-                <text>See All Pets</text>
-                <route>/pets</route>
-            </component>
-        </component>
-    </page>
+**Example Page Configuration File:**
+[Petstore Page Configuration File](samples/petstore/pages.xml)
 
-    <page name="Pets" route="/pets" navbar="true">
-        <component type="Container" id="petsContainer">
-            <resource method="GET">/pets</resource>
-            <result>
-                <component type="CardSection" id="petsContainerCardSection">
-                    <component type="Button" id="updatePetButton">
-                        <text>Update</text>
-                        <route>/updatePet</route>
-                    </component>
-                    <component type="Button" id="deletePetButton">
-                        <text>Delete</text>
-                        <route>/deletePet</route>
-                    </component>
-                </component>
-            </result>
-        </component>
-        <component type="Button" id="createPetButton">
-            <text>Add New Pet</text>
-            <route>/createPet</route>
-        </component>
-    </page>
-
-    <page name="CreatePet" route="/createPet" navbar="false">
-        <component type="Form" id="createPetForm">
-            <resource method="POST">/pets</resource>
-            <submit>Add Pet</submit>
-            <result>
-                <component type="Alert" id="createPetFormAlert"/>
-            </result>
-        </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
-        </component>
-    </page>
-
-    <page name="UpdatePet" route="/updatePet" navbar="false">
-        <component type="Form" id="updatePetForm">
-            <resource method="PUT">/pets/{id}</resource>
-            <submit>Update Pet</submit>
-            <result>
-                <component type="Alert" id="updatePetFormAlert"/>
-            </result>
-        </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
-        </component>
-    </page>
-
-    <page name="DeletePet" route="/deletePet" navbar="false">
-        <component type="Form" id="deletePetForm">
-            <resource method="DELETE">/pets/{id}</resource>
-            <submit>Delete Pet</submit>
-            <result>
-                <component type="Alert" id="deletePetFormAlert"/>
-            </result>
-        </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
-        </component>
-    </page>
-</pages>
-```
-
- **Example Generated Homepage:**
+**Example Generated Homepage:**
 ![generated-homepage.jpg](docs/resources/images/generated-homepage.jpg)
 
 #### iii. User Customization Files

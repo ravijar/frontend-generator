@@ -51,7 +51,7 @@ public class ProjectManager {
         return true;
     }
 
-    public boolean generatFrontend() {
+    public boolean generateFrontend() {
         if(!updateProjectName()) return false;
 
         logger.info("Generating Frontend...");
@@ -171,7 +171,7 @@ public class ProjectManager {
     public boolean generateAll() {
         if(!updateProjectName()) return false;
         logger.info("Generating ClientAPI and Frontend...");
-        generatFrontend();
+        generateFrontend();
         generateClientAPI();
 
         return true;

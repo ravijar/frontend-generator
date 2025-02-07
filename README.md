@@ -185,18 +185,18 @@ The configuration file is an XML document containing <pages> as the root element
   - `<submit>` : Defines the label for a form submission button.
   - `<text>` : Defines the textual content for a component.
   
- An example Page Configuration File:
+ **Example Page Configuration File:**
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <pages>
     <page name="Home" route="/home" navbar="true">
-        <component type="HeroSection" id="homeNavbar">
+        <component type="HeroSection" id="heroSection">
             <text>Petstore</text>
             <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
-        </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
+            <component type="Button" id="seeAllPetsButton">
+                <text>See All Pets</text>
+                <route>/pets</route>
+            </component>
         </component>
     </page>
 
@@ -204,7 +204,16 @@ The configuration file is an XML document containing <pages> as the root element
         <component type="Container" id="petsContainer">
             <resource method="GET">/pets</resource>
             <result>
-                <component type="CardSection"/>
+                <component type="CardSection" id="petsContainerCardSection">
+                    <component type="Button" id="updatePetButton">
+                        <text>Update</text>
+                        <route>/updatePet</route>
+                    </component>
+                    <component type="Button" id="deletePetButton">
+                        <text>Delete</text>
+                        <route>/deletePet</route>
+                    </component>
+                </component>
             </result>
         </component>
         <component type="Button" id="createPetButton">
@@ -213,10 +222,41 @@ The configuration file is an XML document containing <pages> as the root element
         </component>
     </page>
 
-    <page name="CreatePet" route="/createPet" navbar="true">
+    <page name="CreatePet" route="/createPet" navbar="false">
         <component type="Form" id="createPetForm">
             <resource method="POST">/pets</resource>
             <submit>Add Pet</submit>
+            <result>
+                <component type="Alert" id="createPetFormAlert"/>
+            </result>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
+
+    <page name="UpdatePet" route="/updatePet" navbar="false">
+        <component type="Form" id="updatePetForm">
+            <resource method="PUT">/pets/{id}</resource>
+            <submit>Update Pet</submit>
+            <result>
+                <component type="Alert" id="updatePetFormAlert"/>
+            </result>
+        </component>
+        <component type="Button" id="seeAllPetsButton">
+            <text>See All Pets</text>
+            <route>/pets</route>
+        </component>
+    </page>
+
+    <page name="DeletePet" route="/deletePet" navbar="false">
+        <component type="Form" id="deletePetForm">
+            <resource method="DELETE">/pets/{id}</resource>
+            <submit>Delete Pet</submit>
+            <result>
+                <component type="Alert" id="deletePetFormAlert"/>
+            </result>
         </component>
         <component type="Button" id="seeAllPetsButton">
             <text>See All Pets</text>
@@ -225,6 +265,9 @@ The configuration file is an XML document containing <pages> as the root element
     </page>
 </pages>
 ```
+
+ **Example Generated Homepage:**
+![generated-homepage.jpg](docs/resources/images/generated-homepage.jpg)
 
 #### iii. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.
@@ -330,7 +373,7 @@ styles/
     - iii. `apply --styles` :
       - Applies user-defined styles from the styles folder to the generated project.
   ```
-  java -jar FrontendGenerator-<version>.jar build --code
+  java -jar FrontendGenerator-0.2.0.jar apply --styles
   ```  
 
 ### 4: Run the Application
@@ -347,11 +390,9 @@ styles/
 ### 6: View Available Commands
 - To view all available commands and their usage, run:
   ```
-  java -jar FrontendGenerator-<version>.jar help
+  java -jar FrontendGenerator-0.2.0.jar --help
   ```
 - This will display detailed information about the commands you can use and their respective options.
-
-
 
 
 

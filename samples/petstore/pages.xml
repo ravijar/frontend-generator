@@ -49,7 +49,17 @@
         <component type="Container" id="adminPetsContainer">
             <resource method="GET">/pets</resource>
             <result>
-                <component type="Table" id="adminPetsContainerTable"/>
+                <component type="Table" id="adminPetsContainerTable">
+                    <data key="id"/>
+                    <component type="Button" id="updatePetButton">
+                        <text>Update</text>
+                        <route>/updatePet/{id}</route>
+                    </component>
+                    <component type="Button" id="deletePetButton">
+                        <text>Delete</text>
+                        <route>/deletePet/{id}</route>
+                    </component>
+                </component>
             </result>
         </component>
     </page>

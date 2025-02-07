@@ -12,6 +12,6 @@ public class Save {
     @JacksonXmlProperty(isAttribute = true)
     private String type;
 
-    @JacksonXmlProperty(localName = "data")
-    private Data data;
+    @JacksonXmlProperty(localName = "assign")
+    private Assign assign;
 }

@@ -17,7 +17,7 @@
             <resource method="GET">/pets</resource>
             <result>
                 <component type="CardSection" id="petsContainerCardSection">
-                    <data key="id" title="name" description="description" image="imageURL"/>
+                    <assign key="id" title="name" description="description" image="imageURL"/>
                     <route>/pets/{id}</route>
                 </component>
             </result>
@@ -33,11 +33,11 @@
             <resource method="GET">/pets/{id}</resource>
             <result>
                 <component type="Card" id="petContainerCard">
-                    <data key="id" title="name" description="description" image="imageURL"/>
+                    <assign key="id" title="name" description="description" image="imageURL"/>
                     <component type="Button" id="petAddToCartButton">
                         <text>Add to Cart</text>
                         <save type="localStorage">
-                            <data key="cart"/>
+                            <assign key="cart"/>
                         </save>
                     </component>
                 </component>
@@ -50,7 +50,7 @@
             <resource method="GET">/pets</resource>
             <result>
                 <component type="Table" id="adminPetsContainerTable">
-                    <data key="id"/>
+                    <assign key="id"/>
                     <component type="Button" id="updatePetButton">
                         <text>Update</text>
                         <route>/updatePet/{id}</route>

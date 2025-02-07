@@ -15,7 +15,7 @@ public class TablePopulator extends ComponentPopulator{
 
     public void populate(Table source, FreeMarkerTable target) {
         populateComponent(source, target);
-        target.setRowKey(source.getData().getKey());
+        target.setRowKey(source.getAssign().getKey());
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 

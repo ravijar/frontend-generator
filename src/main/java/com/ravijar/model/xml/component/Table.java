@@ -2,7 +2,7 @@ package com.ravijar.model.xml.component;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.ravijar.model.xml.Data;
+import com.ravijar.model.xml.Assign;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,8 +13,8 @@ import java.util.List;
 @Setter
 @ToString
 public class Table extends Component{
-    @JacksonXmlProperty(localName = "data")
-    private Data data;
+    @JacksonXmlProperty(localName = "assign")
+    private Assign assign;
 
     @JacksonXmlProperty(localName = "component")
     @JacksonXmlElementWrapper(useWrapping = false)

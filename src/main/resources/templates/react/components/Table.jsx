@@ -1,12 +1,12 @@
 import "./Table.css";
 import {Children, cloneElement, isValidElement} from "react";
 
-export default function Table({ columns, data, rowKey, displayNames, children }) {
+export default function Table({ columns, data, rowKey, displayNames, styles = {}, children }) {
     const childComponents = Array.isArray(children) ? children : [children];
 
     return (
-        <div className="table-container">
-            <table className="custom-table">
+        <div className="table-container" style={styles.tableContainer}>
+            <table className="custom-table" style={styles.customTable}>
                 <thead>
                 <tr>
                     {columns.map((col) => (
@@ -20,7 +20,7 @@ export default function Table({ columns, data, rowKey, displayNames, children })
                 <tbody>
                 {data.length === 0 ? (
                     <tr>
-                        <td colSpan={columns.length + childComponents.length} className="no-data">
+                        <td colSpan={columns.length + childComponents.length} className="no-data" style={styles.noData}>
                             No data available
                         </td>
                     </tr>

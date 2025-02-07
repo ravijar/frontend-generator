@@ -8,4 +8,7 @@
     <#case "Card">
         <#include cardStyle>
         <#break>
+    <#case "Table">
+        <#include tableStyle>
+        <#break>
 </#switch>

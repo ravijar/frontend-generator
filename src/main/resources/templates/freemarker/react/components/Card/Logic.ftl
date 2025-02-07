@@ -19,5 +19,8 @@ ${indent}       item.data = rest;
 
 ${indent}   return item;
 ${indent}};
+
+        <#assign component = component.resultComponent>
+        <#include nestLogic>
         <#break>
 </#switch>

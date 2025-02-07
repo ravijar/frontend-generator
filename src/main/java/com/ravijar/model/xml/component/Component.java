@@ -21,6 +21,7 @@ import lombok.ToString;
         @JsonSubTypes.Type(value = Container.class, name = "Container"),
         @JsonSubTypes.Type(value = Alert.class, name = "Alert"),
         @JsonSubTypes.Type(value = Card.class, name = "Card"),
+        @JsonSubTypes.Type(value = Table.class, name = "Table")
 })
 
 @Getter

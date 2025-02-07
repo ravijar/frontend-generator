@@ -11,6 +11,9 @@
             <#case "Alert">
                 <#include alertLogic>
                 <#break>
+            <#case "Table">
+                <#include tableLogic>
+                <#break>
         </#switch>
         <#break>
 </#switch>

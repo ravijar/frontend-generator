@@ -12,6 +12,9 @@
             <#case "Card">
                 <#include cardCall>
                 <#break>
+            <#case "Table">
+                <#include tableCall>
+                <#break>
         </#switch>
         <#break>
 </#switch>

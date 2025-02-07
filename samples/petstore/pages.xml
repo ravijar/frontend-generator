@@ -45,6 +45,15 @@
         </component>
     </page>
 
+    <page name="Admin" route="/admin" navbar="true">
+        <component type="Container" id="adminPetsContainer">
+            <resource method="GET">/pets</resource>
+            <result>
+                <component type="Table" id="adminPetsContainerTable"/>
+            </result>
+        </component>
+    </page>
+
     <page name="CreatePet" route="/createPet" navbar="false">
         <component type="Form" id="createPetForm">
             <resource method="POST">/pets</resource>

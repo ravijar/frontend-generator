@@ -50,6 +50,9 @@
 <#assign searchBarLogic = "/react/components/SearchBar/Logic.ftl">
 <#assign searchBarState = "/react/components/SearchBar/State.ftl">
 
+<#assign tableCall = "/react/components/Table/Call.ftl">
+<#assign tableLogic = "/react/components/Table/Logic.ftl">
+
 <#assign resultCall = "/react/components/common/result/Call.ftl">
 <#assign resultLogic = "/react/components/common/result/Logic.ftl">
 <#assign resultState = "/react/components/common/result/State.ftl">
@@ -67,6 +70,7 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
+import Table from "../components/Table";
 <#list page.components as component>
     <#switch component.type>
         <#case "Form">

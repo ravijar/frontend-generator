@@ -14,7 +14,8 @@
         "SearchBar",
         "Button",
         "CardSection",
-        "Card"
+        "Card",
+        "Table"
       ]
     },
     {
@@ -41,7 +42,8 @@
         "CardSection",
         "NavBar",
         "Form",
-        "Card"
+        "Card",
+        "Table"
       ]
     },
     {

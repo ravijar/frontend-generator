@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Data {
+public class Assign {
     @JacksonXmlProperty(isAttribute = true)
     private String key;
 

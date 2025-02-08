@@ -12,10 +12,10 @@ public class CardSectionPopulator extends ComponentPopulator{
 
     public void populate(CardSection source, FreeMarkerCardSection target) {
         populateComponent(source, target);
-        target.setCardKey(source.getData().getKey());
-        target.setCardTitle(source.getData().getTitle());
-        target.setCardDescription(source.getData().getDescription());
-        target.setCardImage(source.getData().getImage());
+        target.setCardKey(source.getAssign().getKey());
+        target.setCardTitle(source.getAssign().getTitle());
+        target.setCardDescription(source.getAssign().getDescription());
+        target.setCardImage(source.getAssign().getImage());
         target.setRoute(source.getRoute().getUrl());
         target.setTemplateLiteralRoute(StringHelper.toTemplateLiteralRoute(source.getRoute().getUrl()));
         target.setUrlParameter(StringHelper.extractUrlParameter(source.getRoute().getUrl()));

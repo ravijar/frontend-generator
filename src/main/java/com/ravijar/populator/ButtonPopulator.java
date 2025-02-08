@@ -24,7 +24,7 @@ public class ButtonPopulator extends ComponentPopulator{
         if (source.getSave() != null) {
             target.setAction("save");
             target.setSaveType(source.getSave().getType());
-            target.setSaveKey(source.getSave().getData().getKey());
+            target.setSaveKey(source.getSave().getAssign().getKey());
         }
     }
 }

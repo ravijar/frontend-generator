@@ -14,6 +14,9 @@
                     <#case "Container">
                         <#include containerLogic>
                         <#break>
+                    <#case "Button">
+                        <#include buttonLogic>
+                        <#break>
                 </#switch>
             </#list>
         </#if>

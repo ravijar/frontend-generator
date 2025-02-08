@@ -47,6 +47,10 @@ public class PopulatorHelper {
                 freeMarkerComponent = new FreeMarkerCard();
                 new CardPopulator(openAPIParser).populate((Card) component, (FreeMarkerCard) freeMarkerComponent);
             }
+            case "Table" -> {
+                freeMarkerComponent = new FreeMarkerTable();
+                new TablePopulator(openAPIParser).populate((Table) component, (FreeMarkerTable) freeMarkerComponent);
+            }
             default -> freeMarkerComponent = null;
         }
         return freeMarkerComponent;

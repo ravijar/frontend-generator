@@ -16,12 +16,14 @@
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
+<#assign saveLocalStorage = "/react/logic/SaveLocalStorage.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">
 <#assign alertState = "/react/components/Alert/State.ftl">
 
 <#assign buttonCall = "/react/components/Button/Call.ftl">
+<#assign buttonLogic = "/react/components/Button/Logic.ftl">
 
 <#assign cardCall = "/react/components/Card/Call.ftl">
 <#assign cardLogic = "/react/components/Card/Logic.ftl">
@@ -48,6 +50,9 @@
 <#assign searchBarLogic = "/react/components/SearchBar/Logic.ftl">
 <#assign searchBarState = "/react/components/SearchBar/State.ftl">
 
+<#assign tableCall = "/react/components/Table/Call.ftl">
+<#assign tableLogic = "/react/components/Table/Logic.ftl">
+
 <#assign resultCall = "/react/components/common/result/Call.ftl">
 <#assign resultLogic = "/react/components/common/result/Logic.ftl">
 <#assign resultState = "/react/components/common/result/State.ftl">
@@ -65,6 +70,7 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
+import Table from "../components/Table";
 <#list page.components as component>
     <#switch component.type>
         <#case "Form">
@@ -141,6 +147,9 @@ export default function ${page.name?cap_first}() {
                 <#break>
             <#case "Container">
                 <#include containerLogic>
+                <#break>
+            <#case "Button">
+                <#include buttonLogic>
                 <#break>
         </#switch>
     </#list>

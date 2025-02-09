@@ -160,7 +160,7 @@ The configuration file is an XML document containing <pages> as the root element
     - `id`: Unique identifier for the component.
   - Supported Component Types:
     - `HeroSection`: Provides a visually static section with text and images.
-      - Functionality: Includes `<text>` for content and `<image>` for visuals.
+      - Functionality: Includes two <text> tags one for the main text and one for the subtext, and <image> for visuals.
       - Nesting: Can nest `Button`, `SearchBar`, and `Container` components.
     - `Button`: Provides navigation.
       - Functionality: Uses `<text>` for the label and `<route>` for frontend navigation.
@@ -175,6 +175,8 @@ The configuration file is an XML document containing <pages> as the root element
       - Nesting: Can nest `<Button>` components.
     - `Alert`: Display alerts or messages.
       - Functionality: Exclusively used within a `<result>` tag.
+    - `Table`: Adds a table.
+      - Functionality: Exclusively used within a `<result>` tag.
 
 4. Child Tags
   - `<resource>` : Defines an API resource to be accessed by the component.
@@ -186,6 +188,7 @@ The configuration file is an XML document containing <pages> as the root element
   - `<image>` : Defines an image URL for a visual element within a component.
   - `<submit>` : Defines the label for a form submission button.
   - `<text>` : Defines the textual content for a component.
+  - `<assign>` : Assigns the fields to display in a CardSection or Card Component. 
   
 **Example Page Configuration File:**
 [Petstore Page Configuration File](samples/petstore/pages.xml)

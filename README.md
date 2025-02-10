@@ -173,6 +173,9 @@ The configuration file is an XML document containing <pages> as the root element
     - `CardSection`: Displays fetched data in a card layout.
       - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
       - Nesting: Can nest `<Button>` components.
+    - `Card`: Displays fetched data in a single card.
+      - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
+      - Nesting: Can nest `<Button>` components.
     - `Alert`: Display alerts or messages.
       - Functionality: Exclusively used within a `<result>` tag.
     - `Table`: Adds a table.

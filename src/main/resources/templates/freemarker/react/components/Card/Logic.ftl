@@ -2,7 +2,9 @@
 <#switch component.role>
     <#case "parent">
     <#case "child">
-        <#include fetchUrlParam>
+        <#switch component.fetch>
+            <#case "resource">
+                <#include fetchUrlParam>
 
 ${indent}const ${component.resultComponent.id}Filter = () => {
 ${indent}   let item = { data:[] };
@@ -20,7 +22,9 @@ ${indent}       item.data = rest;
 ${indent}   return item;
 ${indent}};
 
-        <#assign component = component.resultComponent>
-        <#include nestLogic>
+                    <#assign component = component.resultComponent>
+                    <#include nestLogic>
+                <#break>
+        </#switch>
         <#break>
 </#switch>

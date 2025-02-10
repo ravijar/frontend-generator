@@ -45,6 +45,19 @@
         </component>
     </page>
 
+    <page name="Cart" route="/cart" navbar="true">
+        <component type="Container" id="cartContainer">
+            <load type="localStorage">
+                <assign key="cart"/>
+            </load>
+            <result>
+                <component type="Table" id="cartTable">
+                    <assign key="id"/>
+                </component>
+            </result>
+        </component>
+    </page>
+
     <page name="Admin" route="/admin" navbar="true">
         <component type="Container" id="adminPetsContainer">
             <resource method="GET">/pets</resource>

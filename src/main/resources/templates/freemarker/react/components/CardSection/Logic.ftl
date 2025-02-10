@@ -2,7 +2,9 @@
 <#switch component.role>
     <#case "parent">
     <#case "child">
-        <#include fetch>
+        <#switch component.fetch>
+            <#case "resource">
+                <#include fetch>
 
 ${indent}const ${component.resultComponent.id}Filter = () => {
 ${indent}   let items = [];
@@ -30,5 +32,7 @@ ${indent}           break;
 ${indent}   }
 ${indent}   return items;
 ${indent}};
+                <#break>
+        </#switch>
         <#break>
 </#switch>

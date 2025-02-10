@@ -13,10 +13,12 @@
 <#assign fetch = "/react/logic/fetch/Fetch.ftl">
 <#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
 
+<#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
+<#assign loadLocalStorage = "/react/logic/localStorage/LoadLocalStorage.ftl">
+
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
-<#assign saveLocalStorage = "/react/logic/SaveLocalStorage.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">

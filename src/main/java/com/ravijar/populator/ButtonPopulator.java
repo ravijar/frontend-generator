@@ -21,10 +21,9 @@ public class ButtonPopulator extends ComponentPopulator{
             target.setTemplateLiteralRoute(StringHelper.toTemplateLiteralRoute(source.getRoute().getUrl()));
         }
 
-        if (source.getSave() != null) {
-            target.setAction("save");
-            target.setSaveType(source.getSave().getType());
-            target.setSaveKey(source.getSave().getAssign().getKey());
+        if (source.getLocalStorage() != null) {
+            target.setAction(source.getLocalStorage().getAction());
+            target.setLocalStorageKey(source.getLocalStorage().getAssign().getKey());
         }
     }
 }

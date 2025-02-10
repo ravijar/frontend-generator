@@ -17,7 +17,7 @@ public class FormPopulator extends ComponentPopulator{
         target.setSubmitText(source.getSubmit().getName());
 
         if(source.getResource() != null) {
-            target.setFetch("resource");
+            target.setAction("resource");
             target.setResource(openAPIParser.getResourceData(source.getResource()));
         }
 

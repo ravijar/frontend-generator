@@ -12,6 +12,5 @@ public class FreeMarkerButton extends FreeMarkerComponent{
     private String route;
     private String templateLiteralRoute;
     private String urlParameter;
-    private String saveType;
-    private String saveKey;
+    private String localStorageKey;
 }

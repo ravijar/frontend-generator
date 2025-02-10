@@ -2,7 +2,7 @@
 <#switch component.role>
     <#case "parent">
     <#case "child">
-        <#switch component.fetch>
+        <#switch component.action>
             <#case "resource">
                 <#include fetch>
 

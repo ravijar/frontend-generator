@@ -1,13 +1,9 @@
-<#switch component.fetch>
+<#switch component.action>
     <#case "resource">
         <#include fetch>
         <#break>
     <#case "load">
-        <#switch component.loadType>
-            <#case "localStorage">
-                <#include loadLocalStorage>
-                <#break>
-        </#switch>
+        <#include loadLocalStorage>
         <#break>
 </#switch>
 

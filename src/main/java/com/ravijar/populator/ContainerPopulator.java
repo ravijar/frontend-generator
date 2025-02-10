@@ -15,14 +15,13 @@ public class ContainerPopulator extends ComponentPopulator{
         populateComponent(source, target);
 
         if(source.getResource() != null) {
-            target.setFetch("resource");
+            target.setAction("resource");
             target.setResource(openAPIParser.getResourceData(source.getResource()));
         }
 
-        if(source.getLoad() != null) {
-            target.setFetch("load");
-            target.setLoadType(source.getLoad().getType());
-            target.setLoadKey(source.getLoad().getAssign().getKey());
+        if(source.getLocalStorage() != null) {
+            target.setAction(source.getLocalStorage().getAction());
+            target.setLocalStorageKey(source.getLocalStorage().getAssign().getKey());
         }
 
         FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent());

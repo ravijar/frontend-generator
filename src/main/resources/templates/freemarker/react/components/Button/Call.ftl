@@ -10,7 +10,7 @@ ${indent}       text="${component.text}"
 ${indent}       onClick={(<#if component.urlParameter??>${component.urlParameter}</#if>) => navigate(`<#if component.urlParameter??>${component.templateLiteralRoute}<#else>${component.route}</#if>`)}
                 <#break>
             <#case "save">
-${indent}       onClick={() => saveTo${component.saveKey?cap_first}(${resultComponent.id}Filter())}
+${indent}       onClick={() => saveTo${component.localStorageKey?cap_first}(${resultComponent.id}Filter())}
                 <#break>
         </#switch>
 ${indent}       styles={styles.${component.id}}

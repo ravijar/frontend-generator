@@ -36,9 +36,9 @@
                     <assign key="id" title="name" description="description" image="imageURL"/>
                     <component type="Button" id="petAddToCartButton">
                         <text>Add to Cart</text>
-                        <save type="localStorage">
+                        <localStorage action="save">
                             <assign key="cart"/>
-                        </save>
+                        </localStorage>
                     </component>
                 </component>
             </result>
@@ -47,9 +47,9 @@
 
     <page name="Cart" route="/cart" navbar="true">
         <component type="Container" id="cartContainer">
-            <load type="localStorage">
+            <localStorage action="load">
                 <assign key="cart"/>
-            </load>
+            </localStorage>
             <result>
                 <component type="Table" id="cartTable">
                     <assign key="id"/>

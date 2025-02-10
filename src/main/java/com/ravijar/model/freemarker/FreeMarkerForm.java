@@ -10,7 +10,7 @@ import lombok.*;
 public class FreeMarkerForm extends FreeMarkerComponent{
     private String title;
     private String submitText;
-    private String fetch;
+    private String action;
     private OpenAPIResource resource;
     private FreeMarkerComponent resultComponent;
 }

@@ -3,7 +3,7 @@
     <#case "parent">
     <#case "child">
 ${indent}<div className="${component.resultComponent.styleId}-container">
-        <#switch component.fetch>
+        <#switch component.action>
             <#case "resource">
 ${indent}    {${component.id}Fetched && (
 ${indent}       <Table
@@ -21,8 +21,8 @@ ${indent}    )}
             <#case "load">
 ${indent}       <Table
 ${indent}           styles={styles.${component.resultComponent.id}}
-${indent}           columns={Object.keys(load${component.loadKey?cap_first}()[0])}
-${indent}           data={load${component.loadKey?cap_first}()}
+${indent}           columns={Object.keys(load${component.localStorageKey?cap_first}()[0])}
+${indent}           data={load${component.localStorageKey?cap_first}()}
 ${indent}           rowKey="${component.resultComponent.rowKey}"
 ${indent}       >
                 <#assign component = component.resultComponent>

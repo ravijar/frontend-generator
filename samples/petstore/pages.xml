@@ -48,7 +48,13 @@
             </localStorage>
             <result>
                 <component type="Table" id="cartTable">
-                    <assign key="id"/>
+                    <assign key="key"/>
+                    <component type="Button" id="removeFromCartButton">
+                        <text>Remove</text>
+                        <localStorage action="remove">
+                            <assign key="cart"/>
+                        </localStorage>
+                    </component>
                 </component>
             </result>
         </component>

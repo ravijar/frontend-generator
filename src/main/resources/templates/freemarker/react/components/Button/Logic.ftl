@@ -1,6 +1,8 @@
 <#switch component.action>
     <#case "save">
-            <#include saveLocalStorage>
-            <#break>
+        <#include saveLocalStorage>
+        <#break>
+    <#case "remove">
+        <#include removeLocalStorage>
         <#break>
 </#switch>

@@ -15,6 +15,7 @@
 
 <#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
 <#assign loadLocalStorage = "/react/logic/localStorage/LoadLocalStorage.ftl">
+<#assign removeLocalStorage = "/react/logic/localStorage/RemoveLocalStorage.ftl">
 
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">

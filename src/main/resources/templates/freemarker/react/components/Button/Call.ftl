@@ -12,6 +12,9 @@ ${indent}       onClick={(<#if component.urlParameter??>${component.urlParameter
             <#case "save">
 ${indent}       onClick={() => saveTo${component.localStorageKey?cap_first}(${resultComponent.id}Filter())}
                 <#break>
+            <#case "remove">
+${indent}       onClick={(id) => removeFrom${component.localStorageKey?cap_first}(id)}
+                <#break>
         </#switch>
 ${indent}       styles={styles.${component.id}}
 ${indent}   />

@@ -9,4 +9,5 @@
         <#break>
 </#switch>
 <#assign component = currentComponent>
+<#include nestLogic>
 

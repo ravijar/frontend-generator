@@ -1,3 +1,5 @@
+<#assign currentComponent = component>
+<#assign component = currentComponent.parent>
 <#switch component.action>
     <#case "resource">
         <#include fetch>
@@ -6,4 +8,5 @@
         <#include loadLocalStorage>
         <#break>
 </#switch>
+<#assign component = currentComponent>
 

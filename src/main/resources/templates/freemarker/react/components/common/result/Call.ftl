@@ -2,7 +2,8 @@
     <#case "root">
     <#case "child">
         <#assign resultComponent = component.resultComponent>
-        <#switch component.resultComponent.type>
+        <#assign component = resultComponent>
+        <#switch component.type>
             <#case "CardSection">
                 <#include cardSectionCall>
                 <#break>

@@ -1,7 +1,9 @@
 <#switch component.role>
     <#case "root">
     <#case "child">
-        <#switch component.resultComponent.type>
+        <#assign resultComponent = component.resultComponent>
+        <#assign component = resultComponent>
+        <#switch component.type>
             <#case "CardSection">
                 <#include cardSectionLogic>
                 <#break>

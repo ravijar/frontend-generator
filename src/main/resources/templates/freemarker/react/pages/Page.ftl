@@ -98,9 +98,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-        <#assign component = parentComponent>
-        <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+        <#assign component = rootComponent>
+        <#switch component.type>
             <#case "HeroSection">
                 <#include heroSectionState>
                 <#break>
@@ -118,9 +118,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseEffects -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-    <#assign component = parentComponent>
-    <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+    <#assign component = rootComponent>
+    <#switch component.type>
         <#case "HeroSection">
             <#include heroSectionEffect>
             <#break>
@@ -135,9 +135,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component Logic -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-        <#assign component = parentComponent>
-        <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+        <#assign component = rootComponent>
+        <#switch component.type>
             <#case "HeroSection">
                 <#include heroSectionLogic>
                 <#break>
@@ -160,9 +160,9 @@ export default function ${page.name?cap_first}() {
         <div className = "page-container">
             <#-- Calling Components -->
             <#assign indentValue = 3>
-            <#list page.components as parentComponent>
-                <#assign component = parentComponent>
-                <#switch parentComponent.type>
+            <#list page.components as rootComponent>
+                <#assign component = rootComponent>
+                <#switch component.type>
                     <#case "HeroSection">
                         <#include heroSectionCall>
                         <#break>

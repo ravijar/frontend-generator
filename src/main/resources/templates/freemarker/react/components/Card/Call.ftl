@@ -1,15 +1,14 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-<#switch component.role>
+<#switch component.parent.role>
     <#case "root">
     <#case "child">
-${indent}<div className="${component.resultComponent.styleId}-container">
-${indent}    {${component.id}Fetched && (
+${indent}<div className="${component.styleId}-container">
+${indent}    {${component.parent.id}Fetched && (
 ${indent}       <Card
-${indent}           item={${component.resultComponent.id}Filter()}
-${indent}           displayNames={${component.id}Responses[${component.id}FetchResponse?.httpStatusCode]?.displayNames}
-${indent}           styles={styles.${component.resultComponent.id}}
+${indent}           item={${component.id}Filter()}
+${indent}           displayNames={${component.parent.id}Responses[${component.parent.id}FetchResponse?.httpStatusCode]?.displayNames}
+${indent}           styles={styles.${component.id}}
 ${indent}       >
-        <#assign component = component.resultComponent>
         <#include nestCall>
 ${indent}       </Card>
 ${indent}    )}

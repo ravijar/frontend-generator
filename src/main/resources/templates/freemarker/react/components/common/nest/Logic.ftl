@@ -1,10 +1,10 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "result">
         <#if component.subComponents??>
             <#list component.subComponents as subComponent>
                 <#assign component = subComponent>
-                <#switch subComponent.type>
+                <#switch component.type>
                     <#case "SearchBar">
                         <#include searchBarLogic>
                         <#break>

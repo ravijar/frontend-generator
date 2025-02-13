@@ -1,9 +1,8 @@
 <#switch component.action>
     <#case "save">
-        <#switch component.saveType>
-            <#case "localStorage">
-                <#include saveLocalStorage>
-                <#break>
-        </#switch>
+        <#include saveLocalStorage>
+        <#break>
+    <#case "remove">
+        <#include removeLocalStorage>
         <#break>
 </#switch>

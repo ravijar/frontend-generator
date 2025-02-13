@@ -1,6 +1,10 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "child">
-        <#include fetchOnInitEffect>
+        <#switch component.action>
+            <#case "resource">
+                <#include fetchOnInitEffect>
+                <#break>
+        </#switch>
         <#break>
 </#switch>

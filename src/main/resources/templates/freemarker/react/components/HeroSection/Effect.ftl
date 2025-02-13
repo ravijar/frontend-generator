@@ -1,5 +1,5 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
         <#include nestEffect>
         <#break>
 </#switch>

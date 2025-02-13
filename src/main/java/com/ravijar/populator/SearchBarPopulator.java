@@ -17,7 +17,7 @@ public class SearchBarPopulator extends ComponentPopulator{
         populateComponent(source, target);
         target.setResource(openAPIParser.getResourceData(source.getResource()));
 
-        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent());
+        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent(), target);
         freeMarkerComponent.setRole("result");
         target.setResultComponent(freeMarkerComponent);
     }

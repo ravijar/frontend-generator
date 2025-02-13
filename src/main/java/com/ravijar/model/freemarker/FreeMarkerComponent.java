@@ -11,4 +11,5 @@ public abstract class FreeMarkerComponent {
     private String id;
     private String styleId;
     private String role;
+    private FreeMarkerComponent parent;
 }

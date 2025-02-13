@@ -13,10 +13,13 @@
 <#assign fetch = "/react/logic/fetch/Fetch.ftl">
 <#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
 
+<#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
+<#assign loadLocalStorage = "/react/logic/localStorage/LoadLocalStorage.ftl">
+<#assign removeLocalStorage = "/react/logic/localStorage/RemoveLocalStorage.ftl">
+
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
-<#assign saveLocalStorage = "/react/logic/SaveLocalStorage.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">
@@ -96,9 +99,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-        <#assign component = parentComponent>
-        <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+        <#assign component = rootComponent>
+        <#switch component.type>
             <#case "HeroSection">
                 <#include heroSectionState>
                 <#break>
@@ -116,9 +119,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseEffects -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-    <#assign component = parentComponent>
-    <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+    <#assign component = rootComponent>
+    <#switch component.type>
         <#case "HeroSection">
             <#include heroSectionEffect>
             <#break>
@@ -133,9 +136,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component Logic -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-        <#assign component = parentComponent>
-        <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+        <#assign component = rootComponent>
+        <#switch component.type>
             <#case "HeroSection">
                 <#include heroSectionLogic>
                 <#break>
@@ -158,9 +161,9 @@ export default function ${page.name?cap_first}() {
         <div className = "page-container">
             <#-- Calling Components -->
             <#assign indentValue = 3>
-            <#list page.components as parentComponent>
-                <#assign component = parentComponent>
-                <#switch parentComponent.type>
+            <#list page.components as rootComponent>
+                <#assign component = rootComponent>
+                <#switch component.type>
                     <#case "HeroSection">
                         <#include heroSectionCall>
                         <#break>

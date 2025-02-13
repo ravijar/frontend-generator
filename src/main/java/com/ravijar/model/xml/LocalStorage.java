@@ -8,9 +8,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Save {
+public class LocalStorage {
     @JacksonXmlProperty(isAttribute = true)
-    private String type;
+    private String action;
 
     @JacksonXmlProperty(localName = "assign")
     private Assign assign;

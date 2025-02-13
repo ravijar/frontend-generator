@@ -22,10 +22,6 @@
                 </component>
             </result>
         </component>
-        <component type="Button" id="createPetButton">
-            <text>Add New Pet</text>
-            <route>/createPet</route>
-        </component>
     </page>
 
     <page name="Pet" route="/pets/{id}" navbar="false">
@@ -36,9 +32,28 @@
                     <assign key="id" title="name" description="description" image="imageURL"/>
                     <component type="Button" id="petAddToCartButton">
                         <text>Add to Cart</text>
-                        <save type="localStorage">
+                        <localStorage action="save">
                             <assign key="cart"/>
-                        </save>
+                        </localStorage>
+                    </component>
+                </component>
+            </result>
+        </component>
+    </page>
+
+    <page name="Cart" route="/cart" navbar="true">
+        <component type="Container" id="cartContainer">
+            <localStorage action="load">
+                <assign key="cart"/>
+            </localStorage>
+            <result>
+                <component type="Table" id="cartTable">
+                    <assign key="key"/>
+                    <component type="Button" id="removeFromCartButton">
+                        <text>Remove</text>
+                        <localStorage action="remove">
+                            <assign key="cart"/>
+                        </localStorage>
                     </component>
                 </component>
             </result>
@@ -46,6 +61,10 @@
     </page>
 
     <page name="Admin" route="/admin" navbar="true">
+        <component type="Button" id="createPetButton">
+            <text>Add New Pet</text>
+            <route>/createPet</route>
+        </component>
         <component type="Container" id="adminPetsContainer">
             <resource method="GET">/pets</resource>
             <result>

@@ -1,5 +1,5 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "child">
         <#assign value = "${component.id}${component.resource.urlParameters[0].name?cap_first}">
         <#include handleChange>

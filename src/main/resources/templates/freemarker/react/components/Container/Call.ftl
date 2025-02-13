@@ -1,5 +1,5 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "child">
         <#include resultCall>
         <#break>

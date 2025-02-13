@@ -1,6 +1,6 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
 ${indent}<div className="${component.resultComponent.styleId}-container">
 ${indent}    {${component.id}ShowAlert && (
 ${indent}        <Alert

@@ -24,7 +24,7 @@ public class ContainerPopulator extends ComponentPopulator{
             target.setLocalStorageKey(source.getLocalStorage().getAssign().getKey());
         }
 
-        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent());
+        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent(), target);
         freeMarkerComponent.setRole("result");
         target.setResultComponent(freeMarkerComponent);
     }

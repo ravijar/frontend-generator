@@ -25,7 +25,7 @@ public class HeroSectionPopulator extends ComponentPopulator{
 
         if(source.getSubComponents() != null) {
             for(Component component : source.getSubComponents()) {
-                FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
+                FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component, target);
                 freeMarkerComponent.setRole("child");
                 freeMarkerComponents.add(freeMarkerComponent);
             }

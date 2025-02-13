@@ -1,5 +1,5 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "child">
         <#switch component.action>
             <#case "resource">

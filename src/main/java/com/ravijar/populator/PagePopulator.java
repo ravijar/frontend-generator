@@ -27,8 +27,8 @@ public class PagePopulator {
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for(Component component : source.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component);
-            freeMarkerComponent.setRole("parent");
+            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component, null);
+            freeMarkerComponent.setRole("root");
             freeMarkerComponents.add(freeMarkerComponent);
         }
         target.setComponents(freeMarkerComponents);

@@ -12,7 +12,7 @@ public class PopulatorHelper {
         this.openAPIParser = openAPIParser;
     }
 
-    public FreeMarkerComponent switchComponent(Component component) {
+    public FreeMarkerComponent switchComponent(Component component, FreeMarkerComponent parentComponent) {
         FreeMarkerComponent freeMarkerComponent;
         switch (component.getType()) {
             case "HeroSection" -> {
@@ -51,8 +51,11 @@ public class PopulatorHelper {
                 freeMarkerComponent = new FreeMarkerTable();
                 new TablePopulator(openAPIParser).populate((Table) component, (FreeMarkerTable) freeMarkerComponent);
             }
-            default -> freeMarkerComponent = null;
+            default -> {
+                return null;
+            }
         }
+        freeMarkerComponent.setParent(parentComponent);
         return freeMarkerComponent;
     }
 }

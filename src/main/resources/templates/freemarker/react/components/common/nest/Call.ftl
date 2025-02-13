@@ -1,5 +1,5 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "result">
         <#if component.subComponents??>
             <#assign indentValue = indentValue + 3>

@@ -1,5 +1,5 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "child">
         <#assign state = "${component.id}ShowAlert">
         <#include useState>

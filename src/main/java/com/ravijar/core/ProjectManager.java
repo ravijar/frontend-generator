@@ -43,7 +43,7 @@ public class ProjectManager {
         this.configHandler = new ConfigHandler("config.properties");
     }
 
-    private boolean updateProjectName() {
+    private boolean setProjectNameFromConfig() {
         if (!this.configHandler.isPropertiesFileAvailable()) {
             return false;
         }
@@ -52,7 +52,7 @@ public class ProjectManager {
     }
 
     public boolean generateFrontend() {
-        if(!updateProjectName()) return false;
+        if(!setProjectNameFromConfig()) return false;
 
         logger.info("Generating Frontend...");
 
@@ -99,7 +99,7 @@ public class ProjectManager {
     }
 
     public boolean generateClientAPI() {
-        if(!updateProjectName()) return false;
+        if(!setProjectNameFromConfig()) return false;
 
         logger.info("Generating ClientAPI...");
 
@@ -114,7 +114,7 @@ public class ProjectManager {
     }
 
     public boolean applyUserStyles() {
-        if(!updateProjectName()) return false;
+        if(!setProjectNameFromConfig()) return false;
 
         logger.info("Applying User Styles... ");
 
@@ -161,7 +161,7 @@ public class ProjectManager {
     }
 
     public boolean runProject() {
-        if(!updateProjectName()) return false;
+        if(!setProjectNameFromConfig()) return false;
 
         this.commandHandler.runReactApp(getProjectName());
 
@@ -169,7 +169,7 @@ public class ProjectManager {
     }
 
     public boolean generateAll() {
-        if(!updateProjectName()) return false;
+        if(!setProjectNameFromConfig()) return false;
         logger.info("Generating ClientAPI and Frontend...");
         generateFrontend();
         generateClientAPI();
@@ -178,7 +178,7 @@ public class ProjectManager {
     }
 
     public boolean test() {
-        if(!updateProjectName()) return false;
+        if(!setProjectNameFromConfig()) return false;
 
         logger.info("Starting Testing...");
 

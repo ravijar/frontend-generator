@@ -14,6 +14,9 @@
                     <#case "Container">
                         <#include containerState>
                         <#break>
+                    <#case "Button">
+                        <#include buttonState>
+                        <#break>
                 </#switch>
             </#list>
         </#if>

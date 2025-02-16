@@ -15,6 +15,9 @@ ${indent}       onClick={() => saveTo${component.localStorageKey?cap_first}(${re
             <#case "remove">
 ${indent}       onClick={(id) => removeFrom${component.localStorageKey?cap_first}(id)}
                 <#break>
+            <#case "resource">
+${indent}       onClick={(id) => ${component.id}Fetch(id)}
+                <#break>
         </#switch>
 ${indent}       styles={styles.${component.id}}
 ${indent}   />

@@ -76,7 +76,10 @@
                     </component>
                     <component type="Button" id="deletePetButton">
                         <text>Delete</text>
-                        <route>/deletePet/{id}</route>
+                        <resource method="DELETE">/pets/{id}</resource>
+                        <result>
+                            <component type="Alert" id="deletePetFormAlert"/>
+                        </result>
                     </component>
                 </component>
             </result>

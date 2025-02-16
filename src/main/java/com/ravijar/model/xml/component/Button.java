@@ -1,9 +1,7 @@
 package com.ravijar.model.xml.component;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.ravijar.model.xml.Route;
-import com.ravijar.model.xml.LocalStorage;
-import com.ravijar.model.xml.Text;
+import com.ravijar.model.xml.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +15,12 @@ public class Button extends Component{
 
     @JacksonXmlProperty(localName = "route")
     private Route route;
+
+    @JacksonXmlProperty(localName = "resource")
+    private Resource resource;
+
+    @JacksonXmlProperty(localName = "result")
+    private Result result;
 
     @JacksonXmlProperty(localName = "localStorage")
     private LocalStorage localStorage;

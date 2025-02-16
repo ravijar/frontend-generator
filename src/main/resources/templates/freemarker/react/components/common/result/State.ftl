@@ -7,6 +7,9 @@
             <#case "Alert">
                 <#include alertState>
                 <#break>
+            <#case "Table">
+                <#include tableState>
+                <#break>
         </#switch>
         <#break>
 </#switch>

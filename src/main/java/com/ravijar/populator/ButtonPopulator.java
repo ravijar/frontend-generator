@@ -1,7 +1,9 @@
 package com.ravijar.populator;
 
+import com.ravijar.helper.PopulatorHelper;
 import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.FreeMarkerButton;
+import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.xml.component.Button;
 import com.ravijar.parser.OpenAPIParser;
 
@@ -24,6 +26,15 @@ public class ButtonPopulator extends ComponentPopulator{
         if (source.getLocalStorage() != null) {
             target.setAction(source.getLocalStorage().getAction());
             target.setLocalStorageKey(source.getLocalStorage().getAssign().getKey());
+        }
+
+        if(source.getResource() != null) {
+            target.setAction("resource");
+            target.setResource(openAPIParser.getResourceData(source.getResource()));
+
+            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent(), target);
+            freeMarkerComponent.setRole("result");
+            target.setResultComponent(freeMarkerComponent);
         }
     }
 }

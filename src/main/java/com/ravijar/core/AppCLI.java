@@ -17,6 +17,6 @@ public class AppCLI {
         commandLine.addSubcommand("validate",new ValidateXMLCommand(projectManager));
 
         int exitCode = commandLine.execute(args);
-        System.exit(exitCode);
+//        System.exit(exitCode);
     }
 }

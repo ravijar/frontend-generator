@@ -6,11 +6,14 @@
 <#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
 
 <#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">
+<#assign fetchHeaderParam = "/react/logic/fetch/parts/FetchHeaderParam.ftl">
 <#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
 <#assign fetchBody = "/react/logic/fetch/parts/FetchBody.ftl">
+<#assign fetchBodyParam = "/react/logic/fetch/parts/FetchBodyParam.ftl">
 <#assign fetchBodyUrlParam = "/react/logic/fetch/parts/FetchBodyUrlParam.ftl">
 
 <#assign fetch = "/react/logic/fetch/Fetch.ftl">
+<#assign fetchParam = "/react/logic/fetch/FetchParam.ftl">
 <#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
 
 <#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
@@ -27,6 +30,7 @@
 
 <#assign buttonCall = "/react/components/Button/Call.ftl">
 <#assign buttonLogic = "/react/components/Button/Logic.ftl">
+<#assign buttonState = "/react/components/Button/State.ftl">
 
 <#assign cardCall = "/react/components/Card/Call.ftl">
 <#assign cardLogic = "/react/components/Card/Logic.ftl">
@@ -55,6 +59,7 @@
 
 <#assign tableCall = "/react/components/Table/Call.ftl">
 <#assign tableLogic = "/react/components/Table/Logic.ftl">
+<#assign tableState = "/react/components/Table/State.ftl">
 
 <#assign resultCall = "/react/components/common/result/Call.ftl">
 <#assign resultLogic = "/react/components/common/result/Logic.ftl">

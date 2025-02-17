@@ -10,12 +10,14 @@ import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.parser.XMLParser;
 import com.ravijar.model.PageDTO;
 import com.ravijar.model.xml.Page;
+import com.ravijar.validators.XMLValidator;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
@@ -170,10 +172,11 @@ public class ProjectManager {
 
     public boolean generateAll() {
         if(!setProjectNameFromConfig()) return false;
+        boolean isValid=validateXML(projectName+"\\pages.xml");
+        if(!isValid) return false;
         logger.info("Generating ClientAPI and Frontend...");
         generateFrontend();
         generateClientAPI();
-
         return true;
     }
 
@@ -183,6 +186,22 @@ public class ProjectManager {
         logger.info("Starting Testing...");
 
         return true;
+    }
+
+    public boolean validateXML(String xmlPath){
+        XMLValidator xmlValidator=new XMLValidator();
+        try {
+            xmlValidator.isValid(xmlPath);
+            logger.info("XML Validated!");
+            return true;
+        } catch (SAXException e) {
+            logger.error("Invalid XML File!");
+            logger.error(e.getMessage());
+            return false;
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            return false;
+        }
     }
 
     @Deprecated

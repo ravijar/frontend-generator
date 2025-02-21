@@ -158,7 +158,37 @@ The configuration file is an XML document containing <pages> as the root element
   - **Attributes:**
     - `type`: The type of component (e.g., HeroSection, Button, Form).
     - `id`: Unique identifier for the component.
-  - Supported Component Types:
+  - **Categories:**
+    - Root Components : Added under the `<pages>` tag. 
+    - Child Components : Nested inside Root Components.
+    - Result Components – Exclusively used within `<result>` tags.
+
+##### Supported Component Types:
+
+ i. `HeroSection` [Root]
+  - A visually static section that highlights key text and a background image URL.
+  - **Functionality:**
+    - Uses `<text>` tags for main and subtext.
+    - Uses `<image>` for adding an image URL.
+  - **Nesting:**
+    - Can contain Button, SearchBar, and Container components.
+   
+```
+<component type="HeroSection" id="heroSection">
+    <text>Find Your Perfect Pet & Everything They Need!</text>
+    <text>From adorable companions to premium pet supplies, we&apos;ve got everything to make your pet happy!</text>
+    <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
+</component>
+
+```
+
+![hero-section-gif.gif](docs/resources/documentation/hero-section-gif.gif)  
+
+
+
+
+
+- Supported Component Types:
     - `HeroSection`: Provides a visually static section with text and images.
       - Functionality: Includes two <text> tags one for the main text and one for the subtext, and <image> for visuals.
       - Nesting: Can nest `Button`, `SearchBar`, and `Container` components.

@@ -197,7 +197,7 @@ The configuration file is an XML document containing <pages> as the root element
 [Petstore Page Configuration File](samples/petstore/pages.xml)
 
 **Example Generated Homepage:**
-![generated-homepage.jpg](docs/resources/images/generated-homepage.jpg)
+![generated-homepage.jpg](docs/resources/documentation/generated-homepage.jpg)
 
 #### iii. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.

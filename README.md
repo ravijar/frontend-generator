@@ -171,7 +171,7 @@ The configuration file is an XML document containing <pages> as the root element
     - Uses `<text>` tags for main and subtext.
     - Uses `<image>` for adding an image URL.
   - **Nesting:**
-    - Can contain Button, SearchBar, and Container components.
+    - Can contain **Button**, **SearchBar**, and **Container** components.
    
 ```
 <component type="HeroSection" id="heroSection">
@@ -179,7 +179,6 @@ The configuration file is an XML document containing <pages> as the root element
     <text>From adorable companions to premium pet supplies, we&apos;ve got everything to make your pet happy!</text>
     <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
 </component>
-
 ```
 ![hero-section-gif.gif](docs/resources/documentation/hero-section-gif.gif)  
 
@@ -291,6 +290,66 @@ The configuration file is an XML document containing <pages> as the root element
 
 ```
 ![form-gif.gif](docs/resources/documentation/form-gif.gif) 
+
+ v. `SearchBar` [Root/Child]
+  - A search bar component that fetches data from a specified resource.
+  - **Functionality:**
+    - Uses `<resource>` to define the API endpoint for search queries.
+    - Should define `<result>` components to display search results.
+   
+```
+<component type="SearchBar" id="petSearchBar">
+    <resource method="GET">/pets/{id}</resource>
+    <result>
+        <component type="CardSection" id="petsSearchBarCardSection">
+            <assign key="id" title="name" description="description" image="imageURL"/>
+            <route>/pets/{id}</route>
+        </component>
+    </result>
+</component>
+
+```
+
+ vi. `CardSection` [Result]
+  - Displays a list of cards, where each card contains an **image**, **a title**, and **a description** related to an item.
+  - **Functionality:**
+    - Uses `<assign>` to map the key, title, description and image for the cards from BE.
+    - Each card is **clickable** and supports frontend navigation using `<route>`.
+   
+```
+<result>
+    <component type="CardSection" id="petsContainerCardSection">
+        <assign key="id" title="name" description="description" image="imageURL"/>
+        <route>/pets/{id}</route>
+    </component>
+</result>
+```
+![card-section-gif.gif](docs/resources/documentation/card-section-gif.gif) 
+
+ vii. `Card` [Result]
+  - Displays an image, a title, a description, and additional data in a structured format.
+  - **Functionality:**
+    - Uses `<assign>` to map the **key**, **title**, **description** and **image** for the card from BE.
+    - Supports displaying additional data in point form.
+  - **Nesting:**
+    - Can contain **Button** components.
+   
+```
+<result>
+    <component type="Card" id="petContainerCard">
+        <assign key="id" title="name" description="description" image="imageURL"/>
+        <component type="Button" id="petAddToCartButton">
+            <text>Add to Cart</text>
+            <localStorage action="save">
+                <assign key="cart"/>
+            </localStorage>
+        </component>
+    </component>
+</result>
+```
+![card-gif.gif](docs/resources/documentation/card-gif.gif) 
+
+
 
 
 

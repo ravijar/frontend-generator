@@ -272,6 +272,27 @@ The configuration file is an XML document containing <pages> as the root element
       </component>
       ```
 
+ iv. `Form` [Root]
+  - A form based on URL parameters and schema properties defined in an OpenAPI Specification (OAS) resource.
+  - **Functionality:**
+    - Uses `<resource>` to define the API endpoint for form submission.
+    - Uses `<submit>` to specify the button label for submitting the form.
+    - Can define a `<result>` component to display responses.
+   
+```
+<component type="Form" id="createPetForm">
+    <resource method="POST">/pets</resource>
+    <text>Create New Pet</text>
+    <submit>Add Pet</submit>
+    <result>
+        <component type="Alert" id="createPetFormAlert"/>
+    </result>
+</component>
+
+```
+![form-gif.gif](docs/resources/documentation/form-gif.gif) 
+
+
 
 - Supported Component Types:
     - `HeroSection`: Provides a visually static section with text and images.

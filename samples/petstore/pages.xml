@@ -24,6 +24,18 @@
         </component>
     </page>
 
+    <page name="SearchPets" route="/searchPets" navbar="false">
+        <component type="SearchBar" id="petsSearchBar">
+            <resource method="GET">/pets/{id}</resource>
+            <result>
+                <component type="CardSection" id="petsContainerCardSection">
+                    <assign key="id" title="name" description="description" image="imageURL"/>
+                    <route>/pets/{id}</route>
+                </component>
+            </result>
+        </component>
+    </page>
+
     <page name="Pet" route="/pets/{id}" navbar="false">
         <component type="Container" id="petContainer">
             <resource method="GET">/pets/{id}</resource>

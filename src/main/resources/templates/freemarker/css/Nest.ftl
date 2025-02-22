@@ -8,7 +8,7 @@
         <#break>
     <#case "Button">
         <#switch component.role>
-            <#case "parent">
+            <#case "root">
     z-index: 1;
     position: absolute;
     bottom: 50px;

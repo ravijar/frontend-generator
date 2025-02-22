@@ -1,5 +1,6 @@
 package com.ravijar.model.freemarker;
 
+import com.ravijar.model.openapi.OpenAPIResource;
 import lombok.*;
 
 @NoArgsConstructor
@@ -12,6 +13,7 @@ public class FreeMarkerButton extends FreeMarkerComponent{
     private String route;
     private String templateLiteralRoute;
     private String urlParameter;
-    private String saveType;
-    private String saveKey;
+    private String localStorageKey;
+    private OpenAPIResource resource;
+    private FreeMarkerComponent resultComponent;
 }

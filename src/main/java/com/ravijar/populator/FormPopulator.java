@@ -13,11 +13,15 @@ public class FormPopulator extends ComponentPopulator{
 
     public void populate(Form source, FreeMarkerForm target) {
         populateComponent(source, target);
-        target.setResource(openAPIParser.getResourceData(source.getResource()));
         target.setTitle(source.getText().getBody());
         target.setSubmitText(source.getSubmit().getName());
 
-        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent());
+        if(source.getResource() != null) {
+            target.setAction("resource");
+            target.setResource(openAPIParser.getResourceData(source.getResource()));
+        }
+
+        FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent(), target);
         freeMarkerComponent.setRole("result");
         target.setResultComponent(freeMarkerComponent);
     }

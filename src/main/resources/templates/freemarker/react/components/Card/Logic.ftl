@@ -1,26 +1,32 @@
 <#assign indent = ""?left_pad(indentValue * 4)>
-<#switch component.role>
-    <#case "parent">
+<#switch component.parent.role>
+    <#case "root">
     <#case "child">
-        <#include fetchUrlParam>
+        <#switch component.parent.action>
+            <#case "resource">
+                <#assign currentComponent = component>
+                <#assign component = currentComponent.parent>
+                <#include fetchUrlParam>
+                <#assign component = currentComponent>
 
-${indent}const ${component.resultComponent.id}Filter = () => {
+${indent}const ${component.id}Filter = () => {
 ${indent}   let item = { data:[] };
-${indent}   const responseData = ${component.id}FetchResponse?.data;
+${indent}   const responseData = ${component.parent.id}FetchResponse?.data;
 ${indent}   if (!responseData) return item;
 
-${indent}   const { ${component.resultComponent.cardKey}, ${component.resultComponent.cardTitle}, ${component.resultComponent.cardDescription}, ${component.resultComponent.cardImage}, ...rest } = responseData;
+${indent}   const { ${component.cardKey}, ${component.cardTitle}, ${component.cardDescription}, ${component.cardImage}, ...rest } = responseData;
 
-${indent}       item.key = ${component.resultComponent.cardKey};
-${indent}       item.title = ${component.resultComponent.cardTitle};
-${indent}       item.description = ${component.resultComponent.cardDescription};
-${indent}       item.image = ${component.resultComponent.cardImage};
+${indent}       item.key = ${component.cardKey};
+${indent}       item.title = ${component.cardTitle};
+${indent}       item.description = ${component.cardDescription};
+${indent}       item.image = ${component.cardImage};
 ${indent}       item.data = rest;
 
 ${indent}   return item;
 ${indent}};
 
-        <#assign component = component.resultComponent>
-        <#include nestLogic>
+                    <#include nestLogic>
+                <#break>
+        </#switch>
         <#break>
 </#switch>

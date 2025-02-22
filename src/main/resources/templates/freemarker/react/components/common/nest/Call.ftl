@@ -1,11 +1,11 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "result">
         <#if component.subComponents??>
             <#assign indentValue = indentValue + 3>
             <#list component.subComponents as subComponent>
                 <#assign component = subComponent>
-                <#switch subComponent.type>
+                <#switch component.type>
                     <#case "Button">
                         <#include buttonCall>
                         <#break>

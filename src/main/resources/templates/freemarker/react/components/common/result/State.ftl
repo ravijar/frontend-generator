@@ -1,9 +1,14 @@
 <#switch component.role>
-    <#case "parent">
+    <#case "root">
     <#case "child">
-        <#switch component.resultComponent.type>
+        <#assign resultComponent = component.resultComponent>
+        <#assign component = resultComponent>
+        <#switch component.type>
             <#case "Alert">
                 <#include alertState>
+                <#break>
+            <#case "Table">
+                <#include tableState>
                 <#break>
         </#switch>
         <#break>

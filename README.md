@@ -158,46 +158,261 @@ The configuration file is an XML document containing <pages> as the root element
   - **Attributes:**
     - `type`: The type of component (e.g., HeroSection, Button, Form).
     - `id`: Unique identifier for the component.
-  - Supported Component Types:
-    - `HeroSection`: Provides a visually static section with text and images.
-      - Functionality: Includes two <text> tags one for the main text and one for the subtext, and <image> for visuals.
-      - Nesting: Can nest `Button`, `SearchBar`, and `Container` components.
-    - `Button`: Provides navigation.
-      - Functionality: Uses `<text>` for the label and `<route>` for frontend navigation.
-    - `Container`: Fetches and displays data using an API resource.
-      - Functionality: Includes `<resource>` for API mapping and `<result>` for defining the component type for the result. Comes with a useEffect hook with no dependencies.
-    - `Form`: Captures and submits user data to an API.
-      - Functionality: Uses `<resource>` for API submission, `<submit>` for button labeling, and optionally `<result>` to display output.
-    - `SearchBar`: Allows users to search and view results.
-      - Functionality: Uses `<resource>` for API queries and `<result>` to display the search results.
-    - `CardSection`: Displays fetched data in a card layout.
-      - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
-      - Nesting: Can nest `<Button>` components.
-    - `Card`: Displays fetched data in a single card.
-      - Functionality: Exclusively used within a `<result>` tag. No id required when nested in `<result>`.
-      - Nesting: Can nest `<Button>` components.
-    - `Alert`: Display alerts or messages.
-      - Functionality: Exclusively used within a `<result>` tag.
-    - `Table`: Adds a table.
-      - Functionality: Exclusively used within a `<result>` tag.
+  - **Categories:**
+    - Root Components : Added under the `<pages>` tag. 
+    - Child Components : Nested inside Root Components.
+    - Result Components – Exclusively used within `<result>` tags.
 
-4. Child Tags
-  - `<resource>` : Defines an API resource to be accessed by the component.
+##### Supported Component Types:
+
+ i. `HeroSection` [Root]
+  - A visually static section that highlights key text and a background image URL.
+  - **Functionality:**
+    - Uses `<text>` tags for main and subtext.
+    - Uses `<image>` for adding an image URL.
+  - **Nesting:**
+    - Can contain **Button**, **SearchBar**, and **Container** components.
+   
+```
+<component type="HeroSection" id="heroSection">
+    <text>Find Your Perfect Pet & Everything They Need!</text>
+    <text>From adorable companions to premium pet supplies, we&apos;ve got everything to make your pet happy!</text>
+    <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
+</component>
+```
+![hero-section-gif.gif](docs/resources/documentation/hero-section-gif.gif)  
+
+ ii. `Button` [Root/Child]
+  - A button that supports various actions triggered on a click event.
+  - **Functionality:**
+    a. **Route-Based Navigation** : Navigates to a predefined **frontend URL** when click
+      - Uses `<text>` for the label and `<route>` for frontend navigation.
+      ```
+      <component type="Button" id="updatePetButton">
+          <text>Update</text>
+          <route>/updatePet/{id}</route>
+      </component>
+      ```
+    b. **Backend API Interaction** (Resource-Based Actions) : Performs actions related to **backend API** access.
+      - Uses `<text>` for the button label, `<resource>` for performing an API action, and `<result>` to handle the response.
+      ```
+      <component type="Button" id="deletePetButton">
+          <text>Delete</text>
+          <resource method="DELETE">/pets/{id}</resource>
+          <result>
+              <component type="Alert" id="deletePetFormAlert"/>
+          </result>
+      </component>
+      ```
+    c. LocalStorage Actions (Only supported for Buttons inside a Card component).
+      1. Save to Local Storage
+          - Uses `<text>` for the button label and `<localStorage>` with action attribute set to save perform a local storage save.
+          - Uses `<assign>` to set the LocalStorage `key` value
+         
+          ```
+          <component type="Button" id="petAddToCartButton">
+              <text>Add to Cart</text>
+              <localStorage action="save">
+                  <assign key="cart"/>
+              </localStorage>
+          </component>
+          ```
+      2. Remove from Local Storage
+          - Uses `<text>` for the button label and `<localStorage>` with action attribute set to remove perform a local storage delete.
+          - Uses `<assign>` to set the LocalStorage `key` value
+         
+          ```
+          <component type="Button" id="removeFromCartButton">
+              <text>Remove</text>
+              <localStorage action="remove">
+                  <assign key="cart"/>
+              </localStorage>
+          </component>
+          ```
+      
+      ![button-gif.gif](docs/resources/documentation/button-gif.gif)  
+
+ iii. `Container` [Root/Child]
+  - A **data-fetching** component that retrieves and displays information from a backend API or LocalStorage
+  - Uses `useEffect()` to fetch data when the page loads.
+  - Stores fetched data using `useState()`
+  - **Functionality:**
+    a. **Fetch from a resource**
+      - Uses `<resource>` to fetch data from an API and <result> to display the retrieved data.
+      ```
+      <component type="Container" id="petsContainer">
+          <resource method="GET">/pets</resource>
+          <result>
+              <component type="CardSection" id="petsContainerCardSection">
+                  <assign key="id" title="name" description="description" image="imageURL"/>
+                  <route>/pets/{id}</route>
+              </component>
+          </result>
+      </component>
+      ```
+    b. **Fetching from LocalStorage** _(Only supported when using `<Table>` as the result component)_
+      - Uses `<localStorage>` to load data and display it within `<result>`
+      ```
+      <component type="Container" id="cartContainer">
+          <localStorage action="load">
+              <assign key="cart"/>
+          </localStorage>
+          <result>
+              <component type="Table" id="cartTable">
+                  <assign key="key"/>
+                  <component type="Button" id="removeFromCartButton">
+                      <text>Remove</text>
+                      <localStorage action="remove">
+                          <assign key="cart"/>
+                      </localStorage>
+                  </component>
+              </component>
+          </result>
+      </component>
+      ```
+
+ iv. `Form` [Root]
+  - A form based on URL parameters and schema properties defined in an OpenAPI Specification (OAS) resource.
+  - **Functionality:**
+    - Uses `<resource>` to define the API endpoint for form submission.
+    - Uses `<submit>` to specify the button label for submitting the form.
+    - Can define a `<result>` component to display responses.
+   
+```
+<component type="Form" id="createPetForm">
+    <resource method="POST">/pets</resource>
+    <text>Create New Pet</text>
+    <submit>Add Pet</submit>
+    <result>
+        <component type="Alert" id="createPetFormAlert"/>
+    </result>
+</component>
+
+```
+![form-gif.gif](docs/resources/documentation/form-gif.gif) 
+
+ v. `SearchBar` [Root/Child]
+  - A search bar component that fetches data from a specified resource.
+  - **Functionality:**
+    - Uses `<resource>` to define the API endpoint for search queries.
+    - Should define `<result>` components to display search results.
+   
+```
+<component type="SearchBar" id="petSearchBar">
+    <resource method="GET">/pets/{id}</resource>
+    <result>
+        <component type="CardSection" id="petsSearchBarCardSection">
+            <assign key="id" title="name" description="description" image="imageURL"/>
+            <route>/pets/{id}</route>
+        </component>
+    </result>
+</component>
+
+```
+
+ vi. `CardSection` [Result]
+  - Displays a list of cards, where each card contains an **image**, **a title**, and **a description** related to an item.
+  - **Functionality:**
+    - Uses `<assign>` to map the key, title, description and image for the cards from BE.
+    - Each card is **clickable** and supports frontend navigation using `<route>`.
+   
+```
+<result>
+    <component type="CardSection" id="petsContainerCardSection">
+        <assign key="id" title="name" description="description" image="imageURL"/>
+        <route>/pets/{id}</route>
+    </component>
+</result>
+```
+![card-section-gif.gif](docs/resources/documentation/card-section-gif.gif) 
+
+ vii. `Card` [Result]
+  - Displays an image, a title, a description, and additional data in a structured format.
+  - **Functionality:**
+    - Uses `<assign>` to map the **key**, **title**, **description** and **image** for the card from BE.
+    - Supports displaying additional data in point form.
+  - **Nesting:**
+    - Can contain **Button** components.
+   
+```
+<result>
+    <component type="Card" id="petContainerCard">
+        <assign key="id" title="name" description="description" image="imageURL"/>
+        <component type="Button" id="petAddToCartButton">
+            <text>Add to Cart</text>
+            <localStorage action="save">
+                <assign key="cart"/>
+            </localStorage>
+        </component>
+    </component>
+</result>
+```
+![card-gif.gif](docs/resources/documentation/card-gif.gif) 
+
+ viii. `Alert` [Result]
+  - Displays success or failure messages based on the API response.
+  - **Functionality:**
+    - Works with the response defined in the OpenAPI Specification (OAS).
+    - Determines success or failure based on the HTTP status code.
+   
+```
+<result>
+    <component type="Alert" id="createPetFormAlert"/>
+</result>
+```
+![alert-gif.gif](docs/resources/documentation/alert-gif.gif) 
+
+ ix. `Table` [Result]
+  - Displays data in a structured tabular format.
+  - **Functionality:**
+    - Uses `<assign>` to define the key for each row.
+  - **Nesting:**
+    - Can contain **Button** components.
+    - Nested components appear in a new column for each row.
+   
+```
+<result>
+    <component type="Table" id="adminPetsContainerTable">
+        <assign key="id"/>
+        <component type="Button" id="updatePetButton">
+            <text>Update</text>
+            <route>/updatePet/{id}</route>
+        </component>
+        <component type="Button" id="deletePetButton">
+            <text>Delete</text>
+            <resource method="DELETE">/pets/{id}</resource>
+            <result>
+                <component type="Alert" id="deletePetFormAlert"/>
+            </result>
+        </component>
+    </component>
+</result>
+```
+![table-gif.gif](docs/resources/documentation/table-gif.gif) 
+
+4. Properties Tags
+  i. `<resource>` : Defines an API resource to be accessed by the component.
      - **Attributes**:
         - `method`: HTTP method (e.g., `GET`, `POST`).
-  - `<route>` : Defines frontend routing for navigation.
-  - `<result>` : Defines the data fetched by an API call and specifies the component used to display the data.
+  ii. `<route>` : Defines frontend routing for navigation.
+  iii. `<result>` : Defines the data fetched by an API call and specifies the component used to display the data.
      - The `CardSection` component is used to display the fetched data.
-  - `<image>` : Defines an image URL for a visual element within a component.
-  - `<submit>` : Defines the label for a form submission button.
-  - `<text>` : Defines the textual content for a component.
-  - `<assign>` : Assigns the fields to display in a CardSection or Card Component. 
+  iv. `<image>` : Defines an image URL for a visual element within a component.
+  v. `<submit>` : Defines the label for a form submission button.
+  vi. `<text>` : Defines the textual content for a component.
+  vii. `<assign>` : Assigns the fields to display in a CardSection or Card Component.
+  viii. `<localStorage>`: Defines an interaction with the browser's Local Storage to store, retrieve, or remove data persistently across sessions.
+      - **Attributes**:
+        - `action`: Defines the operation to perform.
+          - `save` → Saves data to Local Storage.
+          - `load` → Loads data to Local Storage.
+          - `remove` → Removes data to Local Storage.
   
 **Example Page Configuration File:**
 [Petstore Page Configuration File](samples/petstore/pages.xml)
 
 **Example Generated Homepage:**
-![generated-homepage.jpg](docs/resources/images/generated-homepage.jpg)
+![generated-homepage.jpg](docs/resources/documentation/generated-homepage.jpg)
 
 #### iii. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.

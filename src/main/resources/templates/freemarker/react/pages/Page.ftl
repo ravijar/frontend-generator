@@ -6,17 +6,23 @@
 <#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
 
 <#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">
+<#assign fetchHeaderParam = "/react/logic/fetch/parts/FetchHeaderParam.ftl">
 <#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
 <#assign fetchBody = "/react/logic/fetch/parts/FetchBody.ftl">
+<#assign fetchBodyParam = "/react/logic/fetch/parts/FetchBodyParam.ftl">
 <#assign fetchBodyUrlParam = "/react/logic/fetch/parts/FetchBodyUrlParam.ftl">
 
 <#assign fetch = "/react/logic/fetch/Fetch.ftl">
+<#assign fetchParam = "/react/logic/fetch/FetchParam.ftl">
 <#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
+
+<#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
+<#assign loadLocalStorage = "/react/logic/localStorage/LoadLocalStorage.ftl">
+<#assign removeLocalStorage = "/react/logic/localStorage/RemoveLocalStorage.ftl">
 
 <#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
-<#assign saveLocalStorage = "/react/logic/SaveLocalStorage.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">
@@ -24,6 +30,7 @@
 
 <#assign buttonCall = "/react/components/Button/Call.ftl">
 <#assign buttonLogic = "/react/components/Button/Logic.ftl">
+<#assign buttonState = "/react/components/Button/State.ftl">
 
 <#assign cardCall = "/react/components/Card/Call.ftl">
 <#assign cardLogic = "/react/components/Card/Logic.ftl">
@@ -52,6 +59,7 @@
 
 <#assign tableCall = "/react/components/Table/Call.ftl">
 <#assign tableLogic = "/react/components/Table/Logic.ftl">
+<#assign tableState = "/react/components/Table/State.ftl">
 
 <#assign resultCall = "/react/components/common/result/Call.ftl">
 <#assign resultLogic = "/react/components/common/result/Logic.ftl">
@@ -96,9 +104,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-        <#assign component = parentComponent>
-        <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+        <#assign component = rootComponent>
+        <#switch component.type>
             <#case "HeroSection">
                 <#include heroSectionState>
                 <#break>
@@ -116,9 +124,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component UseEffects -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-    <#assign component = parentComponent>
-    <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+    <#assign component = rootComponent>
+    <#switch component.type>
         <#case "HeroSection">
             <#include heroSectionEffect>
             <#break>
@@ -133,9 +141,9 @@ export default function ${page.name?cap_first}() {
 
     <#-- Creating Component Logic -->
     <#assign indentValue = 1>
-    <#list page.components as parentComponent>
-        <#assign component = parentComponent>
-        <#switch parentComponent.type>
+    <#list page.components as rootComponent>
+        <#assign component = rootComponent>
+        <#switch component.type>
             <#case "HeroSection">
                 <#include heroSectionLogic>
                 <#break>
@@ -158,9 +166,9 @@ export default function ${page.name?cap_first}() {
         <div className = "page-container">
             <#-- Calling Components -->
             <#assign indentValue = 3>
-            <#list page.components as parentComponent>
-                <#assign component = parentComponent>
-                <#switch parentComponent.type>
+            <#list page.components as rootComponent>
+                <#assign component = rootComponent>
+                <#switch component.type>
                     <#case "HeroSection">
                         <#include heroSectionCall>
                         <#break>

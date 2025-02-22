@@ -18,9 +18,9 @@
         <#break>
     <#case "Form">
     z-index: 1;
-    position: absolute;
-    top: 60px;
-    left:35%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
         <#break>
     <#default>
 
@@ -32,9 +32,9 @@
     <#switch component.resultComponent.type>
         <#case "Card">
     z-index: 1;
-    position: absolute;
-    top: 100px;
-    left:25%;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
             <#break>
         <#case "Alert">
     z-index: 1;

@@ -9,6 +9,8 @@ Welcome to the **Automatic Frontend Generation Framework**! This project aims to
 
 This framework is specifically designed for backend developers and teams who need a functional, customizable frontend without diving deep into frontend technologies. By using configuration files such as the **Page Configuration File** and **User Customization Files**, along side with the **OpenAPI Specification**, the framework ensures that the frontend is always in sync with the backend while allowing flexibility in styling and structure.
 
+![generated-frontend.gif](docs/resources/documentation/generated-frontend.gif)
+
 ### Key Features
 - **Automatic React Frontend Generation**: Quickly generate fully functional React frontends from your API definitions.
 - **Customizable Components and Pages**: Modify predefined styles or create custom page-specific styles with ease.
@@ -275,6 +277,7 @@ The configuration file is an XML document containing <pages> as the root element
   - A form based on URL parameters and schema properties defined in an OpenAPI Specification (OAS) resource.
   - **Functionality:**
     - Uses `<resource>` to define the API endpoint for form submission.
+    - Uses `<text>` to define the form title
     - Uses `<submit>` to specify the button label for submitting the form.
     - Can define a `<result>` component to display responses.
    
@@ -391,28 +394,33 @@ The configuration file is an XML document containing <pages> as the root element
 ![table-gif.gif](docs/resources/documentation/table-gif.gif) 
 
 4. Properties Tags
-  i. `<resource>` : Defines an API resource to be accessed by the component.
-     - **Attributes**:
-        - `method`: HTTP method (e.g., `GET`, `POST`).
-  ii. `<route>` : Defines frontend routing for navigation.
-  iii. `<result>` : Defines the data fetched by an API call and specifies the component used to display the data.
-     - The `CardSection` component is used to display the fetched data.
-  iv. `<image>` : Defines an image URL for a visual element within a component.
-  v. `<submit>` : Defines the label for a form submission button.
-  vi. `<text>` : Defines the textual content for a component.
-  vii. `<assign>` : Assigns the fields to display in a CardSection or Card Component.
-  viii. `<localStorage>`: Defines an interaction with the browser's Local Storage to store, retrieve, or remove data persistently across sessions.
-      - **Attributes**:
-        - `action`: Defines the operation to perform.
-          - `save` → Saves data to Local Storage.
-          - `load` → Loads data to Local Storage.
-          - `remove` → Removes data to Local Storage.
+   
+i. `<resource>` : Defines an API resource to be accessed by the component.  
+   - **Attributes**:  
+     - `method`: HTTP method (e.g., `GET`, `POST`).
+
+ii. `<route>` : Defines frontend routing for navigation.  
+
+iii. `<result>` : Defines the data fetched by an API call and specifies the component used to display the data.  
+   - The `CardSection` component is used to display the fetched data.
+
+iv. `<image>` : Defines an image URL for a visual element within a component.  
+
+v. `<submit>` : Defines the label for a form submission button.  
+
+vi. `<text>` : Defines the textual content for a component.  
+
+vii. `<assign>` : Assigns the fields to display in a `CardSection` or `Card` component.  
+
+viii. `<localStorage>` : Defines an interaction with the browser's Local Storage to store, retrieve, or remove data persistently across sessions.    
+   - **Attributes**:    
+     - `action`: Defines the operation to perform.    
+       - **`save`** → Saves data to Local Storage.    
+       - **`load`** → Loads data to Local Storage.    
+       - **`remove`** → Removes data from Local Storage.  
   
 **Example Page Configuration File:**
 [Petstore Page Configuration File](samples/petstore/pages.xml)
-
-**Example Generated Homepage:**
-![generated-homepage.jpg](docs/resources/documentation/generated-homepage.jpg)
 
 #### iii. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.

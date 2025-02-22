@@ -233,7 +233,44 @@ The configuration file is an XML document containing <pages> as the root element
       
       ![button-gif.gif](docs/resources/documentation/button-gif.gif)  
 
-
+ iii. `Container` [Root/Child]
+  - A **data-fetching** component that retrieves and displays information from a backend API or LocalStorage
+  - Uses `useEffect()` to fetch data when the page loads.
+  - Stores fetched data using `useState()`
+  - **Functionality:**
+    a. **Fetch from a resource**
+      - Uses `<resource>` to fetch data from an API and <result> to display the retrieved data.
+      ```
+      <component type="Container" id="petsContainer">
+          <resource method="GET">/pets</resource>
+          <result>
+              <component type="CardSection" id="petsContainerCardSection">
+                  <assign key="id" title="name" description="description" image="imageURL"/>
+                  <route>/pets/{id}</route>
+              </component>
+          </result>
+      </component>
+      ```
+    b. **Fetching from LocalStorage** _(Only supported when using `<Table>` as the result component)_
+      - Uses `<localStorage>` to load data and display it within `<result>`
+      ```
+      <component type="Container" id="cartContainer">
+          <localStorage action="load">
+              <assign key="cart"/>
+          </localStorage>
+          <result>
+              <component type="Table" id="cartTable">
+                  <assign key="key"/>
+                  <component type="Button" id="removeFromCartButton">
+                      <text>Remove</text>
+                      <localStorage action="remove">
+                          <assign key="cart"/>
+                      </localStorage>
+                  </component>
+              </component>
+          </result>
+      </component>
+      ```
 
 
 - Supported Component Types:

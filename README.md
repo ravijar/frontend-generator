@@ -181,9 +181,57 @@ The configuration file is an XML document containing <pages> as the root element
 </component>
 
 ```
-
 ![hero-section-gif.gif](docs/resources/documentation/hero-section-gif.gif)  
 
+ ii. `Button` [Root/Child]
+  - A button that supports various actions triggered on a click event.
+  - **Functionality:**
+    a. **Route-Based Navigation** : Navigates to a predefined **frontend URL** when click
+      - Uses `<text>` for the label and `<route>` for frontend navigation.
+      ```
+      <component type="Button" id="updatePetButton">
+          <text>Update</text>
+          <route>/updatePet/{id}</route>
+      </component>
+      ```
+    b. **Backend API Interaction** (Resource-Based Actions) : Performs actions related to **backend API** access.
+      - Uses `<text>` for the button label, `<resource>` for performing an API action, and `<result>` to handle the response.
+      ```
+      <component type="Button" id="deletePetButton">
+          <text>Delete</text>
+          <resource method="DELETE">/pets/{id}</resource>
+          <result>
+              <component type="Alert" id="deletePetFormAlert"/>
+          </result>
+      </component>
+      ```
+    c. LocalStorage Actions (Only supported for Buttons inside a Card component).
+      1. Save to Local Storage
+          - Uses `<text>` for the button label and `<localStorage>` with action attribute set to save perform a local storage save.
+          - Uses `<assign>` to set the LocalStorage `key` value
+         
+          ```
+          <component type="Button" id="petAddToCartButton">
+              <text>Add to Cart</text>
+              <localStorage action="save">
+                  <assign key="cart"/>
+              </localStorage>
+          </component>
+          ```
+      2. Remove from Local Storage
+          - Uses `<text>` for the button label and `<localStorage>` with action attribute set to remove perform a local storage delete.
+          - Uses `<assign>` to set the LocalStorage `key` value
+         
+          ```
+          <component type="Button" id="removeFromCartButton">
+              <text>Remove</text>
+              <localStorage action="remove">
+                  <assign key="cart"/>
+              </localStorage>
+          </component>
+          ```
+      
+      ![button-gif.gif](docs/resources/documentation/button-gif.gif)  
 
 
 

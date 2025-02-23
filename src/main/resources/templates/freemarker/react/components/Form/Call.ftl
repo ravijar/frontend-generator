@@ -18,5 +18,6 @@ ${indent}        ${component.id}${property.name?cap_first}Error={${component.id}
 ${indent}        styles = {styles.${component.id}}
 ${indent}    />
 ${indent}</div>
+<#include resultCall>
         <#break>
 </#switch>

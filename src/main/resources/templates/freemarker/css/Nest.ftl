@@ -37,7 +37,7 @@
     justify-content: center;
             <#break>
         <#case "Alert">
-    z-index: 1;
+    z-index: 10;
     position: absolute;
     top: 75px;
     right: 5px;

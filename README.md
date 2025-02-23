@@ -81,7 +81,7 @@ iv. `pages.xml` File:
 
 
 ### 2: Add Input Files
-#### i. OpenAPI Specification
+#### I. OpenAPI Specification
 The framework requires specific custom extensions in the OpenAPI Specification for it to function correctly and leverage its full capabilities. Below is an explanation of each required extension, where it must be included, and its purpose:
 
 
@@ -138,7 +138,7 @@ The framework does not support defining schemas directly inside the paths object
 **Example Open API Specification:**
 [Petstore OpenAPI Specification](samples/petstore/openapi.yaml)
 
-#### ii. Pages Configuration File
+#### II. Pages Configuration File
 The Pages Configuration File defines the structure and layout of the frontend pages to be generated. This includes support for components, routes, and navigation bars, offering greater flexibility and customization.
 
 #### Structure
@@ -424,7 +424,7 @@ viii. `<localStorage>` : Defines an interaction with the browser's Local Storage
 **Example Page Configuration File:**
 [Petstore Page Configuration File](samples/petstore/pages.xml)
 
-#### iii. User Customization Files
+#### III. User Customization Files
 The User Customization Files allows users to customize the appearance and behavior of the generated frontend. These files are part of the `styles` folder, which is created after running the initialization command.
 The styles folder is organized as follows:
 ```

@@ -21,7 +21,7 @@ ${indent}    )}
 ${indent}       <Table
 ${indent}           styles={styles.${component.id}}
 ${indent}           columns={Object.keys(load${component.parent.localStorageKey?cap_first}()[0])}
-${indent}           data={load${component.parent.localStorageKey?cap_first}()}
+${indent}           data={${component.parent.id}LoadResponse}
 ${indent}           rowKey="${component.rowKey}"
 ${indent}       >
                 <#include nestCall>

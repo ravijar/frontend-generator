@@ -8,6 +8,14 @@
                 <#include useState>
                 <#include resultState>
                 <#break>
+            <#case "save">
+                <#assign state = "${component.id}SaveResponse">
+                <#include useState>
+                <#break>
+            <#case "remove">
+                <#assign state = "${component.id}RemoveResponse">
+                <#include useState>
+                <#break>
         </#switch>
         <#break>
 </#switch>

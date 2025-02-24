@@ -46,7 +46,7 @@ The framework requires the following input files to function:
 - **Build the Project** : Run the commands **'mvn clean'** and **'mvn install'** to clean, build, and install the project.
 - **Locate the .jar File** : Navigate to the **target** folder.
 
-Refer to the [Technical Documentation](README-dev.md) for detailed development guidelines.
+Refer to the [Technical Documentation](README-dev.md) for detailed development guidelines..
 
 ### 1. Run the Initialization Command
 - Use the following command to initialize the project:

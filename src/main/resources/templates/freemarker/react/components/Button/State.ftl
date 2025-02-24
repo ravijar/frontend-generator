@@ -6,7 +6,6 @@
                 <#include useState>
                 <#assign state = "${component.id}Fetched">
                 <#include useState>
-                <#include resultState>
                 <#break>
             <#case "save">
                 <#assign state = "${component.id}SaveResponse">
@@ -17,5 +16,6 @@
                 <#include useState>
                 <#break>
         </#switch>
+        <#include resultState>
         <#break>
 </#switch>

@@ -17,6 +17,7 @@ ${indent}               description: "Removed from ${component.localStorageKey?c
 ${indent}               itemIndex: itemIndex,
 ${indent}               count: prevResponse?.count !== undefined ? prevResponse.count + 1 : 0
 ${indent}           }));
+${indent}           set${component.id?cap_first}ShowAlert(true);
 ${indent}       } catch (error) {
 ${indent}           set${component.id?cap_first}RemoveResponse((prevResponse) => ({
 ${indent}               httpStatusCode: "500",
@@ -24,6 +25,7 @@ ${indent}               description: "Failed to remove from ${component.localSto
 ${indent}               itemIndex: itemIndex,
 ${indent}               count: prevResponse?.count !== undefined ? prevResponse.count + 1 : 0
 ${indent}           }));
+${indent}           set${component.id?cap_first}ShowAlert(true);
 ${indent}       }
 ${indent}   }
 ${indent}};

@@ -16,6 +16,7 @@ ${indent}               description: "Saved to ${component.localStorageKey?cap_f
 ${indent}               item: item,
 ${indent}               count: prevResponse?.count !== undefined ? prevResponse.count + 1 : 0
 ${indent}           }));
+${indent}           set${component.id?cap_first}ShowAlert(true);
 ${indent}       } catch (error) {
 ${indent}           set${component.id?cap_first}SaveResponse((prevResponse) => ({
 ${indent}               httpStatusCode: "500",
@@ -23,6 +24,7 @@ ${indent}               description: "Failed to save to ${component.localStorage
 ${indent}               item: item,
 ${indent}               count: prevResponse?.count !== undefined ? prevResponse.count + 1 : 0
 ${indent}           }));
+${indent}           set${component.id?cap_first}ShowAlert(true);
 ${indent}       }
 ${indent}};
 

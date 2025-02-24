@@ -47,6 +47,9 @@
                         <localStorage action="save">
                             <assign key="cart"/>
                         </localStorage>
+                        <result>
+                            <component type="Alert" id="petAddToCartButtonAlert"/>
+                        </result>
                     </component>
                 </component>
             </result>
@@ -66,6 +69,9 @@
                         <localStorage action="remove">
                             <assign key="cart"/>
                         </localStorage>
+                        <result>
+                            <component type="Alert" id="removeFromCartButtonAlert"/>
+                        </result>
                     </component>
                 </component>
             </result>
@@ -90,7 +96,7 @@
                         <text>Delete</text>
                         <resource method="DELETE">/pets/{id}</resource>
                         <result>
-                            <component type="Alert" id="deletePetFormAlert"/>
+                            <component type="Alert" id="deletePetButtonAlert"/>
                         </result>
                     </component>
                 </component>
@@ -120,14 +126,4 @@
         </component>
     </page>
 
-    <page name="DeletePet" route="/deletePet/{id}" navbar="false">
-        <component type="Form" id="deletePetForm">
-            <resource method="DELETE">/pets/{id}</resource>
-            <text>Delete Pet</text>
-            <submit>Delete Pet</submit>
-            <result>
-                <component type="Alert" id="deletePetFormAlert"/>
-            </result>
-        </component>
-    </page>
 </pages>

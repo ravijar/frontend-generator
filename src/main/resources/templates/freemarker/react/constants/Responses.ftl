@@ -24,4 +24,11 @@ ${indent}};
         <#include responses>
     </#list>
 </#if>
+<#if component.resultComponent??>
+    <#if component.resultComponent.subComponents??>
+        <#list component.resultComponent.subComponents as component>
+            <#include responses>
+        </#list>
+    </#if>
+</#if>
 

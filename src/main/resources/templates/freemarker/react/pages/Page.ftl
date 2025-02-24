@@ -2,7 +2,9 @@
 
 <#assign useState = "/react/hooks/UseState.ftl">
 
+<#assign dependency = "/react/hooks/useEffect/Dependency.ftl">
 <#assign fetchOnInitEffect = "/react/hooks/useEffect/FetchOnInit.ftl">
+<#assign loadOnInitEffect = "/react/hooks/useEffect/LoadOnInit.ftl">
 <#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
 
 <#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">

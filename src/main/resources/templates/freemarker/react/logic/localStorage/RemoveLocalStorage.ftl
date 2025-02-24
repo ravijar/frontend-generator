@@ -9,7 +9,24 @@ ${indent}           ${component.localStorageKey}[itemIndex].count -= 1;
 ${indent}       } else {
 ${indent}           ${component.localStorageKey}.splice(itemIndex, 1);
 ${indent}       }
-${indent}       localStorage.setItem("${component.localStorageKey}", JSON.stringify(${component.localStorageKey}));
+${indent}       try {
+${indent}           localStorage.setItem("${component.localStorageKey}", JSON.stringify(${component.localStorageKey}));
+${indent}           set${component.id?cap_first}RemoveResponse((prevResponse) => ({
+${indent}               httpStatusCode: "200",
+${indent}               description: "Removed from ${component.localStorageKey?cap_first}!",
+${indent}               itemIndex: itemIndex,
+${indent}               count: prevResponse?.count !== undefined ? prevResponse.count + 1 : 0
+${indent}           }));
+${indent}           set${component.id?cap_first}ShowAlert(true);
+${indent}       } catch (error) {
+${indent}           set${component.id?cap_first}RemoveResponse((prevResponse) => ({
+${indent}               httpStatusCode: "500",
+${indent}               description: "Failed to remove from ${component.localStorageKey?cap_first}!",
+${indent}               itemIndex: itemIndex,
+${indent}               count: prevResponse?.count !== undefined ? prevResponse.count + 1 : 0
+${indent}           }));
+${indent}           set${component.id?cap_first}ShowAlert(true);
+${indent}       }
 ${indent}   }
 ${indent}};
 

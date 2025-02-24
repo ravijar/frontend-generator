@@ -31,7 +31,9 @@ public class ButtonPopulator extends ComponentPopulator{
         if(source.getResource() != null) {
             target.setAction("resource");
             target.setResource(openAPIParser.getResourceData(source.getResource()));
+        }
 
+        if(source.getResult() != null) {
             FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent(), target);
             freeMarkerComponent.setRole("result");
             target.setResultComponent(freeMarkerComponent);

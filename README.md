@@ -184,6 +184,8 @@ The configuration file is an XML document containing <pages> as the root element
 ```
 ![hero-section-gif.gif](docs/resources/documentation/hero-section-gif.gif)  
 
+_React Code_ - [`HeoSection.jsx`](src/main/resources/templates/react/components/HeroSection.jsx) | _Default Styling_ - [`Herosection.css`](src/main/resources/templates/css/components/HeroSection.css)
+
  ii. `Button` [Root/Child]
   - A button that supports various actions triggered on a click event.
   - **Functionality:**
@@ -232,7 +234,9 @@ The configuration file is an XML document containing <pages> as the root element
           </component>
           ```
       
-      ![button-gif.gif](docs/resources/documentation/button-gif.gif)  
+      ![button-gif.gif](docs/resources/documentation/button-gif.gif)
+
+      _React Code_ - [`Button.jsx`](src/main/resources/templates/react/components/Button.jsx) | _Default Styling_ - [`Button.css`](src/main/resources/templates/css/components/Button.css)
 
  iii. `Container` [Root/Child]
   - A **data-fetching** component that retrieves and displays information from a backend API or LocalStorage
@@ -272,6 +276,7 @@ The configuration file is an XML document containing <pages> as the root element
           </result>
       </component>
       ```
+_React Code_ - [`Container.jsx`](src/main/resources/templates/react/components/Container.jsx) | _Default Styling_ - [`Container.css`](src/main/resources/templates/css/components/Container.css)
 
  iv. `Form` [Root]
   - A form based on URL parameters and schema properties defined in an OpenAPI Specification (OAS) resource.
@@ -294,6 +299,8 @@ The configuration file is an XML document containing <pages> as the root element
 ```
 ![form-gif.gif](docs/resources/documentation/form-gif.gif) 
 
+_React Code_ - [`Form.jsx`](src/main/resources/templates/react/components/Form.jsx) | _Default Styling_ - [`Form.css`](src/main/resources/templates/css/components/Form.css)
+
  v. `SearchBar` [Root/Child]
   - A search bar component that fetches data from a specified resource.
   - **Functionality:**
@@ -310,8 +317,9 @@ The configuration file is an XML document containing <pages> as the root element
         </component>
     </result>
 </component>
-
 ```
+
+_React Code_ - [`SearchBar.jsx`](src/main/resources/templates/react/components/SearchBar.jsx) | _Default Styling_ - [`SearchBar.css`](src/main/resources/templates/css/components/SearchBar.css)
 
  vi. `CardSection` [Result]
   - Displays a list of cards, where each card contains an **image**, **a title**, and **a description** related to an item.
@@ -328,6 +336,8 @@ The configuration file is an XML document containing <pages> as the root element
 </result>
 ```
 ![card-section-gif.gif](docs/resources/documentation/card-section-gif.gif) 
+
+_React Code_ - [`CardSection.jsx`](src/main/resources/templates/react/components/CardSection.jsx) | _Default Styling_ - [`CardSection.css`](src/main/resources/templates/css/components/CardSection.css)
 
  vii. `Card` [Result]
   - Displays an image, a title, a description, and additional data in a structured format.
@@ -352,6 +362,8 @@ The configuration file is an XML document containing <pages> as the root element
 ```
 ![card-gif.gif](docs/resources/documentation/card-gif.gif) 
 
+_React Code_ - [`Card.jsx`](src/main/resources/templates/react/components/Card.jsx) | _Default Styling_ - [`Card.css`](src/main/resources/templates/css/components/Card.css)
+
  viii. `Alert` [Result]
   - Displays success or failure messages based on the API response.
   - **Functionality:**
@@ -364,6 +376,8 @@ The configuration file is an XML document containing <pages> as the root element
 </result>
 ```
 ![alert-gif.gif](docs/resources/documentation/alert-gif.gif) 
+
+_React Code_ - [`Alert.jsx`](src/main/resources/templates/react/components/Alert.jsx) | _Default Styling_ - [`Alert.css`](src/main/resources/templates/css/components/Alert.css)
 
  ix. `Table` [Result]
   - Displays data in a structured tabular format.
@@ -392,6 +406,8 @@ The configuration file is an XML document containing <pages> as the root element
 </result>
 ```
 ![table-gif.gif](docs/resources/documentation/table-gif.gif) 
+
+_React Code_ - [`Table.jsx`](src/main/resources/templates/react/components/Table.jsx) | _Default Styling_ - [`Table.css`](src/main/resources/templates/css/components/Table.css)
 
 4. Properties Tags
    

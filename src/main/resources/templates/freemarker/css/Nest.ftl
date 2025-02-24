@@ -38,7 +38,7 @@
             <#break>
         <#case "Alert">
     z-index: 10;
-    position: absolute;
+    position: fixed;
     top: 75px;
     right: 5px;
             <#break>

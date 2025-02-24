@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class FreeMarkerSearchBar extends FreeMarkerComponent{
+    private String action;
     private OpenAPIResource resource;
     private FreeMarkerComponent resultComponent;
 }

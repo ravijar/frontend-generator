@@ -24,7 +24,7 @@
 .custom-table thead {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 2;
     background-color: #f4f4f4;
 }
 

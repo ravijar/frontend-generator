@@ -5,6 +5,9 @@
             <#case "resource">
                 <#include fetchOnInitEffect>
                 <#break>
+            <#case "load">
+                <#include loadOnInitEffect>
+                <#break>
         </#switch>
         <#break>
 </#switch>

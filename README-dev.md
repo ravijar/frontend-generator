@@ -8,13 +8,12 @@ The framework automates the process of generating frontend components based on t
 This documentation provides an in-depth explanation of the architecture, key packages, and components of the FrontendGenerator Framework. It is intended for developers who wish to understand, extend, or maintain the codebase.
 
 ## Table of Contents
-- [Introduction](#1-introduction)
-- [Technology Stack](#2-technology-stack)
-- [Project Architecture](#3-project-architecture)
+- [Technology Stack](#1-technology-stack)
+- [Project Architecture](#2-project-architecture)
   - [High-Level Architecture](#high-level-architecture)
   - [Detailed Architecture](#detailed-architecture)
   - [Directory Structure](#directory-structure)
-- [Key Packages](#4-key-packages)
+- [Key Packages](#3-key-packages)
   - [com.ravjar.cli](#comravjarcli)
   - [com.ravjar.config](#comravjarconfig)
   - [com.ravjar.core](#comravjarcore)
@@ -24,14 +23,11 @@ This documentation provides an in-depth explanation of the architecture, key pac
   - [com.ravjar.model](#comravjarmodel)
   - [com.ravjar.parser](#comravjarparser)
   - [com.ravjar.populator](#comravjarpopulator)
-- [Execution Flow and Command Lifecycle](#5-execution-flow-and-command-lifecycle)
-- [Testing and Debugging](#6-testing-and-debugging)
-- [Future Enhancements](#7-future-enhancements)
+- [Execution Flow and Command Lifecycle](#4-execution-flow-and-command-lifecycle)
+- [Testing and Debugging](#5-testing-and-debugging)
+- [Future Enhancements](#6-future-enhancements)
 
-## 1. Introduction
-The FrontendGenerator automates the generation of React-based frontends using an OpenAPI Specification, Pages Configuration File, and User Customization Files. It bridges the gap between backend and frontend teams by streamlining UI creation through code generation.
-
-## 2. Technology Stack
+## 1. Technology Stack
 - **Language:** Java  
 - **Build Tool:** Maven  
 - **Code Generation:** Freemarker templates  
@@ -39,7 +35,7 @@ The FrontendGenerator automates the generation of React-based frontends using an
 - **Frontend Framework:** React (generated code)  
 - **Testing:** JUnit  
 
-## 3. Project Architecture
+## 2. Project Architecture
 ### High-Level Architecture
 ![high-level-architecture.png](docs/resources/documentation/high-level-architecture.png)
 ### Detailed Architecture
@@ -71,7 +67,7 @@ FrontendGeneratorJava/
 └── README-dev.md
 ```
 
-## 4. Key Packages
+## 3. Key Packages
 ### com.ravjar.core
 **Purpose:** Provides the entry point for executing CLI commands and manages project lifecycle operations such as initialization, frontend generation, and API integration.
 
@@ -146,7 +142,7 @@ FrontendGeneratorJava/
 ### com.ravjar.populator
 **Purpose:** Handles the transformation of XML-defined components into FreeMarker-based models by mapping attributes and assigning values.
 
-## 5. Execution Flow and Command Lifecycle
+## 4. Execution Flow and Command Lifecycle
 
 ### I. Initialization (init --name <project name>)
 
@@ -190,12 +186,12 @@ Steps:
 
 The generated files (React components, API integrations, and CSS) are placed in the build/ folder.
 
-## 6. Testing and Debugging
+## 5. Testing and Debugging
 - **Unit Tests:** Located in `test/`.
 - **Logging:** Uses `java.util.logging`.
 - **Error Handling:** Custom exceptions for invalid inputs.
 
-## 7. Future Enhancements
+## 6. Future Enhancements
 - Support additional frontend frameworks (Angular, Vue).
 - Introduce more component types.
 - Improve CLI interactivity.

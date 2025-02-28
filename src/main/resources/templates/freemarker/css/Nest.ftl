@@ -2,9 +2,9 @@
 <#switch component.type>
     <#case "SearchBar">
     z-index: 1;
-    position: absolute;
-    top: 60px;
-    right: 30px;
+    margin: 10px 10px 0 0;
+    display: flex;
+    justify-content: flex-end;
         <#break>
     <#case "Button">
         <#switch component.role>
@@ -18,9 +18,9 @@
         <#break>
     <#case "Form">
     z-index: 1;
-    position: absolute;
-    top: 60px;
-    left:35%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
         <#break>
     <#default>
 
@@ -32,13 +32,13 @@
     <#switch component.resultComponent.type>
         <#case "Card">
     z-index: 1;
-    position: absolute;
-    top: 100px;
-    left:25%;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
             <#break>
         <#case "Alert">
-    z-index: 1;
-    position: absolute;
+    z-index: 10;
+    position: fixed;
     top: 75px;
     right: 5px;
             <#break>

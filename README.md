@@ -25,6 +25,7 @@ The **OpenAPI Specification (OAS)** has emerged as the standard for describing R
 
 By leveraging the OAS as a central standard, the **Automatic Frontend Generation Framework** ensures that frontends are consistent with their respective APIs. This integration eliminates common issues caused by misaligned backend and frontend implementations, paving the way for streamlined development workflows.
 
+### Refer to the [Technical Documentation](README-dev.md) for detailed development guidelines.
 
 ## Getting Started
 
@@ -35,18 +36,20 @@ By leveraging the OAS as a central standard, the **Automatic Frontend Generation
 - **Node.js**: Users must have Node.js installed to run the framework.
 - **OpenAPI Version**: Supports OpenAPI versions 3.0.x and 3.1.0.
 
+> **Note:** Maven is only required if you are building the project from source. If you are using the pre-built `.jar` file, you can skip Maven installation.
+
 ### Input Files
 The framework requires the following input files to function:
 - **[OpenAPI Specification](#i-openapi-specification)**: The OpenAPI Specification used as input must be tailored to include specific extensions and configurations required by the framework.
 - **[Pages Configuration File](#ii-pages-configuration-file)**: Defines the structure, layout, and components of the frontend pages, including API endpoints and navigation details.
 - **[User Customization Files](#iii-user-customization-files)**: Predefined and customizable styles for components and pages.
 
-#### Download and Build the Framework
+#### Download and Build the Framework 
 - **Clone the Repository**
 - **Build the Project** : Run the commands **'mvn clean'** and **'mvn install'** to clean, build, and install the project.
 - **Locate the .jar File** : Navigate to the **target** folder.
 
-Refer to the [Technical Documentation](README-dev.md) for detailed development guidelines..
+**Alternatively, you can download the latest release of the framework `.jar` file**.
 
 ### 1. Run the Initialization Command
 - Use the following command to initialize the project:

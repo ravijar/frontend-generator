@@ -25,6 +25,7 @@ The **OpenAPI Specification (OAS)** has emerged as the standard for describing R
 
 By leveraging the OAS as a central standard, the **Automatic Frontend Generation Framework** ensures that frontends are consistent with their respective APIs. This integration eliminates common issues caused by misaligned backend and frontend implementations, paving the way for streamlined development workflows.
 
+### Refer to the [Technical Documentation](README-dev.md) for detailed development guidelines.
 
 ## Getting Started
 
@@ -45,8 +46,6 @@ The framework requires the following input files to function:
 - **Clone the Repository**
 - **Build the Project** : Run the commands **'mvn clean'** and **'mvn install'** to clean, build, and install the project.
 - **Locate the .jar File** : Navigate to the **target** folder.
-
-Refer to the [Technical Documentation](README-dev.md) for detailed development guidelines..
 
 ### 1. Run the Initialization Command
 - Use the following command to initialize the project:

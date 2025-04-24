@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="WARN">
+    <Properties>
+        <Property name="log4j.skipJansi">false</Property>
+    </Properties>
+
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%level] %msg%n"/>
+            <PatternLayout
+                    pattern="[%highlight{%level}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=magenta}] %msg%n"
+                    disableAnsi="false"
+            />
         </Console>
+
+        <File name="File" fileName="logs/application.log" append="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
     </Appenders>
+
     <Loggers>
-        <Root level="info">
+        <Logger name="entryLogger" additivity="false">
             <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Root level="trace">
+            <AppenderRef ref="Console" level="INFO"/>
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -1,0 +1,27 @@
+.search-bar {
+    display: flex;
+    align-items: center;
+    max-width: 250px;
+    border-radius: 20px;
+    border: 2px solid #1A1A1A;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.search-input {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    border: none;
+    outline: none;
+}
+
+.search-button {
+    background-color: white;
+    flex-grow: 1;
+    border: none;
+    padding: 11px 10px;
+    font-family: inherit;
+    cursor: pointer;
+}

@@ -1,0 +1,70 @@
+{
+  "templateMappings": [
+    {
+      "name": "React Components",
+      "sourceFolder": "/react/components/",
+      "destinationFolder": "/build/src/components/",
+      "extension": ".jsx",
+      "templates": [
+        "InputField",
+        "KeyValuePair",
+        "RecursiveKeyValuePair",
+        "Alert",
+        "HeroSection",
+        "SearchBar",
+        "Button",
+        "CardSection",
+        "Card",
+        "Table"
+      ]
+    },
+    {
+      "name": "React Common",
+      "sourceFolder": "/react/common/",
+      "destinationFolder": "/build/src/common/",
+      "extension": ".js",
+      "templates": [
+        "Utils"
+      ]
+    },
+    {
+      "name": "CSS Components",
+      "sourceFolder": "/css/components/",
+      "destinationFolder": "/styles/components/",
+      "extension": ".css",
+      "templates": [
+        "InputField",
+        "KeyValuePair",
+        "Alert",
+        "HeroSection",
+        "SearchBar",
+        "Button",
+        "CardSection",
+        "NavBar",
+        "Form",
+        "Card",
+        "Table"
+      ]
+    },
+    {
+      "name": "CSS Common",
+      "sourceFolder": "/css/common/",
+      "destinationFolder": "/styles/",
+      "extension": ".css",
+      "templates": [
+        "App",
+        "index"
+      ]
+    },
+    {
+      "name": "Project Templates",
+      "sourceFolder": "/project/",
+      "destinationFolder": "/",
+      "extension": "",
+      "templates": [
+        "openapi.yaml",
+        "pages.xml"
+      ]
+    }
+  ]
+}

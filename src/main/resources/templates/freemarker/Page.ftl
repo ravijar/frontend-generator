@@ -1,3 +1,7 @@
+<#--
+  @Deprecated since January 10, 2025.
+-->
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createConfiguration, DefaultApi } from "../client_api";

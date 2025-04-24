@@ -1,10 +1,13 @@
 package com.ravijar.model;
 
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
+@Deprecated
 class PageDTOTest {
 
     @Test

@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Deprecated
 public class ResponseDTO {
     private String code;
     private String description;

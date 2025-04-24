@@ -1,11 +1,14 @@
 .alert {
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: 15px 20px;
     border: 1px solid transparent;
     border-radius: 4px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    max-width: 300px;
 }
 
 .alert-success {
@@ -23,29 +26,50 @@
 .alert-content {
     display: flex;
     align-items: center;
-    width: 100%;
     justify-content: space-between;
+    width: 100%;
 }
 
-.alert-status-code {
-    font-size: 18px;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 4px;
+.alert-icon {
+    font-size: 30px;
     margin-right: 10px;
-    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.alert-icon-success {
+    color: #28a745;
+}
+
+.alert-icon-error {
+    color: #dc3545;
 }
 
 .alert-message {
-    font-size: 16px;
+    font-size: 14px;
     flex-grow: 1;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .alert-close-button {
-    background: none;
+    background-color: inherit;
     border: none;
     font-size: 20px;
     cursor: pointer;
     line-height: 20px;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+
+.alert-close-button:hover {
+    border-radius: 20px;
+    background-color: rgba(26, 26, 26, 0.15);
+}
+
+.alert-progress-bar {
+    height: 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: width 0.1s linear;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }

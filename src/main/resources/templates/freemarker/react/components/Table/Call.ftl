@@ -5,7 +5,7 @@
 ${indent}<div className="${component.styleId}-container">
         <#switch component.parent.action>
             <#case "resource">
-${indent}    {${component.parent.id}Fetched && (
+${indent}    {${component.parent.id}Fetched && ${component.parent.id}FetchResponse.data[0] && (
 ${indent}       <Table
 ${indent}           styles={styles.${component.id}}
 ${indent}           columns={Object.keys(${component.parent.id}FetchResponse.data[0])}

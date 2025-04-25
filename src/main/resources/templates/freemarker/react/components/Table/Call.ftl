@@ -18,6 +18,7 @@ ${indent}       </Table>
 ${indent}    )}
                 <#break>
             <#case "load">
+${indent}    {load${component.parent.localStorageKey?cap_first}()[0] && (
 ${indent}       <Table
 ${indent}           styles={styles.${component.id}}
 ${indent}           columns={Object.keys(load${component.parent.localStorageKey?cap_first}()[0])}
@@ -26,6 +27,7 @@ ${indent}           rowKey="${component.rowKey}"
 ${indent}       >
                 <#include nestCall>
 ${indent}       </Table>
+${indent}    )}
                 <#break>
         </#switch>
 ${indent}</div>

@@ -24,7 +24,8 @@
       "destinationFolder": "/build/src/common/",
       "extension": ".js",
       "templates": [
-        "Utils"
+        "Utils",
+        "ClientAPIWrapper"
       ]
     },
     {
@@ -64,6 +65,34 @@
       "templates": [
         "openapi.yaml",
         "pages.xml"
+      ]
+    },
+    {
+      "name": "React Auth",
+      "sourceFolder": "/react/auth/",
+      "destinationFolder": "/build/src/auth/",
+      "extension": ".jsx",
+      "templates": [
+        "AuthProvider",
+        "RequireAuth"
+      ]
+    },
+    {
+      "name": "React Pages",
+      "sourceFolder": "/react/pages/",
+      "destinationFolder": "/build/src/pages/",
+      "extension": ".jsx",
+      "templates": [
+        "Login"
+      ]
+    },
+    {
+      "name": "CSS Pages",
+      "sourceFolder": "/css/pages/",
+      "destinationFolder": "/styles/pages/",
+      "extension": ".css",
+      "templates": [
+        "Login"
       ]
     }
   ]

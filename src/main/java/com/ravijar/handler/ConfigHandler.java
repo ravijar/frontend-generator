@@ -83,5 +83,30 @@ public class ConfigHandler {
             return null;
         }
     }
+
+    public boolean isProjectInitialized() {
+        File configFile = new File(filePath);
+        if (!configFile.exists()) {
+            return false;
+        }
+        
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream(configFile)) {
+            properties.load(fis);
+            return properties.getProperty("projectName") != null;
+        } catch (IOException e) {
+            logger.error("Failed to check project initialization status: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    public void clearConfiguration() {
+        File configFile = new File(filePath);
+        if (configFile.exists()) {
+            if (!configFile.delete()) {
+                logger.error("Failed to delete existing configuration file");
+            }
+        }
+    }
 }
 

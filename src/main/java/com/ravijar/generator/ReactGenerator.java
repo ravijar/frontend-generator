@@ -23,6 +23,7 @@ public class ReactGenerator {
     private final Map<String, List<OpenAPISchemaProperty>> schemas;
     private final CSSGenerator cssGenerator;
     private final JSGenerator jsGenerator;
+    private final List<FreeMarkerPage> freeMarkerPages;
 
     public ReactGenerator(Configuration cfg, OpenAPIParser openAPIParser) {
         this.cfg = cfg;
@@ -30,21 +31,11 @@ public class ReactGenerator {
         this.jsGenerator = new JSGenerator(cfg);
         this.openAPIParser = openAPIParser;
         this.schemas = openAPIParser.getSchemas();
+        this.freeMarkerPages = new ArrayList<>();
     }
 
-    public void generateAppPage(String outputDir, List<Page> pages) throws IOException, TemplateException {
+    public void generateAppPage(String outputDir) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
-
-        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
-        for (Page page : pages) {
-            freeMarkerPages.add(new FreeMarkerPage(
-                    page.getName(),
-                    page.getRoute(),
-                    StringHelper.toColonRoute(page.getRoute()),
-                    StringHelper.extractUrlParameter(page.getRoute()),
-                    null
-            ));
-        }
         dataModel.put("pages", freeMarkerPages);
 
         Template template = cfg.getTemplate("react/pages/App.ftl");
@@ -53,22 +44,16 @@ public class ReactGenerator {
         }
     }
 
-    public void generateNavBar(String outputDir, List<Page> pages) throws IOException, TemplateException {
+    public void generateNavBar(String outputDir) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
 
-        List<FreeMarkerPage> freeMarkerPages = new ArrayList<>();
-        for (Page page : pages) {
-            if (page.isNavbar()) {
-                freeMarkerPages.add(new FreeMarkerPage(
-                        page.getName(),
-                        page.getRoute(),
-                        StringHelper.toColonRoute(page.getRoute()),
-                        StringHelper.extractUrlParameter(page.getRoute()),
-                        null
-                ));
+        List<FreeMarkerPage> navBarPages = new ArrayList<>();
+        for (FreeMarkerPage page : freeMarkerPages) {
+            if (page.isVisibleInNavBar()) {
+                navBarPages.add(page);
             }
         }
-        dataModel.put("pages", freeMarkerPages);
+        dataModel.put("pages", navBarPages);
 
         Template template = cfg.getTemplate("react/components/NavBar/Generate.ftl");
         try (Writer fileWriter = new FileWriter(outputDir + "/NavBar.jsx")) {
@@ -101,6 +86,7 @@ public class ReactGenerator {
         }
 
         dataModel.put("page", freeMarkerPage);
+        freeMarkerPages.add(freeMarkerPage);
 
         Template template = cfg.getTemplate("react/pages/Page.ftl");
         try (Writer fileWriter = new FileWriter(pageOutputDir + "/" + page.getName() + ".jsx")) {

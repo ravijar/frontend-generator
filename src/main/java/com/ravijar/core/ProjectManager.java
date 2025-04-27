@@ -88,8 +88,8 @@ public class ProjectManager {
                         page
                 );
             }
-            reactGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
-            reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
+            reactGenerator.generateAppPage(appOutputDir.getAbsolutePath());
+            reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath());
             applyUserStyles();
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());

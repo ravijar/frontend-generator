@@ -4,12 +4,14 @@ import com.ravijar.helper.PopulatorHelper;
 import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.FreeMarkerButton;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
+import com.ravijar.model.freemarker.FreeMarkerPage;
+import com.ravijar.model.openapi.OpenAPIResource;
 import com.ravijar.model.xml.component.Button;
 import com.ravijar.parser.OpenAPIParser;
 
 public class ButtonPopulator extends ComponentPopulator{
-    public ButtonPopulator(OpenAPIParser openAPIParser) {
-        super(openAPIParser);
+    public ButtonPopulator(OpenAPIParser openAPIParser, FreeMarkerPage page) {
+        super(openAPIParser, page);
     }
 
     public void populate(Button source, FreeMarkerButton target) {
@@ -29,12 +31,16 @@ public class ButtonPopulator extends ComponentPopulator{
         }
 
         if(source.getResource() != null) {
+            OpenAPIResource openAPIResource = openAPIParser.getResourceData(source.getResource());
+
             target.setAction("resource");
-            target.setResource(openAPIParser.getResourceData(source.getResource()));
+            target.setResource(openAPIResource);
+
+            if(openAPIResource.isSecured() && !page.isSecured()) page.setSecured(true);
         }
 
         if(source.getResult() != null) {
-            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(source.getResult().getComponent(), target);
+            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser, page).switchComponent(source.getResult().getComponent(), target);
             freeMarkerComponent.setRole("result");
             target.setResultComponent(freeMarkerComponent);
         }

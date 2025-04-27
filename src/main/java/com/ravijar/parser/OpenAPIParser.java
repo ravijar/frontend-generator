@@ -2,10 +2,7 @@ package com.ravijar.parser;
 
 import com.ravijar.helper.OpenAPIConverter;
 import com.ravijar.model.PageDTO;
-import com.ravijar.model.openapi.OpenAPIParameter;
-import com.ravijar.model.openapi.OpenAPIResource;
-import com.ravijar.model.openapi.OpenAPIResponse;
-import com.ravijar.model.openapi.OpenAPISchemaProperty;
+import com.ravijar.model.openapi.*;
 import com.ravijar.model.xml.Resource;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -250,6 +247,47 @@ public class OpenAPIParser {
         return schemas;
     }
 
+    public Map<String, OpenAPISecurityScheme> getSecuritySchemes() {
+        if (openAPIData == null || openAPIData.getComponents() == null || openAPIData.getComponents().getSecuritySchemes() == null) {
+            logger.error("No security schemes found in OpenAPI specification.");
+            return Collections.emptyMap();
+        }
+
+        Map<String, OpenAPISecurityScheme> securitySchemes = new HashMap<>();
+
+        openAPIData.getComponents().getSecuritySchemes().forEach((name, securityScheme) -> {
+            if ("oauth2".equalsIgnoreCase(securityScheme.getType().toString())) {
+                OpenAPISecurityScheme scheme = new OpenAPISecurityScheme(
+                        securityScheme.getType().toString(),
+                        securityScheme.getFlows().getAuthorizationCode().getAuthorizationUrl(),
+                        securityScheme.getFlows().getAuthorizationCode().getTokenUrl(),
+                        securityScheme.getFlows().getAuthorizationCode().getScopes()
+                );
+                securitySchemes.put(name, scheme);
+            }
+        });
+
+        return securitySchemes;
+    }
+
+    public List<OpenAPISecurityRequirement> getSecurityRequirementsForOperation(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+        if (operation == null || operation.getSecurity() == null) {
+            logger.info("No security requirements found for path: {} {}", method, path);
+            return Collections.emptyList();
+        }
+
+        List<OpenAPISecurityRequirement> securityRequirements = new ArrayList<>();
+
+        operation.getSecurity().forEach(securityRequirement -> {
+            securityRequirement.forEach((schemeName, scopes) -> {
+                securityRequirements.add(new OpenAPISecurityRequirement(schemeName, scopes));
+            });
+        });
+
+        return securityRequirements;
+    }
+
     public String getOperationId(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
         if (operation == null) {
@@ -284,6 +322,7 @@ public class OpenAPIParser {
         List<OpenAPIParameter> urlParameters = getParameters(url, httpMethod);
         String requestSchema = getRequestSchema(url, httpMethod);
         Set<String> responseCodes = getResponseCodes(url, httpMethod);
+        List<OpenAPISecurityRequirement> securityRequirements = getSecurityRequirementsForOperation(url, httpMethod);
 
         List<OpenAPISchemaProperty> requestParameters;
         requestParameters = getSchemas().get(requestSchema);
@@ -303,7 +342,7 @@ public class OpenAPIParser {
             responses.add(new OpenAPIResponse(code, schemaName, type, description, getSchemas().get(schemaName)));
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
+        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses, securityRequirements);
     }
 
     @Deprecated

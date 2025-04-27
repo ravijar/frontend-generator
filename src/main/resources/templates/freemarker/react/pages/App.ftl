@@ -9,9 +9,11 @@ import RequireAuth from "./auth/RequireAuth";
 import { AuthProvider } from "./auth/AuthProvider";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 export default function App() {
     return (
-        <GoogleOAuthProvider clientId="948644417289-8jibkpafdnf2ael8inekh5q4cqlc2h9d.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={clientId}>
             <AuthProvider>
                 <BrowserRouter>
                     <NavBar />

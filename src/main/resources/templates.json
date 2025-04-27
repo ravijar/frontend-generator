@@ -64,7 +64,8 @@
       "extension": "",
       "templates": [
         "openapi.yaml",
-        "pages.xml"
+        "pages.xml",
+        ".env"
       ]
     },
     {

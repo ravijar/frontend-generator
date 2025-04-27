@@ -76,6 +76,8 @@ public class ProjectManager {
         File userStylesDir = new File(projectName + "\\styles");
         this.fileHandler.createDirectoryIfNotExists(userStylesDir);
 
+        this.fileHandler.copyFile(new File(projectName + "\\.env"), new File(projectName + "\\build\\.env"));
+
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactGenerator reactGenerator = new ReactGenerator(cfg, openAPIParser);

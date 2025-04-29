@@ -12,38 +12,46 @@ paths:
     get:
       summary: Get all pets
       operationId: getAllPets
+      security: []
       responses:
-        '200':
+        "200":
           description: A list of pets
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pet'
+                  $ref: "#/components/schemas/Pet"
 
     post:
       summary: Create a new pet
       operationId: createPet
+      security:
+        - googleOAuth: [admin]
       requestBody:
         description: Pet object that needs to be added to the store
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: "#/components/schemas/Pet"
       responses:
-        '201':
+        "201":
           description: Pet created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: "#/components/schemas/Pet"
+        "403":
+          description: Forbidden - Requires admin access
+        "401":
+          description: Unauthorized - Missing or invalid token
 
   /pets/{id}:
     get:
       summary: Get a pet by ID
       operationId: getPetById
+      security: []
       parameters:
         - name: id
           in: path
@@ -54,18 +62,20 @@ paths:
             format: int64
           x-displayName: ID
       responses:
-        '200':
+        "200":
           description: Pet found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
-        '404':
+                $ref: "#/components/schemas/Pet"
+        "404":
           description: Pet not found
 
     put:
       summary: Update a pet by ID
       operationId: updatePet
+      security:
+        - googleOAuth: [admin]
       parameters:
         - name: id
           in: path
@@ -81,20 +91,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: "#/components/schemas/Pet"
       responses:
-        '200':
+        "200":
           description: Pet updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
-        '404':
+                $ref: "#/components/schemas/Pet"
+        "403":
+          description: Forbidden - Requires admin access
+        "401":
+          description: Unauthorized - Missing or invalid token
+        "404":
           description: Pet not found
 
     delete:
       summary: Delete a pet by ID
       operationId: deletePet
+      security:
+        - googleOAuth: [admin]
       parameters:
         - name: id
           in: path
@@ -105,9 +121,13 @@ paths:
             format: int64
           x-displayName: ID
       responses:
-        '204':
+        "204":
           description: Pet deleted successfully
-        '404':
+        "403":
+          description: Forbidden - Requires admin access
+        "401":
+          description: Unauthorized - Missing or invalid token
+        "404":
           description: Pet not found
 
 components:
@@ -135,3 +155,15 @@ components:
           type: string
           description: Image of the pet
           x-displayName: Image URL
+
+  securitySchemes:
+    googleOAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.google.com/o/oauth2/auth
+          tokenUrl: https://oauth2.googleapis.com/token
+          scopes:
+            guest: "Access as a guest (no authentication required)"
+            user: "Registered user access"
+            admin: "Administrator access"

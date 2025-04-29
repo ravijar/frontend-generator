@@ -2,12 +2,13 @@ package com.ravijar.populator;
 
 import com.ravijar.helper.StringHelper;
 import com.ravijar.model.freemarker.FreeMarkerCardSection;
+import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.xml.component.CardSection;
 import com.ravijar.parser.OpenAPIParser;
 
 public class CardSectionPopulator extends ComponentPopulator{
-    public CardSectionPopulator(OpenAPIParser openAPIParser) {
-        super(openAPIParser);
+    public CardSectionPopulator(OpenAPIParser openAPIParser, FreeMarkerPage page) {
+        super(openAPIParser, page);
     }
 
     public void populate(CardSection source, FreeMarkerCardSection target) {

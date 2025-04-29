@@ -8,7 +8,6 @@ import com.ravijar.handler.ConfigHandler;
 import com.ravijar.handler.FileHandler;
 import com.ravijar.parser.OpenAPIParser;
 import com.ravijar.parser.XMLParser;
-import com.ravijar.model.PageDTO;
 import com.ravijar.model.xml.Page;
 import com.ravijar.validators.XMLValidator;
 import freemarker.template.Configuration;
@@ -35,11 +34,10 @@ public class ProjectManager {
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
     private final ConfigHandler configHandler;
-    private final String[] cssComponentTemplates = {"InputField", "KeyValuePair", "Alert", "HeroSection", "SearchBar", "Button", "CardSection", "NavBar", "Form"};
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
-    private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common"};
-    private final String[] npmPackages = {"react-router-dom", "@fortawesome/react-fontawesome", "@fortawesome/free-regular-svg-icons", "@fortawesome/free-solid-svg-icons"};
-    private static final String SOURCE_ROOT_PATH="templates";
+    private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common", "build/src/auth"};
+    private final String[] npmPackages = {"react-router-dom", "@fortawesome/react-fontawesome", "@fortawesome/free-regular-svg-icons", "@fortawesome/free-solid-svg-icons", "@react-oauth/google"};
+    private static final String SOURCE_ROOT_PATH = "templates";
 
     public ProjectManager() {
         this.fileHandler = new FileHandler();
@@ -56,7 +54,7 @@ public class ProjectManager {
     }
 
     public boolean generateFrontend() {
-        if(!setProjectNameFromConfig()) return false;
+        if (!setProjectNameFromConfig()) return false;
 
         logger.info("Generating Frontend...");
 
@@ -78,6 +76,8 @@ public class ProjectManager {
         File userStylesDir = new File(projectName + "\\styles");
         this.fileHandler.createDirectoryIfNotExists(userStylesDir);
 
+        this.fileHandler.copyFile(new File(projectName + "\\.env"), new File(projectName + "\\build\\.env"));
+
         try {
             Configuration cfg = freeMarkerConfig.getConfiguration();
             ReactGenerator reactGenerator = new ReactGenerator(cfg, openAPIParser);
@@ -90,8 +90,8 @@ public class ProjectManager {
                         page
                 );
             }
-            reactGenerator.generateAppPage(appOutputDir.getAbsolutePath(), pages);
-            reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath(), pages);
+            reactGenerator.generateAppPage(appOutputDir.getAbsolutePath());
+            reactGenerator.generateNavBar(componentOutputDir.getAbsolutePath());
             applyUserStyles();
         } catch (IOException | TemplateException e) {
             logger.error(e.getMessage());
@@ -103,7 +103,7 @@ public class ProjectManager {
     }
 
     public boolean generateClientAPI() {
-        if(!setProjectNameFromConfig()) return false;
+        if (!setProjectNameFromConfig()) return false;
 
         logger.info("Generating ClientAPI...");
 
@@ -118,7 +118,7 @@ public class ProjectManager {
     }
 
     public boolean applyUserStyles() {
-        if(!setProjectNameFromConfig()) return false;
+        if (!setProjectNameFromConfig()) return false;
 
         logger.info("Applying User Styles... ");
 
@@ -199,7 +199,7 @@ public class ProjectManager {
     }
 
     public boolean runProject() {
-        if(!setProjectNameFromConfig()) return false;
+        if (!setProjectNameFromConfig()) return false;
 
         this.commandHandler.runReactApp(getProjectName());
 
@@ -207,9 +207,9 @@ public class ProjectManager {
     }
 
     public boolean generateAll() {
-        if(!setProjectNameFromConfig()) return false;
-        boolean isValid=validateXML(projectName+"\\pages.xml");
-        if(!isValid) return false;
+        if (!setProjectNameFromConfig()) return false;
+        boolean isValid = validateXML(projectName + "\\pages.xml");
+        if (!isValid) return false;
         logger.info("Generating ClientAPI and Frontend...");
         generateFrontend();
         generateClientAPI();
@@ -217,15 +217,15 @@ public class ProjectManager {
     }
 
     public boolean test() {
-        if(!setProjectNameFromConfig()) return false;
+        if (!setProjectNameFromConfig()) return false;
 
         logger.info("Starting Testing...");
 
         return true;
     }
 
-    public boolean validateXML(String xmlPath){
-        XMLValidator xmlValidator=new XMLValidator();
+    public boolean validateXML(String xmlPath) {
+        XMLValidator xmlValidator = new XMLValidator();
         try {
             xmlValidator.isValid(xmlPath);
             logger.info("XML Validated!");
@@ -234,66 +234,9 @@ public class ProjectManager {
             logger.error("Invalid XML File!");
             logger.error(e.getMessage());
             return false;
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             return false;
-        }
-    }
-
-    @Deprecated
-    private void copyUserFiles() {
-        String buildSrcDir = projectName + "\\build\\src\\";
-        String stylesDir = projectName + "\\styles\\";
-
-        for (String cssTemplate : cssComponentTemplates) {
-            File sourceFile = new File(stylesDir + "components\\" + cssTemplate + ".css");
-            if (cssTemplate.equals("Page")) {
-                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "pages\\" + cssTemplate + ".css"));
-            } else {
-                fileHandler.copyFile(sourceFile, new File(buildSrcDir + "components\\" + cssTemplate + ".css"));
-            }
-        }
-
-        fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
-
-        fileHandler.copyAllFilesFromDirectory(new File(stylesDir + "pages"), new File(buildSrcDir + "customStyles"));
-    }
-
-    @Deprecated
-    private void generatePages(List<PageDTO> pageDTOs) {
-        FreeMarkerConfig freeMarkerConfig = new FreeMarkerConfig();
-        OpenAPIParser openAPIParser = new OpenAPIParser(projectName + "\\openapi.yaml");
-
-        File pageOutputDir = new File(projectName + "\\build\\src\\pages");
-        if (!pageOutputDir.exists()) {
-            pageOutputDir.mkdirs();
-        }
-
-        File appOutputDir = new File(projectName + "\\build\\src");
-        if (!appOutputDir.exists()) {
-            appOutputDir.mkdirs();
-        }
-
-        try {
-            Configuration cfg = freeMarkerConfig.getConfiguration();
-            ReactGenerator reactGenerator = new ReactGenerator(cfg, openAPIParser);
-
-            for (PageDTO pageDTO : pageDTOs) {
-                reactGenerator.createPage(pageOutputDir.getAbsolutePath(), pageDTO);
-            }
-            reactGenerator.updateAppPage(appOutputDir.getAbsolutePath(), pageDTOs);
-        } catch (IOException | TemplateException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    @Deprecated
-    private void checkCustomStyleFiles(List<PageDTO> pageDTOs) {
-        for (PageDTO pageDTO : pageDTOs) {
-            File customStyleFile = new File(projectName + "\\styles\\pages\\" + pageDTO.getPageName() + "Styles.js");
-            if (customStyleFile.exists()) {
-                pageDTO.setCustomStyled(true);
-            }
         }
     }
 }

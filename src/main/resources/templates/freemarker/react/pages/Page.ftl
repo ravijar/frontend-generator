@@ -73,7 +73,8 @@
 <#assign nestState = "/react/components/common/nest/State.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createConfiguration, DefaultApi } from "../client_api";
+import { createApiClient } from "../common/ClientAPIWrapper.js";
+import { useAuth } from "../auth/AuthProvider.jsx";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
@@ -101,8 +102,8 @@ export default function ${page.name?cap_first}() {
     const navigate = useNavigate();
     <#if page.urlParameter??>const { ${page.urlParameter} } = useParams();</#if>
 
-    const configuration = createConfiguration();
-    const clientApi = new DefaultApi(configuration);
+    const { token } = useAuth();
+    const clientApi = createApiClient(token);
 
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>

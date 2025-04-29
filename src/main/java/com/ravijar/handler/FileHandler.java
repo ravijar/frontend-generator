@@ -129,4 +129,85 @@ public class FileHandler {
         }
     }
 
+    public void cleanupProjectDirectory(String projectPath) {
+        logger.info("Cleaning up project directory...");
+        
+        File projectDir = new File(projectPath);
+        if (projectDir.exists()) {
+            try {
+                if (!projectDir.canWrite()) {
+                    logger.error("No write permissions for directory: {}", projectDir.getAbsolutePath());
+                    return;
+                }
+                boolean success = deleteDirectory(projectDir);
+                if (success) {
+                    logger.info("Project directory cleaned up successfully.");
+                } else {
+                    logger.error("Failed to completely clean up project directory. Some files may remain.");
+                }
+            } catch (Exception e) {
+                logger.error("Error during project cleanup: {}", e.getMessage());
+            }
+        } else {
+            logger.warn("Project directory {} does not exist", projectPath);
+        }
+    }
+
+    private boolean deleteDirectory(File directory) {
+        boolean success = true;
+        
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    if (!file.canWrite()) {
+                        logger.error("No write permissions for: {}", file.getAbsolutePath());
+                        success = false;
+                        continue;
+                    }
+                    
+                    if (file.isDirectory()) {
+                        success = deleteDirectory(file) && success;
+                    } else {
+                        // Try multiple times in case file is locked
+                        for (int i = 0; i < 3; i++) {
+                            if (file.delete()) {
+                                break;
+                            }
+                            if (i < 2) {
+                                Thread.sleep(100); // Wait briefly before retry
+                            } else {
+                                logger.error("Failed to delete file after retries: {}", file.getAbsolutePath());
+                                success = false;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Error deleting {}: {}", file.getAbsolutePath(), e.getMessage());
+                    success = false;
+                }
+            }
+        }
+        
+        try {
+            // Try to delete the directory itself
+            for (int i = 0; i < 3; i++) {
+                if (directory.delete()) {
+                    break;
+                }
+                if (i < 2) {
+                    Thread.sleep(100); // Wait briefly before retry
+                } else {
+                    logger.error("Failed to delete directory after retries: {}", directory.getAbsolutePath());
+                    success = false;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting directory {}: {}", directory.getAbsolutePath(), e.getMessage());
+            success = false;
+        }
+        
+        return success;
+    }
+
 }

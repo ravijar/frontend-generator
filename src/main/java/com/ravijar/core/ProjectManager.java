@@ -18,8 +18,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class ProjectManager {
@@ -95,7 +97,7 @@ public class ProjectManager {
             logger.error(e.getMessage());
         }
 
-        logger.info("✔ Frontend Generated Successfully!");
+        logger.info("Frontend Generated Successfully!");
 
         return true;
     }
@@ -110,7 +112,7 @@ public class ProjectManager {
         File outputDir = new File(projectName + "\\build\\src\\client_api");
         clientAPIGenerator.generateClientAPI(specDir, outputDir, "typescript");
 
-        logger.info("✔ Client API Generated Successfully!");
+        logger.info("Client API Generated Successfully!");
 
         return true;
     }
@@ -129,13 +131,33 @@ public class ProjectManager {
         fileHandler.copyFile(new File(stylesDir + "index.css"), new File(buildSrcDir + "index.css"));
         fileHandler.copyFile(new File(stylesDir + "App.css"), new File(buildSrcDir + "App.css"));
 
-        logger.info("✔ User Styles Applied Successfully!");
+        logger.info("User Styles Applied Successfully!");
 
         return true;
     }
 
     public void initializeProject(String projectName) {
         logger.info("Project Initialization Started...");
+
+        // Check if project is already initialized
+        if (configHandler.isProjectInitialized()) {
+            logger.warn("Project is already initialized. Do you want to override? (yes/no)");
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                String response = reader.readLine().trim().toLowerCase();
+                
+                if (!response.equals("yes")) {
+                    logger.info("Initialization cancelled by user.");
+                    return;
+                }
+                
+                // Clean up existing project
+                cleanupExistingProject();
+            } catch (IOException e) {
+                logger.error("Error reading user input: {}", e.getMessage());
+                return;
+            }
+        }
 
         this.configHandler.createPropertiesFile(projectName);
         setProjectName(projectName);
@@ -159,7 +181,21 @@ public class ProjectManager {
 
         fileHandler.copyAllTemplates(SOURCE_ROOT_PATH, projectName);
 
-        logger.info("✔ Project initialized successfully!");
+        logger.info("Project initialized successfully!");
+    }
+
+    private void cleanupExistingProject() {
+        logger.info("Cleaning up existing project...");
+        
+        // Get the old project name before clearing configuration
+        String oldProjectName = this.configHandler.readProperty("projectName");
+        if (oldProjectName != null) {
+            // Clean up the old project directory
+            fileHandler.cleanupProjectDirectory(oldProjectName);
+        }
+        
+        // Clear configuration after cleanup
+        configHandler.clearConfiguration();
     }
 
     public boolean runProject() {

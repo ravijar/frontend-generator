@@ -95,6 +95,15 @@
       "templates": [
         "Login"
       ]
+    },
+    {
+      "name": "Assets",
+      "sourceFolder": "/assets/",
+      "destinationFolder": "/build/src/assets/",
+      "extension": "",
+      "templates": [
+        "google-logo.png"
+      ]
     }
   ]
 }

@@ -1,17 +1,25 @@
 .login-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: calc(100vh - 70px);
     background-color: #f9f9f9;
 }
 
-.login-message {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    padding: 2rem 3rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
     color: #333;
-    text-align: center;
 }
 
 .google-login-button {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { GoogleOAuthProvider, googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 
 const AuthContext = createContext(null);
 
@@ -7,14 +7,21 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
 
-    const login = useGoogleLogin({
+    const loginGoogle = useGoogleLogin({
         onSuccess: (response) => {
             setToken(response.access_token);
             setUser(response);
+            if (loginCallback) loginCallback();
         },
-        onError: (error) => console.log('Login Failed:', error),
+        onError: (error) => console.error('Login Failed:', error),
         flow: 'implicit',
     });
+
+    let loginCallback = null;
+    const login = ({ onSuccess } = {}) => {
+        loginCallback = onSuccess;
+        loginGoogle();
+    };
 
     const logout = () => {
         googleLogout();

@@ -5,8 +5,14 @@ import { createApiClient } from "../common/ClientAPIWrapper.js";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+
+    const [token, setToken] = useState(() => {
+        return localStorage.getItem('token') || null;
+    });
 
     let loginCallback = null;
 
@@ -14,18 +20,23 @@ export function AuthProvider({ children }) {
         onSuccess: async (response) => {
             const accessToken = response.access_token;
 
-            setToken(accessToken);
-            setUser(response);
-
             try {
                 const clientApi = createApiClient(accessToken);
-                await clientApi.login(accessToken);
+                const backendUser = await clientApi.login(accessToken);
+
+                setToken(accessToken);
+                setUser(backendUser);
+
+                localStorage.setItem('token', accessToken);
+                localStorage.setItem('user', JSON.stringify(backendUser));
+
                 console.log("User authenticated with backend.");
+                if (loginCallback) loginCallback();
+
             } catch (err) {
                 console.error("Backend login failed:", err);
+                googleLogout();
             }
-
-            if (loginCallback) loginCallback();
         },
         onError: (error) => console.error('Login Failed:', error),
         flow: 'implicit',
@@ -40,6 +51,8 @@ export function AuthProvider({ children }) {
         googleLogout();
         setUser(null);
         setToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
     };
 
     return (

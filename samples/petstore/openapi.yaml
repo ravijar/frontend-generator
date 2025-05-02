@@ -3,8 +3,9 @@ info:
   title: Pet Store API
   description: API for managing pets in a pet store
   version: 1.0.0
+
 servers:
-  - url: https://petstore-dev.up.railway.app/
+  - url: http://localhost:8080
     description: Local development server
 
 paths:
@@ -22,6 +23,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Pet"
+        "400":
+          description: Bad request - invalid query or format
+        "401":
+          description: Unauthorized - authentication required
+        "403":
+          description: Forbidden - insufficient permissions
+        "500":
+          description: Internal server error
 
     post:
       summary: Create a new pet
@@ -42,10 +51,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
-        "403":
-          description: Forbidden - Requires admin access
+        "400":
+          description: Bad request - invalid data format or missing fields
         "401":
-          description: Unauthorized - Missing or invalid token
+          description: Unauthorized - authentication required
+        "403":
+          description: Forbidden - not allowed to create resource
+        "409":
+          description: Conflict - duplicate entry or ID already exists
+        "500":
+          description: Internal server error
 
   /pets/{id}:
     get:
@@ -58,8 +73,7 @@ paths:
           required: true
           description: ID of the pet to return
           schema:
-            type: integer
-            format: int64
+            type: string
           x-displayName: ID
       responses:
         "200":
@@ -68,8 +82,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
+        "400":
+          description: Bad request - invalid ID format
+        "401":
+          description: Unauthorized - authentication required
+        "403":
+          description: Forbidden - access denied
         "404":
           description: Pet not found
+        "500":
+          description: Internal server error
 
     put:
       summary: Update a pet by ID
@@ -82,8 +104,7 @@ paths:
           required: true
           description: ID of the pet to update
           schema:
-            type: integer
-            format: int64
+            type: string
           x-displayName: ID
       requestBody:
         description: Updated pet object
@@ -99,12 +120,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
-        "403":
-          description: Forbidden - Requires admin access
+        "400":
+          description: Bad request - invalid ID or body
         "401":
-          description: Unauthorized - Missing or invalid token
+          description: Unauthorized - authentication required
+        "403":
+          description: Forbidden - not allowed to update
         "404":
           description: Pet not found
+        "500":
+          description: Internal server error
 
     delete:
       summary: Delete a pet by ID
@@ -117,18 +142,21 @@ paths:
           required: true
           description: ID of the pet to delete
           schema:
-            type: integer
-            format: int64
+            type: string
           x-displayName: ID
       responses:
         "204":
-          description: Pet deleted successfully
-        "403":
-          description: Forbidden - Requires admin access
+          description: Pet deleted successfully - no content
+        "400":
+          description: Bad request - invalid ID
         "401":
-          description: Unauthorized - Missing or invalid token
+          description: Unauthorized - authentication required
+        "403":
+          description: Forbidden - not allowed to delete
         "404":
           description: Pet not found
+        "500":
+          description: Internal server error
 
 components:
   schemas:
@@ -136,7 +164,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           description: ID of the pet
           x-displayName: ID
         name:

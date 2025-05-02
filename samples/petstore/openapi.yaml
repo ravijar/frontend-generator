@@ -158,6 +158,30 @@ paths:
         "500":
           description: Internal server error
 
+  /auth/login:
+    post:
+      summary: Authenticate and register user if not present
+      operationId: login
+      security: [ ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Authenticated user returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid or missing token
+        "500":
+          description: Internal server error
+
 components:
   schemas:
     Pet:
@@ -183,6 +207,18 @@ components:
           type: string
           description: Image of the pet
           x-displayName: Image URL
+
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
 
   securitySchemes:
     googleOAuth:

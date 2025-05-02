@@ -1,7 +1,7 @@
 .table-container {
-    width: 90%;
-    height: 80vh;
-    margin: 20px auto;
+    width: 80%;
+    max-height: 80vh;
+    margin: 20px auto 50px;
     overflow-x: auto;
     overflow-y: auto;
     white-space: nowrap;

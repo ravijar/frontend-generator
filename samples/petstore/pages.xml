@@ -102,6 +102,25 @@
                 </component>
             </result>
         </component>
+        <component type="Container" id="adminUsersContainer">
+            <resource method="GET">/users</resource>
+            <result>
+                <component type="Table" id="adminUsersContainerTable">
+                    <assign key="id"/>
+                    <component type="Button" id="updateUserButton">
+                        <text>Update</text>
+                        <route>/updateUser/{id}</route>
+                    </component>
+                    <component type="Button" id="deleteUserButton">
+                        <text>Delete</text>
+                        <resource method="DELETE">/users/{id}</resource>
+                        <result>
+                            <component type="Alert" id="deleteUserButtonAlert"/>
+                        </result>
+                    </component>
+                </component>
+            </result>
+        </component>
     </page>
 
     <page name="CreatePet" route="/createPet" navbar="false">
@@ -122,6 +141,17 @@
             <submit>Update Pet</submit>
             <result>
                 <component type="Alert" id="updatePetFormAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="UpdateUser" route="/updateUser/{id}" navbar="false">
+        <component type="Form" id="updateUserForm">
+            <resource method="PUT">/users/{id}</resource>
+            <text>Update User</text>
+            <submit>Update User</submit>
+            <result>
+                <component type="Alert" id="updateUserFormAlert"/>
             </result>
         </component>
     </page>

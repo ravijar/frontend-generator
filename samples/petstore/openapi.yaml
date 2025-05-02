@@ -182,6 +182,105 @@ paths:
         "500":
           description: Internal server error
 
+  /users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+    post:
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        description: User object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to return
+          schema:
+            type: string
+          x-displayName: ID
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+    put:
+      summary: Update a user by ID
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to update
+          schema:
+            type: string
+          x-displayName: ID
+      requestBody:
+        description: Updated user object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+    delete:
+      summary: Delete a user by ID
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to delete
+          schema:
+            type: string
+          x-displayName: ID
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+
 components:
   schemas:
     Pet:
@@ -211,14 +310,18 @@ components:
     User:
       type: object
       properties:
-        userId:
+        id:
           type: string
+          x-displayName: ID
         email:
           type: string
+          x-displayName: Email
         name:
           type: string
+          x-displayName: Name
         role:
           type: string
+          x-displayName: Role
 
   securitySchemes:
     googleOAuth:

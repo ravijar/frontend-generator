@@ -42,3 +42,19 @@
 .menu-links .active a {
     color: white;
 }
+
+.auth-button {
+    background-color: transparent;
+    border: 1px solid #999;
+    color: #999;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.auth-button:hover {
+    color: white;
+    border-color: white;
+}

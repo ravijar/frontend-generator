@@ -30,11 +30,23 @@ export default function Table({ columns, data, rowKey, displayNames, styles = {}
                         <tr key={index}>
                             {columns.map((col) => (
                                 <td key={col}>
-                                    {typeof row[col] === "object" && row[col] !== null
-                                        ? JSON.stringify(row[col])
-                                        : row[col] !== undefined
-                                            ? row[col]
-                                            : "-"}
+                                    {Array.isArray(row[col]) ? (
+                                        <div>
+                                            {row[col].map((item, i) => (
+                                                <div key={i}>{item}</div>
+                                            ))}
+                                        </div>
+                                    ) : typeof row[col] === "object" && row[col] !== null ? (
+                                        <div>
+                                            {Object.entries(row[col]).map(([k, v], i) => (
+                                                <div key={i}>{k}: {String(v)}</div>
+                                            ))}
+                                        </div>
+                                    ) : row[col] !== undefined ? (
+                                        row[col]
+                                    ) : (
+                                        "-"
+                                    )}
                                 </td>
                             ))}
                             {childComponents.map((child, childIndex) => (

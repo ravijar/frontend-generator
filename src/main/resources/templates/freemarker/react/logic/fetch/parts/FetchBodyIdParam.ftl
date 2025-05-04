@@ -4,7 +4,7 @@
 ${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(id);
         <#break>
     <#case "POST">
-${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(body);
+${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(<#if component.resource.urlParameters?has_content>token, </#if><#if component.resource.requestProperties?has_content>body</#if>);
         <#break>
     <#case "DELETE">
 ${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(id);

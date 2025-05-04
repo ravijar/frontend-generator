@@ -126,6 +126,9 @@ export default function ${page.name?cap_first}() {
             <#case "Container">
                 <#include containerState>
                 <#break>
+            <#case "Button">
+                <#include buttonState>
+                <#break>
         </#switch>
     </#list>
 

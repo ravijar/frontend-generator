@@ -6,8 +6,11 @@ import com.ravijar.model.freemarker.FreeMarkerButton;
 import com.ravijar.model.freemarker.FreeMarkerComponent;
 import com.ravijar.model.freemarker.FreeMarkerPage;
 import com.ravijar.model.openapi.OpenAPIResource;
+import com.ravijar.model.xml.Property;
 import com.ravijar.model.xml.component.Button;
 import com.ravijar.parser.OpenAPIParser;
+
+import java.util.*;
 
 public class ButtonPopulator extends ComponentPopulator{
     public ButtonPopulator(OpenAPIParser openAPIParser, FreeMarkerPage page) {
@@ -35,6 +38,18 @@ public class ButtonPopulator extends ComponentPopulator{
 
             target.setAction("resource");
             target.setResource(openAPIResource);
+
+            if(source.getModel() != null) {
+                List<Map<String, String>> properties = new ArrayList<>();
+
+                for (Property propertyItem : source.getModel().getProperties()) {
+                    Map<String, String> property = new HashMap<>();
+                    property.put(propertyItem.getKey(), propertyItem.getValue());
+                    properties.add(property);
+                }
+
+                target.setModelProperties(properties);
+            }
 
             if(openAPIResource.isSecured() && !page.isSecured()) page.setSecured(true);
         }

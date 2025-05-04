@@ -25,6 +25,9 @@ public class Button extends Component{
     @JacksonXmlProperty(localName = "localStorage")
     private LocalStorage localStorage;
 
+    @JacksonXmlProperty(localName = "model")
+    private Model model;
+
     public Button() {
         this.setType("Button");
     }

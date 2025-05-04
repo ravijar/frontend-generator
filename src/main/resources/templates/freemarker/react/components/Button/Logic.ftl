@@ -6,6 +6,11 @@
         <#include removeLocalStorage>
         <#break>
     <#case "resource">
-        <#include fetchParam>
+    <#if component.modelProperties?has_content>
+        <#include populateModel>
+        <#include fetchReqParamAuth>
+    <#else>
+        <#include fetchIdParam>
+    </#if>
         <#break>
 </#switch>

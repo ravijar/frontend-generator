@@ -44,11 +44,12 @@
                     <assign key="id" title="name" description="description" image="imageURL"/>
                     <component type="Button" id="petAddToCartButton">
                         <text>Add to Cart</text>
-                        <localStorage action="save">
-                            <assign key="cart"/>
-                        </localStorage>
+                        <resource method="POST">/cart</resource>
+                        <model>
+                            <property key="petId" value="id"/>
+                        </model>
                         <result>
-                            <component type="Alert" id="petAddToCartButtonAlert"/>
+                            <component type="Alert" id="addToCartButtonButtonAlert"/>
                         </result>
                     </component>
                 </component>

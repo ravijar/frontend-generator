@@ -281,6 +281,78 @@ paths:
         '404':
           description: User not found
 
+  /cart:
+    get:
+      summary: Get items in the current user's cart
+      operationId: getCart
+      security:
+        - googleOAuth: [ user ]
+      responses:
+        '200':
+          description: List of items in the cart
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartItem'
+
+    post:
+      summary: Add a pet to the current user's cart
+      operationId: addToCart
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItemPost'
+      responses:
+        '200':
+          description: Pet added to cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItem'
+
+  /orders:
+    get:
+      summary: Get all orders for the current user
+      operationId: getOrders
+      security:
+        - googleOAuth: [ user ]
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+
+  /orders/place:
+    post:
+      summary: Place a new order using current cart
+      operationId: placeOrder
+      security:
+        - googleOAuth: [ user ]
+      responses:
+        '201':
+          description: Order placed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
 components:
   schemas:
     Pet:
@@ -322,6 +394,57 @@ components:
         role:
           type: string
           x-displayName: Role
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the cart item
+          x-displayName: ID
+        userId:
+          type: string
+          description: ID of the user who owns this cart
+          x-displayName: User ID
+        petId:
+          type: string
+          description: ID of the pet added to the cart
+          x-displayName: Pet ID
+
+    CartItemPost:
+      type: object
+      properties:
+        petId:
+          type: string
+          description: ID of the pet added to the cart
+          x-displayName: Pet ID
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the order
+          x-displayName: ID
+        userId:
+          type: string
+          description: ID of the user who placed the order
+          x-displayName: User ID
+        petIds:
+          type: array
+          items:
+            type: string
+          description: List of pet IDs in the order
+          x-displayName: Pet Ids
+        orderTime:
+          type: string
+          format: date-time
+          description: Time the order was placed
+          x-displayName: Order Time
+        status:
+          type: string
+          description: Status of the order (e.g., PLACED)
+          x-displayName: Order Status
 
   securitySchemes:
     googleOAuth:

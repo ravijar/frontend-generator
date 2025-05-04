@@ -8,23 +8,27 @@
 <#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
 
 <#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">
-<#assign fetchHeaderParam = "/react/logic/fetch/parts/FetchHeaderParam.ftl">
-<#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
+<#assign fetchHeaderIdParam = "/react/logic/fetch/parts/FetchHeaderIdParam.ftl">
+<#assign fetchHeaderReqParam = "/react/logic/fetch/parts/FetchHeaderReqParam.ftl">
 <#assign fetchBody = "/react/logic/fetch/parts/FetchBody.ftl">
-<#assign fetchBodyParam = "/react/logic/fetch/parts/FetchBodyParam.ftl">
-<#assign fetchBodyUrlParam = "/react/logic/fetch/parts/FetchBodyUrlParam.ftl">
+<#assign fetchBodyIdParam = "/react/logic/fetch/parts/FetchBodyIdParam.ftl">
+<#assign fetchBodyUrlIdParam = "/react/logic/fetch/parts/FetchBodyUrlIdParam.ftl">
+<#assign fetchBodyReqParamAuth = "/react/logic/fetch/parts/FetchBodyReqParamAuth.ftl">
+<#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
 
 <#assign fetch = "/react/logic/fetch/Fetch.ftl">
-<#assign fetchParam = "/react/logic/fetch/FetchParam.ftl">
-<#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
+<#assign fetchIdParam = "/react/logic/fetch/FetchIdParam.ftl">
+<#assign fetchUrlIdParam = "/react/logic/fetch/FetchUrlIdParam.ftl">
+<#assign fetchReqParamAuth = "/react/logic/fetch/FetchReqParamAuth.ftl">
 
 <#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
 <#assign loadLocalStorage = "/react/logic/localStorage/LoadLocalStorage.ftl">
 <#assign removeLocalStorage = "/react/logic/localStorage/RemoveLocalStorage.ftl">
 
-<#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
+<#assign navigate = "/react/logic/Navigate.ftl">
+<#assign populateModel = "/react/logic/PopulateModel.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">

@@ -6,7 +6,7 @@
             <#case "resource">
                 <#assign currentComponent = component>
                 <#assign component = currentComponent.parent>
-                <#include fetchUrlParam>
+                <#include fetchUrlIdParam>
                 <#assign component = currentComponent>
 
 ${indent}const ${component.id}Filter = () => {
@@ -16,11 +16,11 @@ ${indent}   if (!responseData) return item;
 
 ${indent}   const { ${component.cardKey}, ${component.cardTitle}, ${component.cardDescription}, ${component.cardImage}, ...rest } = responseData;
 
-${indent}       item.key = ${component.cardKey};
-${indent}       item.title = ${component.cardTitle};
-${indent}       item.description = ${component.cardDescription};
-${indent}       item.image = ${component.cardImage};
-${indent}       item.data = rest;
+${indent}   item.key = ${component.cardKey};
+${indent}   item.title = ${component.cardTitle};
+${indent}   item.description = ${component.cardDescription};
+${indent}   item.image = ${component.cardImage};
+${indent}   item.data = rest;
 
 ${indent}   return item;
 ${indent}};

@@ -287,6 +287,13 @@ paths:
       operationId: getCart
       security:
         - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
+          schema:
+            type: string
       responses:
         '200':
           description: List of items in the cart
@@ -295,7 +302,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CartItem'
+                  $ref: '#/components/schemas/CartItemView'
 
     post:
       summary: Add a pet to the current user's cart
@@ -323,12 +330,51 @@ paths:
               schema:
                 $ref: '#/components/schemas/CartItem'
 
+  /cart/{cartItemId}:
+    delete:
+      summary: Remove an item from the current user's cart
+      operationId: removeFromCart
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
+          schema:
+            type: string
+        - name: cartItemId
+          in: path
+          required: true
+          description: ID of the cart item to remove
+          schema:
+            type: string
+          x-displayName: Cart Item ID
+      responses:
+        '204':
+          description: Item removed from cart successfully - no content
+        '401':
+          description: Unauthorized - authentication required
+        '403':
+          description: Forbidden - user cannot remove this item
+        '404':
+          description: Cart item not found
+        '500':
+          description: Internal server error
+
   /orders:
     get:
       summary: Get all orders for the current user
       operationId: getOrders
       security:
         - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
+          schema:
+            type: string
       responses:
         '200':
           description: List of orders
@@ -337,7 +383,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Order'
+                  $ref: '#/components/schemas/OrderView'
 
   /orders/place:
     post:
@@ -345,6 +391,13 @@ paths:
       operationId: placeOrder
       security:
         - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
+          schema:
+            type: string
       responses:
         '201':
           description: Order placed successfully
@@ -419,6 +472,22 @@ components:
           description: ID of the pet added to the cart
           x-displayName: Pet ID
 
+    CartItemView:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Cart item ID
+          x-displayName: ID
+        petName:
+          type: string
+          description: Name of the pet in the cart
+          x-displayName: Name
+        quantity:
+          type: integer
+          description: Number of times this pet is in the user's cart
+          x-displayName: Quantity
+
     Order:
       type: object
       properties:
@@ -438,9 +507,30 @@ components:
           x-displayName: Pet Ids
         orderTime:
           type: string
-          format: date-time
           description: Time the order was placed
           x-displayName: Order Time
+        status:
+          type: string
+          description: Status of the order (e.g., PLACED)
+          x-displayName: Order Status
+
+    OrderView:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the order
+          x-displayName: ID
+        orderTime:
+          type: string
+          description: Time the order was placed
+          x-displayName: Order Time
+        petSummary:
+          type: array
+          items:
+            type: string
+          description: List of pet IDs in the order
+          x-displayName: Pets
         status:
           type: string
           description: Status of the order (e.g., PLACED)

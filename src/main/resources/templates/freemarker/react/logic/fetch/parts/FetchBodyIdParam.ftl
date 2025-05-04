@@ -7,7 +7,7 @@ ${indent}        const response = await clientApi.${component.resource.apiFuncti
 ${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(<#if component.resource.urlParameters?has_content>token, </#if><#if component.resource.requestProperties?has_content>body</#if>);
         <#break>
     <#case "DELETE">
-${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(id);
+${indent}        const response = await clientApi.${component.resource.apiFunctionName}WithHttpInfo(<#if component.resource.securityRequirements?has_content && (component.resource.urlParameters?size gt 1)>token, </#if>id);
         <#break>
     <#case "PUT">
     <#case "PATCH">

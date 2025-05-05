@@ -6,7 +6,6 @@ info:
 
 servers:
   - url: http://localhost:8080
-    description: Local development server
 
 paths:
   /pets:
@@ -40,7 +39,6 @@ paths:
       security:
         - googleOAuth: [admin]
       requestBody:
-        description: Pet object that needs to be added to the store
         required: true
         content:
           application/json:
@@ -73,7 +71,6 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the pet to return
           schema:
             type: string
           x-displayName: ID
@@ -104,12 +101,10 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the pet to update
           schema:
             type: string
           x-displayName: ID
       requestBody:
-        description: Updated pet object
         required: true
         content:
           application/json:
@@ -142,7 +137,6 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the pet to delete
           schema:
             type: string
           x-displayName: ID
@@ -169,7 +163,6 @@ paths:
         - name: Authorization
           in: header
           required: true
-          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
           schema:
             type: string
       responses:
@@ -218,7 +211,6 @@ paths:
       summary: Create a new user
       operationId: createUser
       requestBody:
-        description: User object that needs to be added
         required: true
         content:
           application/json:
@@ -250,7 +242,6 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the user to return
           schema:
             type: string
           x-displayName: ID
@@ -279,12 +270,10 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the user to update
           schema:
             type: string
           x-displayName: ID
       requestBody:
-        description: Updated user object
         required: true
         content:
           application/json:
@@ -315,7 +304,6 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the user to delete
           schema:
             type: string
           x-displayName: ID
@@ -343,7 +331,6 @@ paths:
         - name: Authorization
           in: header
           required: true
-          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
           schema:
             type: string
       responses:
@@ -375,7 +362,6 @@ paths:
         - name: Authorization
           in: header
           required: true
-          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
           schema:
             type: string
       requestBody:
@@ -412,13 +398,11 @@ paths:
         - name: Authorization
           in: header
           required: true
-          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
           schema:
             type: string
         - name: cartItemId
           in: path
           required: true
-          description: ID of the cart item to remove
           schema:
             type: string
           x-displayName: Cart Item ID
@@ -446,7 +430,6 @@ paths:
         - name: Authorization
           in: header
           required: true
-          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
           schema:
             type: string
       responses:
@@ -479,7 +462,6 @@ paths:
         - name: Authorization
           in: header
           required: true
-          description: Bearer token obtained from Google OAuth (e.g., "Bearer eyJhbGci...")
           schema:
             type: string
       responses:
@@ -507,23 +489,18 @@ components:
       properties:
         id:
           type: string
-          description: ID of the pet
           x-displayName: ID
         name:
           type: string
-          description: Name of the pet
           x-displayName: Name
         species:
           type: string
-          description: Species of the pet
           x-displayName: Species
         description:
           type: string
-          description: Description of the pet
           x-displayName: Description
         imageURL:
           type: string
-          description: Image of the pet
           x-displayName: Image URL
 
     User:
@@ -547,15 +524,12 @@ components:
       properties:
         id:
           type: string
-          description: ID of the cart item
           x-displayName: ID
         userId:
           type: string
-          description: ID of the user who owns this cart
           x-displayName: User ID
         petId:
           type: string
-          description: ID of the pet added to the cart
           x-displayName: Pet ID
 
     CartItemPost:
@@ -563,7 +537,6 @@ components:
       properties:
         petId:
           type: string
-          description: ID of the pet added to the cart
           x-displayName: Pet ID
 
     CartItemView:
@@ -571,15 +544,12 @@ components:
       properties:
         id:
           type: string
-          description: Cart item ID
           x-displayName: ID
         petName:
           type: string
-          description: Name of the pet in the cart
           x-displayName: Name
         quantity:
           type: integer
-          description: Number of times this pet is in the user's cart
           x-displayName: Quantity
 
     Order:
@@ -587,25 +557,20 @@ components:
       properties:
         id:
           type: string
-          description: ID of the order
           x-displayName: ID
         userId:
           type: string
-          description: ID of the user who placed the order
           x-displayName: User ID
         petIds:
           type: array
           items:
             type: string
-          description: List of pet IDs in the order
           x-displayName: Pet Ids
         orderTime:
           type: string
-          description: Time the order was placed
           x-displayName: Order Time
         status:
           type: string
-          description: Status of the order (e.g., PLACED)
           x-displayName: Order Status
 
     OrderView:
@@ -613,21 +578,17 @@ components:
       properties:
         id:
           type: string
-          description: ID of the order
           x-displayName: ID
         orderTime:
           type: string
-          description: Time the order was placed
           x-displayName: Order Time
         petSummary:
           type: array
           items:
             type: string
-          description: List of pet IDs in the order
           x-displayName: Pets
         status:
           type: string
-          description: Status of the order (e.g., PLACED)
           x-displayName: Order Status
 
   securitySchemes:

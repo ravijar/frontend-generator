@@ -16,7 +16,7 @@ paths:
       security: []
       responses:
         "200":
-          description: A list of pets
+          description: Pets fetched!
           content:
             application/json:
               schema:
@@ -24,13 +24,15 @@ paths:
                 items:
                   $ref: "#/components/schemas/Pet"
         "400":
-          description: Bad request - invalid query or format
+          description: Bad request!
         "401":
-          description: Unauthorized - authentication required
+          description: Authentication required!
         "403":
-          description: Forbidden - insufficient permissions
+          description: Permission denied!
+        "404":
+          description: Pets not found!
         "500":
-          description: Internal server error
+          description: Server error!
 
     post:
       summary: Create a new pet
@@ -46,21 +48,21 @@ paths:
               $ref: "#/components/schemas/Pet"
       responses:
         "201":
-          description: Pet created successfully
+          description: Pet created successfully!
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
         "400":
-          description: Bad request - invalid data format or missing fields
+          description: Bad request!
         "401":
-          description: Unauthorized - authentication required
+          description: Authentication required!
         "403":
-          description: Forbidden - not allowed to create resource
+          description: Permission denied!
         "409":
-          description: Conflict - duplicate entry or ID already exists
+          description: Conflict occurred!
         "500":
-          description: Internal server error
+          description: Server error!
 
   /pets/{id}:
     get:
@@ -77,21 +79,21 @@ paths:
           x-displayName: ID
       responses:
         "200":
-          description: Pet found
+          description: Pet fetched!
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
         "400":
-          description: Bad request - invalid ID format
+          description: Bad request!
         "401":
-          description: Unauthorized - authentication required
+          description: Authentication required!
         "403":
-          description: Forbidden - access denied
+          description: Permission denied!
         "404":
-          description: Pet not found
+          description: Pet not found!
         "500":
-          description: Internal server error
+          description: Server error!
 
     put:
       summary: Update a pet by ID
@@ -115,21 +117,21 @@ paths:
               $ref: "#/components/schemas/Pet"
       responses:
         "200":
-          description: Pet updated successfully
+          description: Pet updated successfully!
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
         "400":
-          description: Bad request - invalid ID or body
+          description: Bad request!
         "401":
-          description: Unauthorized - authentication required
+          description: Authentication required!
         "403":
-          description: Forbidden - not allowed to update
+          description: Permission denied!
         "404":
-          description: Pet not found
+          description: Pet not found!
         "500":
-          description: Internal server error
+          description: Server error!
 
     delete:
       summary: Delete a pet by ID
@@ -146,17 +148,17 @@ paths:
           x-displayName: ID
       responses:
         "204":
-          description: Pet deleted successfully - no content
+          description: Pet deleted successfully!
         "400":
-          description: Bad request - invalid ID
+          description: Bad request!
         "401":
-          description: Unauthorized - authentication required
+          description: Authentication required!
         "403":
-          description: Forbidden - not allowed to delete
+          description: Permission denied!
         "404":
-          description: Pet not found
+          description: Pet not found!
         "500":
-          description: Internal server error
+          description: Server error!
 
   /auth/login:
     post:
@@ -172,15 +174,21 @@ paths:
             type: string
       responses:
         "200":
-          description: Authenticated user returned successfully
+          description: User authenticated successfully!
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
         "400":
-          description: Invalid or missing token
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
         "500":
-          description: Internal server error
+          description: Server error!
 
   /users:
     get:
@@ -188,13 +196,23 @@ paths:
       operationId: getAllUsers
       responses:
         '200':
-          description: A list of users
+          description: Users fetched!
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Users not found!
+        "500":
+          description: Server error!
 
     post:
       summary: Create a new user
@@ -208,11 +226,21 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '201':
-          description: User created successfully
+          description: User created successfully!
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
 
   /users/{id}:
     get:
@@ -228,13 +256,21 @@ paths:
           x-displayName: ID
       responses:
         '200':
-          description: User found
+          description: User fetched!
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: User not found!
+        "500":
+          description: Server error!
 
     put:
       summary: Update a user by ID
@@ -256,13 +292,21 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '200':
-          description: User updated successfully
+          description: User updated successfully!
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: User not found!
+        "500":
+          description: Server error!
 
     delete:
       summary: Delete a user by ID
@@ -277,9 +321,17 @@ paths:
           x-displayName: ID
       responses:
         '204':
-          description: User deleted successfully
-        '404':
-          description: User not found
+          description: User deleted successfully!
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: User not found!
+        "500":
+          description: Server error!
 
   /cart:
     get:
@@ -296,13 +348,23 @@ paths:
             type: string
       responses:
         '200':
-          description: List of items in the cart
+          description: Cart fetched!
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/CartItemView'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Cart not found!
+        "500":
+          description: Server error!
 
     post:
       summary: Add a pet to the current user's cart
@@ -324,11 +386,21 @@ paths:
               $ref: '#/components/schemas/CartItemPost'
       responses:
         '200':
-          description: Pet added to cart
+          description: Pet added to cart!
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartItem'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
 
   /cart/{cartItemId}:
     delete:
@@ -352,15 +424,17 @@ paths:
           x-displayName: Cart Item ID
       responses:
         '204':
-          description: Item removed from cart successfully - no content
-        '401':
-          description: Unauthorized - authentication required
-        '403':
-          description: Forbidden - user cannot remove this item
-        '404':
-          description: Cart item not found
-        '500':
-          description: Internal server error
+          description: Item removed from cart successfully!
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Cart item not found!
+        "500":
+          description: Server error!
 
   /orders:
     get:
@@ -377,13 +451,23 @@ paths:
             type: string
       responses:
         '200':
-          description: List of orders
+          description: Orders fetched!
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrderView'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Orders not found!
+        "500":
+          description: Server error!
 
   /orders/place:
     post:
@@ -399,12 +483,22 @@ paths:
           schema:
             type: string
       responses:
-        '201':
-          description: Order placed successfully
+        '200':
+          description: Order placed successfully!
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
 
 components:
   schemas:

@@ -86,6 +86,7 @@ import Card from "../components/Card";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
 import Table from "../components/Table";
+import LoadingModal from "../components/LoadingModal";
 <#list page.components as component>
     <#switch component.type>
         <#case "Form">
@@ -109,6 +110,7 @@ export default function ${page.name?cap_first}() {
     const { token } = useAuth();
     const clientApi = createApiClient(token);
 
+    const [loading, setLoading] = useState(false);
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
     <#list page.components as rootComponent>
@@ -174,6 +176,7 @@ export default function ${page.name?cap_first}() {
 
     return (
         <div className = "page-container">
+            <LoadingModal show={loading}/>
             <#-- Calling Components -->
             <#assign indentValue = 3>
             <#list page.components as rootComponent>

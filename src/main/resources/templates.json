@@ -15,7 +15,8 @@
         "Button",
         "CardSection",
         "Card",
-        "Table"
+        "Table",
+        "LoadingModal"
       ]
     },
     {
@@ -44,7 +45,8 @@
         "NavBar",
         "Form",
         "Card",
-        "Table"
+        "Table",
+        "LoadingModal"
       ]
     },
     {

@@ -16,7 +16,8 @@
         "CardSection",
         "Card",
         "Table",
-        "LoadingModal"
+        "LoadingModal",
+        "NoContent"
       ]
     },
     {
@@ -46,7 +47,8 @@
         "Form",
         "Card",
         "Table",
-        "LoadingModal"
+        "LoadingModal",
+        "NoContent"
       ]
     },
     {

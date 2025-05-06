@@ -1,25 +1,58 @@
 import { createContext, useContext, useState } from 'react';
-import { GoogleOAuthProvider, googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { createApiClient } from "../common/ClientAPIWrapper.js";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
-    const login = useGoogleLogin({
-        onSuccess: (response) => {
-            setToken(response.access_token);
-            setUser(response);
+    const [token, setToken] = useState(() => {
+        return localStorage.getItem('token') || null;
+    });
+
+    let loginCallback = null;
+
+    const loginGoogle = useGoogleLogin({
+        onSuccess: async (response) => {
+            const accessToken = response.access_token;
+
+            try {
+                const clientApi = createApiClient(accessToken);
+                const backendUser = await clientApi.login(accessToken);
+
+                setToken(accessToken);
+                setUser(backendUser);
+
+                localStorage.setItem('token', accessToken);
+                localStorage.setItem('user', JSON.stringify(backendUser));
+
+                console.log("User authenticated with backend.");
+                if (loginCallback) loginCallback();
+
+            } catch (err) {
+                console.error("Backend login failed:", err);
+                googleLogout();
+            }
         },
-        onError: (error) => console.log('Login Failed:', error),
+        onError: (error) => console.error('Login Failed:', error),
         flow: 'implicit',
     });
+
+    const login = ({ onSuccess } = {}) => {
+        loginCallback = onSuccess;
+        loginGoogle();
+    };
 
     const logout = () => {
         googleLogout();
         setUser(null);
         setToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
     };
 
     return (

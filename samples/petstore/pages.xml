@@ -44,11 +44,12 @@
                     <assign key="id" title="name" description="description" image="imageURL"/>
                     <component type="Button" id="petAddToCartButton">
                         <text>Add to Cart</text>
-                        <localStorage action="save">
-                            <assign key="cart"/>
-                        </localStorage>
+                        <resource method="POST">/cart</resource>
+                        <model>
+                            <property key="petId" value="id"/>
+                        </model>
                         <result>
-                            <component type="Alert" id="petAddToCartButtonAlert"/>
+                            <component type="Alert" id="addToCartButtonButtonAlert"/>
                         </result>
                     </component>
                 </component>
@@ -58,21 +59,35 @@
 
     <page name="Cart" route="/cart" navbar="true">
         <component type="Container" id="cartContainer">
-            <localStorage action="load">
-                <assign key="cart"/>
-            </localStorage>
+            <resource method="GET">/cart</resource>
             <result>
                 <component type="Table" id="cartTable">
-                    <assign key="key"/>
-                    <component type="Button" id="removeFromCartButton">
+                    <assign key="id"/>
+                    <component type="Button" id="removeItemButton">
                         <text>Remove</text>
-                        <localStorage action="remove">
-                            <assign key="cart"/>
-                        </localStorage>
+                        <resource method="DELETE">/cart/{cartItemId}</resource>
                         <result>
-                            <component type="Alert" id="removeFromCartButtonAlert"/>
+                            <component type="Alert" id="removeItemButtonAlert"/>
                         </result>
                     </component>
+                </component>
+            </result>
+        </component>
+        <component type="Button" id="placeOrderButton">
+            <text>Place Order</text>
+            <resource method="POST">/orders/place</resource>
+            <result>
+                <component type="Alert" id="placeOrderButtonAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="Orders" route="/orders" navbar="true">
+        <component type="Container" id="ordersContainer">
+            <resource method="GET">/orders</resource>
+            <result>
+                <component type="Table" id="ordersTable">
+                    <assign key="id"/>
                 </component>
             </result>
         </component>
@@ -102,6 +117,25 @@
                 </component>
             </result>
         </component>
+        <component type="Container" id="adminUsersContainer">
+            <resource method="GET">/users</resource>
+            <result>
+                <component type="Table" id="adminUsersContainerTable">
+                    <assign key="id"/>
+                    <component type="Button" id="updateUserButton">
+                        <text>Update</text>
+                        <route>/updateUser/{id}</route>
+                    </component>
+                    <component type="Button" id="deleteUserButton">
+                        <text>Delete</text>
+                        <resource method="DELETE">/users/{id}</resource>
+                        <result>
+                            <component type="Alert" id="deleteUserButtonAlert"/>
+                        </result>
+                    </component>
+                </component>
+            </result>
+        </component>
     </page>
 
     <page name="CreatePet" route="/createPet" navbar="false">
@@ -122,6 +156,17 @@
             <submit>Update Pet</submit>
             <result>
                 <component type="Alert" id="updatePetFormAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="UpdateUser" route="/updateUser/{id}" navbar="false">
+        <component type="Form" id="updateUserForm">
+            <resource method="PUT">/users/{id}</resource>
+            <text>Update User</text>
+            <submit>Update User</submit>
+            <result>
+                <component type="Alert" id="updateUserFormAlert"/>
             </result>
         </component>
     </page>

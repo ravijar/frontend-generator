@@ -25,6 +25,7 @@ public class PagePopulator {
         target.setColonRoute(StringHelper.toColonRoute(source.getRoute()));
         target.setSecured(false);
         target.setVisibleInNavBar(source.isNavbar());
+        target.setSecurityScopes(new ArrayList<>());
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 

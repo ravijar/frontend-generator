@@ -1,3 +1,3 @@
 <#include fetchHeader>
-<#include fetchBodyUrlParam>
+<#include fetchBodyUrlIdParam>
 <#include fetchFooter>

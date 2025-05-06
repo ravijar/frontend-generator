@@ -15,7 +15,9 @@
         "Button",
         "CardSection",
         "Card",
-        "Table"
+        "Table",
+        "LoadingModal",
+        "NoContent"
       ]
     },
     {
@@ -44,7 +46,9 @@
         "NavBar",
         "Form",
         "Card",
-        "Table"
+        "Table",
+        "LoadingModal",
+        "NoContent"
       ]
     },
     {
@@ -75,7 +79,8 @@
       "extension": ".jsx",
       "templates": [
         "AuthProvider",
-        "RequireAuth"
+        "RequireAuth",
+        "RoleBasedAccess"
       ]
     },
     {
@@ -84,7 +89,8 @@
       "destinationFolder": "/build/src/pages/",
       "extension": ".jsx",
       "templates": [
-        "Login"
+        "Login",
+        "Unauthorized"
       ]
     },
     {
@@ -93,7 +99,17 @@
       "destinationFolder": "/styles/pages/",
       "extension": ".css",
       "templates": [
-        "Login"
+        "Login",
+        "Unauthorized"
+      ]
+    },
+    {
+      "name": "Assets",
+      "sourceFolder": "/assets/",
+      "destinationFolder": "/build/src/assets/",
+      "extension": "",
+      "templates": [
+        "google-logo.png"
       ]
     }
   ]

@@ -2,7 +2,6 @@ package com.ravijar.parser;
 
 import com.ravijar.helper.OpenAPIConverter;
 import com.ravijar.model.openapi.*;
-import com.ravijar.model.xml.Resource;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -312,11 +311,12 @@ public class OpenAPIParser {
         return responses.keySet();
     }
 
-    public OpenAPIResource getResourceData(Resource resource) {
-        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(resource.getMethod());
-        String url = resource.getUrl();
+    public OpenAPIResource getResourceData(String url, String method) {
+        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(method);
 
         String apiFunctionName = getOperationId(url, httpMethod);
+        if (apiFunctionName == null) return null;
+
         List<OpenAPIParameter> urlParameters = getParameters(url, httpMethod);
         String requestSchema = getRequestSchema(url, httpMethod);
         Set<String> responseCodes = getResponseCodes(url, httpMethod);
@@ -340,6 +340,6 @@ public class OpenAPIParser {
             responses.add(new OpenAPIResponse(code, schemaName, type, description, getSchemas().get(schemaName)));
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses, securityRequirements);
+        return new OpenAPIResource(method, apiFunctionName, urlParameters, requestParameters, responses, securityRequirements);
     }
 }

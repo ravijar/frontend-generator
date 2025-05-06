@@ -17,12 +17,18 @@ public class ContainerPopulator extends ComponentPopulator{
         populateComponent(source, target);
 
         if(source.getResource() != null) {
-            OpenAPIResource openAPIResource = openAPIParser.getResourceData(source.getResource());
+            OpenAPIResource openAPIResource = openAPIParser.getResourceData(source.getResource().getUrl(), source.getResource().getMethod());
 
             target.setAction("resource");
             target.setResource(openAPIResource);
 
-            if(openAPIResource.isSecured() && !page.isSecured()) page.setSecured(true);
+            if(openAPIResource.isSecured()) {
+                if (!page.isSecured()) page.setSecured(true);
+
+                for (String scope : openAPIResource.getSecurityRequirements().get(0).getRequiredScopes()) {
+                    if (!page.getSecurityScopes().contains(scope)) page.getSecurityScopes().add(scope);
+                }
+            }
         }
 
         if(source.getLocalStorage() != null) {

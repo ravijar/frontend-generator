@@ -1,0 +1,29 @@
+.unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.unauthorized-icon {
+    font-size: 64px;
+    color: #e63946;
+    margin-bottom: 20px;
+}
+
+.unauthorized-title {
+    font-size: 28px;
+    color: #1A1A1A;
+    margin-bottom: 10px;
+}
+
+.unauthorized-message {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+

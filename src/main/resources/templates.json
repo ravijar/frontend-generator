@@ -79,7 +79,8 @@
       "extension": ".jsx",
       "templates": [
         "AuthProvider",
-        "RequireAuth"
+        "RequireAuth",
+        "RoleBasedAccess"
       ]
     },
     {
@@ -88,7 +89,8 @@
       "destinationFolder": "/build/src/pages/",
       "extension": ".jsx",
       "templates": [
-        "Login"
+        "Login",
+        "Unauthorized"
       ]
     },
     {
@@ -97,7 +99,8 @@
       "destinationFolder": "/styles/pages/",
       "extension": ".css",
       "templates": [
-        "Login"
+        "Login",
+        "Unauthorized"
       ]
     },
     {

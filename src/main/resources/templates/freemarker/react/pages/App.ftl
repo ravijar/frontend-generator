@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import ${page.name?cap_first} from "./pages/${page.name?cap_first}";
 </#list>
 import Login from "./pages/Login";
+import Unauthorized from "./pages/Unauthorized";
 import RequireAuth from "./auth/RequireAuth";
 import { AuthProvider } from "./auth/AuthProvider";
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -26,11 +27,15 @@ export default function App() {
                             path="/login"
                             element={<Login />}
                         />
+                        <Route
+                            path="/unauthorized"
+                            element={<Unauthorized />}
+                        />
                     <#list pages as page>
                         <Route
                             path="<#if page.urlParameter??>${page.colonRoute}<#else>${page.route}</#if>"
                         <#if page.secured == true>
-                            element={<RequireAuth><${page.name?cap_first}/></RequireAuth>}
+                            element={<RequireAuth roles={[<#list page.securityScopes as scope>"${scope}", </#list>]}><${page.name?cap_first}/></RequireAuth>}
                         <#else>
                             element={<${page.name?cap_first}/>}
                         </#if>

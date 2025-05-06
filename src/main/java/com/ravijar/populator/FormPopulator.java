@@ -24,7 +24,13 @@ public class FormPopulator extends ComponentPopulator{
             target.setAction("resource");
             target.setResource(openAPIResource);
 
-            if(openAPIResource.isSecured() && !page.isSecured()) page.setSecured(true);
+            if(openAPIResource.isSecured()) {
+                if (!page.isSecured()) page.setSecured(true);
+
+                for (String scope : openAPIResource.getSecurityRequirements().get(0).getRequiredScopes()) {
+                    if (!page.getSecurityScopes().contains(scope)) page.getSecurityScopes().add(scope);
+                }
+            }
         }
 
         FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser, page).switchComponent(source.getResult().getComponent(), target);

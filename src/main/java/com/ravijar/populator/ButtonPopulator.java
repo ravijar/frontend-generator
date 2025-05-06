@@ -34,7 +34,7 @@ public class ButtonPopulator extends ComponentPopulator{
         }
 
         if(source.getResource() != null) {
-            OpenAPIResource openAPIResource = openAPIParser.getResourceData(source.getResource());
+            OpenAPIResource openAPIResource = openAPIParser.getResourceData(source.getResource().getUrl(), source.getResource().getMethod());
 
             target.setAction("resource");
             target.setResource(openAPIResource);

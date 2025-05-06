@@ -12,7 +12,7 @@ paths:
     get:
       summary: Get all pets
       operationId: getAllPets
-      security: []
+      security: [ ]
       responses:
         "200":
           description: Pets fetched!
@@ -37,7 +37,7 @@ paths:
       summary: Create a new pet
       operationId: createPet
       security:
-        - googleOAuth: [admin]
+        - googleOAuth: [ admin ]
       requestBody:
         required: true
         content:
@@ -66,7 +66,7 @@ paths:
     get:
       summary: Get a pet by ID
       operationId: getPetById
-      security: []
+      security: [ ]
       parameters:
         - name: id
           in: path
@@ -96,7 +96,7 @@ paths:
       summary: Update a pet by ID
       operationId: updatePet
       security:
-        - googleOAuth: [admin]
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
@@ -132,7 +132,7 @@ paths:
       summary: Delete a pet by ID
       operationId: deletePet
       security:
-        - googleOAuth: [admin]
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
@@ -187,6 +187,7 @@ paths:
     get:
       summary: Get all users
       operationId: getAllUsers
+      security: [ ]
       responses:
         '200':
           description: Users fetched!
@@ -210,6 +211,8 @@ paths:
     post:
       summary: Create a new user
       operationId: createUser
+      security:
+        - googleOAuth: [ admin ]
       requestBody:
         required: true
         content:
@@ -238,6 +241,8 @@ paths:
     get:
       summary: Get a user by ID
       operationId: getUserById
+      security:
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
@@ -266,6 +271,8 @@ paths:
     put:
       summary: Update a user by ID
       operationId: updateUser
+      security:
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
@@ -300,6 +307,8 @@ paths:
     delete:
       summary: Delete a user by ID
       operationId: deleteUser
+      security:
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
@@ -599,6 +608,5 @@ components:
           authorizationUrl: https://accounts.google.com/o/oauth2/auth
           tokenUrl: https://oauth2.googleapis.com/token
           scopes:
-            guest: "Access as a guest (no authentication required)"
             user: "Registered user access"
             admin: "Administrator access"

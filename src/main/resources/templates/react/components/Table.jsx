@@ -38,10 +38,14 @@ export default function Table({ title, data = [], rowKey, displayNames = {}, sty
 
                                 let displayValue;
                                 if (Array.isArray(value)) {
-                                    displayValue = value.map((item, i) => <div key={i}>{item}</div>);
+                                    displayValue = value.map((item, i) => (
+                                        <div className="table-data-list" key={i} title={item}>
+                                            {item}
+                                        </div>
+                                    ));
                                 } else if (typeof value === "object" && value !== null) {
                                     displayValue = Object.entries(value).map(([k, v], i) => (
-                                        <div key={i}>
+                                        <div className="table-data-list" key={i} title={`${k} - ${v}`}>
                                             {k}: {String(v)}
                                         </div>
                                     ));

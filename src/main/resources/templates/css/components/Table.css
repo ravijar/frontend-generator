@@ -59,6 +59,25 @@
     cursor:default;
 }
 
+.table-data-list {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor:default;
+    position: relative;
+    padding-left: 10px;
+}
+
+.table-data-list::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+}
+
 .custom-table tr {
     background-color: #fafafa;
 }

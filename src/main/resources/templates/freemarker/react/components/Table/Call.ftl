@@ -7,6 +7,9 @@ ${indent}<div className="${component.styleId}-container">
             <#case "resource">
 ${indent}    {${component.parent.id}Fetched && (
 ${indent}       <Table
+                <#if component.parent.title??>
+${indent}           title="${component.parent.title}"
+                </#if>
 ${indent}           styles={styles.${component.id}}
 ${indent}           data={${component.parent.id}FetchResponse.data}
 ${indent}           rowKey="${component.rowKey}"
@@ -19,6 +22,9 @@ ${indent}    )}
             <#case "load">
 ${indent}    {load${component.parent.localStorageKey?cap_first}()[0] && (
 ${indent}       <Table
+                <#if component.parent.title??>
+${indent}           title="${component.parent.title}"
+                </#if>
 ${indent}           styles={styles.${component.id}}
 ${indent}           columns={Object.keys(load${component.parent.localStorageKey?cap_first}()[0])}
 ${indent}           data={${component.parent.id}LoadResponse}

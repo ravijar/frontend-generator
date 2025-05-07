@@ -1,6 +1,14 @@
+.table-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #333;
+    margin: 15px 10% 0;
+    text-align: left;
+}
+
 .table-container {
     width: 80%;
-    max-height: 80vh;
+    max-height: 70vh;
     margin: 20px auto 50px;
     overflow-x: auto;
     overflow-y: auto;
@@ -29,7 +37,7 @@
 }
 
 .custom-table th {
-    padding: 12px 20px;
+    padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     background-color: #787878;
@@ -40,11 +48,11 @@
 }
 
 .custom-table td {
-    padding: 12px 20px;
+    padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     min-width: 20px;
-    max-width: 250px;
+    max-width: 170px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

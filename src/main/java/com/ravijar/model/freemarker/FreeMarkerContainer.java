@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class FreeMarkerContainer extends FreeMarkerComponent{
+    private String title;
     private String action;
     private OpenAPIResource resource;
     private String localStorageKey;

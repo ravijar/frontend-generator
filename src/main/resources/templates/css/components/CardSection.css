@@ -1,3 +1,12 @@
+.card-section-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #333;
+    margin: 15px 10% 0;
+    padding: 0 10px;
+    text-align: left;
+}
+
 .card-array-container {
     width: 80%;
     background-color: inherit;
@@ -11,7 +20,7 @@
     box-sizing: border-box;
     margin: 20px auto;
     padding: 10px;
-    max-height: 85vh;
+    max-height: 80vh;
     overflow-y: auto;
 }
 

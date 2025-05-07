@@ -2,7 +2,7 @@
     display: flex;
     max-width: 800px;
     min-width: 400px;
-    padding: 20px 10px;
+    padding: 20px;
     background: #fdfdfd;
     position: relative;
     overflow: visible;
@@ -70,4 +70,9 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
+}
+
+.no-image .content-container {
+    flex: 1 1 100%;
+    padding-left: 0;
 }

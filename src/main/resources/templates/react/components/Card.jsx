@@ -4,10 +4,12 @@ import {Children, cloneElement, isValidElement} from "react";
 
 const Card = ({ item, displayNames, styles = {}, children }) => {
     return (
-        <div className="detailed-card" style={styles.detailedCard}>
-            <div className="detailed-card-img" style={styles.detailedCardImg}>
-                <img src={item.image} alt={item.title}></img>
-            </div>
+        <div className={`detailed-card ${!item.image ? "no-image" : ""}`} style={styles.detailedCard}>
+            {item.image && (
+                <div className="detailed-card-img" style={styles.detailedCardImg}>
+                    <img src={item.image} alt={item.title}></img>
+                </div>
+            )}
             <div className="content-container" style={styles.contentContainer}>
                 <div className="detailed-card-info" style={styles.detailedCardInfo}>
                     <p className="detailed-card-title" style={styles.detailedCardTitle}>{item.title}</p>

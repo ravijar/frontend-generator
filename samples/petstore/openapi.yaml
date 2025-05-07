@@ -501,15 +501,22 @@ components:
         name:
           type: string
           x-displayName: Name
-        species:
-          type: string
-          x-displayName: Species
         description:
           type: string
           x-displayName: Description
+        category:
+          type: string
+          x-displayName: Category
         imageURL:
           type: string
           x-displayName: Image URL
+        price:
+          type: number
+          format: double
+          x-displayName: Price
+        stock:
+          type: integer
+          x-displayName: Stock
 
     User:
       type: object
@@ -559,6 +566,10 @@ components:
         quantity:
           type: integer
           x-displayName: Quantity
+        total:
+          type: number
+          format: double
+          x-displayName: Total
 
     Order:
       type: object
@@ -598,6 +609,10 @@ components:
         status:
           type: string
           x-displayName: Order Status
+        total:
+          type: number
+          format: double
+          x-displayName: Total
 
   securitySchemes:
     googleOAuth:

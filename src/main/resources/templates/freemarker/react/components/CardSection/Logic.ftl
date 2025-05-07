@@ -22,6 +22,7 @@ ${indent}               key: responseData.${component.cardKey},
 ${indent}               title: responseData.${component.cardTitle},
 ${indent}               description: responseData.${component.cardDescription},
 ${indent}               image: responseData.${component.cardImage},
+${indent}               highlight: responseData.${component.cardHighlight}
 ${indent}           });
 ${indent}           break;
 ${indent}       case "array":
@@ -29,7 +30,8 @@ ${indent}           items = responseData.map((item) => ({
 ${indent}               key: item.${component.cardKey},
 ${indent}               title: item.${component.cardTitle},
 ${indent}               description: item.${component.cardDescription},
-${indent}               image: item.${component.cardImage}
+${indent}               image: item.${component.cardImage},
+${indent}               highlight: item.${component.cardHighlight}
 ${indent}           }));
 ${indent}           break;
 ${indent}   }

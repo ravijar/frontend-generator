@@ -17,6 +17,7 @@ public class CardSectionPopulator extends ComponentPopulator{
         target.setCardTitle(source.getAssign().getTitle());
         target.setCardDescription(source.getAssign().getDescription());
         target.setCardImage(source.getAssign().getImage());
+        target.setCardHighlight(source.getAssign().getHighlight());
         target.setRoute(source.getRoute().getUrl());
         target.setTemplateLiteralRoute(StringHelper.toTemplateLiteralRoute(source.getRoute().getUrl()));
         target.setUrlParameter(StringHelper.extractUrlParameter(source.getRoute().getUrl()));

@@ -1,8 +1,9 @@
 .form {
-    min-width: 300px;
-    max-width: 400px;
+    min-width: 400px;
+    max-width: 600px;
+    max-height: 80vh;
     background-color: #fff;
-    padding: 32px 24px;
+    padding: 24px 16px;
     color: #212121;
     display: flex;
     flex-direction: column;
@@ -15,24 +16,48 @@
     text-align: center;
     font-weight: 600;
     font-size: 18px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
-.form .form-submit {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.form-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    margin-bottom: 16px;
+    background: #fbfbfb;
+    border: 1px solid #f1f1f1;
+    border-radius: 4px;
+}
+
+.form-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.form-body::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+.form-body::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 20px 0;
+}
+
+.form-submit {
+    width: auto;
+    align-self: center;
+    padding: 12px 16px;
+    font-size: inherit;
     font-family: inherit;
     color: #fff;
     background-color: #212121;
     border: none;
-    width: 100%;
-    padding: 12px 16px;
-    font-size: inherit;
-    gap: 8px;
-    margin: 12px 0;
     cursor: pointer;
     border-radius: 6px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
 }
 

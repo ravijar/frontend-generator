@@ -16,6 +16,11 @@ const Card = ({ item, displayNames, styles = {}, children }) => {
                 <div className="key-value-pairs-container" style={styles.keyValuePairsContainer}>
                     <RecursiveKeyValuePair data={item.data} displayNames={displayNames}/>
                 </div>
+                {item.highlight && (
+                    <div className="card-highlight-text" style={styles.highlightText}>
+                        {item.highlight}
+                    </div>
+                )}
                 <div className="children-container" style={styles.childrenContainer}>
                     {Children.map(children, (child) =>
                         isValidElement(child)

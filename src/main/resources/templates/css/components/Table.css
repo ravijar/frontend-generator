@@ -36,6 +36,7 @@
     color: white;
     font-weight: bold;
     white-space: normal;
+    cursor: default;
 }
 
 .custom-table td {
@@ -44,8 +45,10 @@
     border-bottom: 1px solid #ddd;
     min-width: 20px;
     max-width: 250px;
-    white-space: normal;
-    word-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor:default;
 }
 
 .custom-table tr {

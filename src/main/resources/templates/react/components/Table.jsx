@@ -31,27 +31,29 @@ export default function Table({ data = [], rowKey, displayNames = {}, styles = {
                 <tbody>
                 {data.map((row, index) => (
                     <tr key={index}>
-                        {columns.map((col) => (
-                            <td key={col}>
-                                {Array.isArray(row[col]) ? (
-                                    <div>
-                                        {row[col].map((item, i) => (
-                                            <div key={i}>{item}</div>
-                                        ))}
+                        {columns.map((col) => {
+                            const value = row[col];
+
+                            let displayValue;
+                            if (Array.isArray(value)) {
+                                displayValue = value.map((item, i) => <div key={i}>{item}</div>);
+                            } else if (typeof value === "object" && value !== null) {
+                                displayValue = Object.entries(value).map(([k, v], i) => (
+                                    <div key={i}>
+                                        {k}: {String(v)}
                                     </div>
-                                ) : typeof row[col] === "object" && row[col] !== null ? (
-                                    <div>
-                                        {Object.entries(row[col]).map(([k, v], i) => (
-                                            <div key={i}>{k}: {String(v)}</div>
-                                        ))}
-                                    </div>
-                                ) : row[col] !== undefined ? (
-                                    row[col]
-                                ) : (
-                                    "-"
-                                )}
-                            </td>
-                        ))}
+                                ));
+                            } else {
+                                displayValue = value !== undefined ? String(value) : "-";
+                            }
+
+                            return (
+                                <td key={col} title={Array.isArray(value) || typeof value === "object" ? undefined : String(value)}>
+                                    {displayValue}
+                                </td>
+                            );
+                        })}
+
                         {childComponents.map((child, childIndex) => (
                             <td key={`child-${childIndex}`}>
                                 {isValidElement(child)

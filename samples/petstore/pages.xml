@@ -17,7 +17,7 @@
             <resource method="GET">/items</resource>
             <result>
                 <component type="CardSection" id="itemsContainerCardSection">
-                    <assign key="id" title="name" description="description" image="imageURL"/>
+                    <assign key="id" title="name" description="description" image="imageURL" highlight="price"/>
                     <route>/items/{id}</route>
                 </component>
             </result>
@@ -29,7 +29,7 @@
             <resource method="GET">/items/{id}</resource>
             <result>
                 <component type="CardSection" id="itemsContainerCardSection">
-                    <assign key="id" title="name" description="description" image="imageURL"/>
+                    <assign key="id" title="name" description="description" image="imageURL" highlight="price"/>
                     <route>/items/{id}</route>
                 </component>
             </result>
@@ -41,7 +41,7 @@
             <resource method="GET">/items/{id}</resource>
             <result>
                 <component type="Card" id="itemContainerCard">
-                    <assign key="id" title="name" description="description" image="imageURL"/>
+                    <assign key="id" title="name" description="description" image="imageURL" highlight="price"/>
                     <component type="Button" id="itemAddToCartButton">
                         <text>Add to Cart</text>
                         <resource method="POST">/cart</resource>

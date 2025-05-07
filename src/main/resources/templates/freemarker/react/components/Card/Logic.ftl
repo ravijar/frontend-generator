@@ -14,12 +14,13 @@ ${indent}   let item = { data:[] };
 ${indent}   const responseData = ${component.parent.id}FetchResponse?.data;
 ${indent}   if (!responseData) return item;
 
-${indent}   const { ${component.cardKey}, ${component.cardTitle}, ${component.cardDescription}, ${component.cardImage}, ...rest } = responseData;
+${indent}   const { ${component.cardKey}, ${component.cardTitle}, ${component.cardDescription}, ${component.cardImage}, ${component.cardHighlight}, ...rest } = responseData;
 
 ${indent}   item.key = ${component.cardKey};
 ${indent}   item.title = ${component.cardTitle};
 ${indent}   item.description = ${component.cardDescription};
 ${indent}   item.image = ${component.cardImage};
+${indent}   item.highlight = ${component.cardHighlight};
 ${indent}   item.data = rest;
 
 ${indent}   return item;

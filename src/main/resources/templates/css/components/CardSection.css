@@ -14,17 +14,16 @@
 }
 
 .card {
-    width: 190px;
-    height: 254px;
+    width: 200px;
     padding: .8em;
-    background: #f5f5f5;
+    background: #fcfcfc;
     position: relative;
     overflow: visible;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .card:hover {
-    background: #f9f9f9;
+    background: #ffffff;
     cursor: pointer;
     box-shadow: 0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
 }
@@ -32,22 +31,36 @@
 .card-img {
     background-color: #b1b1b1;
     background-size: cover;
-    height: 40%;
+    height: 200px;
     width: 100%;
     border-radius: .5rem;
-}
-
-.card-info {
-    padding-top: 10%;
+    margin-bottom: 20px;
 }
 
 .text-title {
     font-weight: 600;
     font-size: 1.2em;
     line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 10px 0;
 }
 
 .text-body {
-    font-size: .9em;
-    padding-bottom: 10px;
+    font-size: 0.9em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 10px 0;
+}
+
+.highlight-text {
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+    text-align: left;
 }

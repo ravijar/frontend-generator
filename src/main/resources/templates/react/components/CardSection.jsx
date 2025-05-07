@@ -33,6 +33,11 @@ const CardSection = ({ items, onClick, styles = {} }) => {
                         {item.description && (
                             <p className="text-body" style={styles.textBody}>{item.description}</p>
                         )}
+                        {item.highlight && (
+                            <div className="highlight-text" style={styles.highlightText}>
+                                {item.highlight}
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}

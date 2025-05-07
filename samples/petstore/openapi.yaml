@@ -1,27 +1,26 @@
 openapi: 3.1.0
 info:
   title: Pet Store API
-  description: API for managing pets in a pet store
   version: 1.0.0
 
 servers:
   - url: http://localhost:8080
 
 paths:
-  /pets:
+  /items:
     get:
-      summary: Get all pets
-      operationId: getAllPets
+      summary: Get all items
+      operationId: getAllItems
       security: [ ]
       responses:
         "200":
-          description: Pets fetched!
+          description: Items fetched!
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Pet"
+                  $ref: "#/components/schemas/Item"
         "400":
           description: Bad request!
         "401":
@@ -29,13 +28,13 @@ paths:
         "403":
           description: Permission denied!
         "404":
-          description: Pets not found!
+          description: Items not found!
         "500":
           description: Server error!
 
     post:
-      summary: Create a new pet
-      operationId: createPet
+      summary: Create a new item
+      operationId: createItem
       security:
         - googleOAuth: [ admin ]
       requestBody:
@@ -43,14 +42,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Pet"
+              $ref: "#/components/schemas/Item"
       responses:
         "201":
-          description: Pet created successfully!
+          description: Item created successfully!
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pet"
+                $ref: "#/components/schemas/Item"
         "400":
           description: Bad request!
         "401":
@@ -62,10 +61,10 @@ paths:
         "500":
           description: Server error!
 
-  /pets/{id}:
+  /items/{id}:
     get:
-      summary: Get a pet by ID
-      operationId: getPetById
+      summary: Get an item by ID
+      operationId: getItemById
       security: [ ]
       parameters:
         - name: id
@@ -76,11 +75,11 @@ paths:
           x-displayName: ID
       responses:
         "200":
-          description: Pet fetched!
+          description: Item fetched!
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pet"
+                $ref: "#/components/schemas/Item"
         "400":
           description: Bad request!
         "401":
@@ -88,13 +87,13 @@ paths:
         "403":
           description: Permission denied!
         "404":
-          description: Pet not found!
+          description: Item not found!
         "500":
           description: Server error!
 
     put:
-      summary: Update a pet by ID
-      operationId: updatePet
+      summary: Update an item by ID
+      operationId: updateItem
       security:
         - googleOAuth: [ admin ]
       parameters:
@@ -109,14 +108,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Pet"
+              $ref: "#/components/schemas/Item"
       responses:
         "200":
-          description: Pet updated successfully!
+          description: Item updated successfully!
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pet"
+                $ref: "#/components/schemas/Item"
         "400":
           description: Bad request!
         "401":
@@ -124,13 +123,13 @@ paths:
         "403":
           description: Permission denied!
         "404":
-          description: Pet not found!
+          description: Item not found!
         "500":
           description: Server error!
 
     delete:
-      summary: Delete a pet by ID
-      operationId: deletePet
+      summary: Delete an item by ID
+      operationId: deleteItem
       security:
         - googleOAuth: [ admin ]
       parameters:
@@ -142,7 +141,7 @@ paths:
           x-displayName: ID
       responses:
         "204":
-          description: Pet deleted successfully!
+          description: Item deleted successfully!
         "400":
           description: Bad request!
         "401":
@@ -150,7 +149,7 @@ paths:
         "403":
           description: Permission denied!
         "404":
-          description: Pet not found!
+          description: Item not found!
         "500":
           description: Server error!
 
@@ -363,7 +362,7 @@ paths:
           description: Server error!
 
     post:
-      summary: Add a pet to the current user's cart
+      summary: Add an item to the current user's cart
       operationId: addToCart
       security:
         - googleOAuth: [ user ]
@@ -381,7 +380,7 @@ paths:
               $ref: '#/components/schemas/CartItemPost'
       responses:
         '200':
-          description: Pet added to cart!
+          description: Item added to cart!
           content:
             application/json:
               schema:
@@ -493,7 +492,7 @@ paths:
 
 components:
   schemas:
-    Pet:
+    Item:
       type: object
       properties:
         id:
@@ -537,16 +536,16 @@ components:
         userId:
           type: string
           x-displayName: User ID
-        petId:
+        itemId:
           type: string
-          x-displayName: Pet ID
+          x-displayName: Item ID
 
     CartItemPost:
       type: object
       properties:
-        petId:
+        itemId:
           type: string
-          x-displayName: Pet ID
+          x-displayName: Item ID
 
     CartItemView:
       type: object
@@ -554,7 +553,7 @@ components:
         id:
           type: string
           x-displayName: ID
-        petName:
+        itemName:
           type: string
           x-displayName: Name
         quantity:
@@ -570,11 +569,11 @@ components:
         userId:
           type: string
           x-displayName: User ID
-        petIds:
+        itemIds:
           type: array
           items:
             type: string
-          x-displayName: Pet Ids
+          x-displayName: Item Ids
         orderTime:
           type: string
           x-displayName: Order Time
@@ -591,11 +590,11 @@ components:
         orderTime:
           type: string
           x-displayName: Order Time
-        petSummary:
+        itemSummary:
           type: array
           items:
             type: string
-          x-displayName: Pets
+          x-displayName: Items
         status:
           type: string
           x-displayName: Order Status

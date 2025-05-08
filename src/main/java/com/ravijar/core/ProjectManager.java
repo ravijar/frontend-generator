@@ -36,7 +36,7 @@ public class ProjectManager {
     private final ConfigHandler configHandler;
     private final String[] projectSubDirs = {"styles/components", "styles/pages", "styles/custom_styles"};
     private final String[] buildSubDirs = {"build/src/components", "build/src/pages", "build/src/custom_styles", "build/src/common", "build/src/auth"};
-    private final String[] npmPackages = {"react-router-dom", "@fortawesome/react-fontawesome", "@fortawesome/free-regular-svg-icons", "@fortawesome/free-solid-svg-icons", "@react-oauth/google"};
+    private final String[] npmPackages = {"react-router-dom", "@fortawesome/react-fontawesome", "@fortawesome/free-regular-svg-icons", "@fortawesome/free-solid-svg-icons", "@react-oauth/google", "react-select"};
     private static final String SOURCE_ROOT_PATH = "templates";
 
     public ProjectManager() {

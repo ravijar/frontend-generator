@@ -9,24 +9,23 @@
                 <#include fetch>
                 <#assign component = currentComponent>
 
-${indent}const ${component.id}Filter = () => {
+${indent}const ${component.id}Filter = (data, schema) => {
 ${indent}   let items = [];
-${indent}   const responseSchema = ${component.parent.id}Responses[${component.parent.id}FetchResponse?.httpStatusCode]?.responseSchema.type;
-${indent}   const responseData = ${component.parent.id}FetchResponse?.data;
-${indent}   if (!responseData) return items;
 
-${indent}   switch (responseSchema) {
+${indent}   if (!data) return items;
+
+${indent}   switch (schema) {
 ${indent}       case "null":
 ${indent}           items.push({
-${indent}               key: responseData.${component.cardKey},
-${indent}               title: responseData.${component.cardTitle},
-${indent}               description: responseData.${component.cardDescription},
-${indent}               image: responseData.${component.cardImage},
-${indent}               highlight: responseData.${component.cardHighlight}
+${indent}               key: data.${component.cardKey},
+${indent}               title: data.${component.cardTitle},
+${indent}               description: data.${component.cardDescription},
+${indent}               image: data.${component.cardImage},
+${indent}               highlight: data.${component.cardHighlight}
 ${indent}           });
 ${indent}           break;
 ${indent}       case "array":
-${indent}           items = responseData.map((item) => ({
+${indent}           items = data.map((item) => ({
 ${indent}               key: item.${component.cardKey},
 ${indent}               title: item.${component.cardTitle},
 ${indent}               description: item.${component.cardDescription},

@@ -32,7 +32,7 @@ const CardSection = ({ data, responseSchema, onClick, mapModel, title, displayNa
         label: displayNames?.[col] || col,
     }));
 
-    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
         return (
             <div className="card-array-container" style={styles.cardArrayContainer}>
                 <NoContent />

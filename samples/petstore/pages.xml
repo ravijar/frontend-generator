@@ -1,55 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pages>
+    <!--Public Pages-->
     <page name="Home" route="/home" navbar="true">
         <component type="HeroSection" id="heroSection">
             <text>Find Your Perfect Pet &amp; Everything They Need!</text>
             <text>From adorable companions to premium pet supplies, we&apos;ve got everything to make your pet happy!</text>
             <image>https://assets.vegconom.de/media/wp-content/uploads/sites/3/2024/03/21181402/dog-in-pet-store-2048x1170.jpeg</image>
         </component>
-        <component type="Button" id="seeAllPetsButton">
-            <text>See All Pets</text>
-            <route>/pets</route>
+        <component type="Button" id="exploreButton">
+            <text>Explore</text>
+            <route>/items</route>
         </component>
     </page>
 
-    <page name="Pets" route="/pets" navbar="true">
-        <component type="Container" id="petsContainer">
-            <resource method="GET">/pets</resource>
+    <page name="Explore" route="/items" navbar="true">
+        <component type="Container" id="exploreContainer">
+            <text>Our Products</text>
+            <resource method="GET">/items</resource>
             <result>
-                <component type="CardSection" id="petsContainerCardSection">
-                    <assign key="id" title="name" description="description" image="imageURL"/>
-                    <route>/pets/{id}</route>
+                <component type="CardSection" id="exploreContainerCardSection">
+                    <assign key="id" title="name" description="description" image="imageURL" highlight="price"/>
+                    <route>/items/{id}</route>
                 </component>
             </result>
         </component>
     </page>
 
-    <page name="SearchPets" route="/searchPets" navbar="false">
-        <component type="SearchBar" id="petsSearchBar">
-            <resource method="GET">/pets/{id}</resource>
+    <!--User Pages-->
+    <page name="Item" route="/items/{id}" navbar="false">
+        <component type="Container" id="itemContainer">
+            <resource method="GET">/items/{id}</resource>
             <result>
-                <component type="CardSection" id="petsContainerCardSection">
-                    <assign key="id" title="name" description="description" image="imageURL"/>
-                    <route>/pets/{id}</route>
-                </component>
-            </result>
-        </component>
-    </page>
-
-    <page name="Pet" route="/pets/{id}" navbar="false">
-        <component type="Container" id="petContainer">
-            <resource method="GET">/pets/{id}</resource>
-            <result>
-                <component type="Card" id="petContainerCard">
-                    <assign key="id" title="name" description="description" image="imageURL"/>
-                    <component type="Button" id="petAddToCartButton">
+                <component type="Card" id="itemContainerCard">
+                    <assign key="id" title="name" description="description" image="imageURL" highlight="price"/>
+                    <component type="Button" id="addToCartButton">
                         <text>Add to Cart</text>
                         <resource method="POST">/cart</resource>
                         <model>
-                            <property key="petId" value="id"/>
+                            <property key="itemId" value="id"/>
                         </model>
                         <result>
-                            <component type="Alert" id="addToCartButtonButtonAlert"/>
+                            <component type="Alert" id="addToCartButtonAlert"/>
                         </result>
                     </component>
                 </component>
@@ -59,6 +50,7 @@
 
     <page name="Cart" route="/cart" navbar="true">
         <component type="Container" id="cartContainer">
+            <text>My Cart</text>
             <resource method="GET">/cart</resource>
             <result>
                 <component type="Table" id="cartTable">
@@ -84,6 +76,7 @@
 
     <page name="Orders" route="/orders" navbar="true">
         <component type="Container" id="ordersContainer">
+            <text>My Orders</text>
             <resource method="GET">/orders</resource>
             <result>
                 <component type="Table" id="ordersTable">
@@ -93,31 +86,59 @@
         </component>
     </page>
 
-    <page name="Admin" route="/admin" navbar="true">
-        <component type="Button" id="createPetButton">
-            <text>Add New Pet</text>
-            <route>/createPet</route>
+    <!--Admin Pages-->
+    <page name="Inventory" route="/inventory" navbar="true">
+        <component type="Button" id="createItemButton">
+            <text>Add Item</text>
+            <route>/createItem</route>
         </component>
-        <component type="Container" id="adminPetsContainer">
-            <resource method="GET">/pets</resource>
+        <component type="Container" id="inventoryContainer">
+            <text>Inventory</text>
+            <resource method="GET">/items</resource>
             <result>
-                <component type="Table" id="adminPetsContainerTable">
+                <component type="Table" id="inventoryContainerTable">
                     <assign key="id"/>
-                    <component type="Button" id="updatePetButton">
+                    <component type="Button" id="updateItemButton">
                         <text>Update</text>
-                        <route>/updatePet/{id}</route>
+                        <route>/updateItem/{id}</route>
                     </component>
-                    <component type="Button" id="deletePetButton">
+                    <component type="Button" id="deleteItemButton">
                         <text>Delete</text>
-                        <resource method="DELETE">/pets/{id}</resource>
+                        <resource method="DELETE">/items/{id}</resource>
                         <result>
-                            <component type="Alert" id="deletePetButtonAlert"/>
+                            <component type="Alert" id="deleteItemButtonAlert"/>
                         </result>
                     </component>
                 </component>
             </result>
         </component>
+    </page>
+
+    <page name="CreateItem" route="/createItem" navbar="false">
+        <component type="Form" id="createItemForm">
+            <resource method="POST">/items</resource>
+            <text>Add New Item</text>
+            <submit>Add Item</submit>
+            <result>
+                <component type="Alert" id="createItemFormAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="UpdateItem" route="/updateItem/{id}" navbar="false">
+        <component type="Form" id="updateItemForm">
+            <resource method="PUT">/items/{id}</resource>
+            <text>Edit Item</text>
+            <submit>Save Changes</submit>
+            <result>
+                <component type="Alert" id="updateItemFormAlert"/>
+            </result>
+        </component>
+    </page>
+
+    <page name="Users" route="/users" navbar="true">
         <component type="Container" id="adminUsersContainer">
+            <text>Users</text>
             <resource method="GET">/users</resource>
             <result>
                 <component type="Table" id="adminUsersContainerTable">
@@ -138,33 +159,11 @@
         </component>
     </page>
 
-    <page name="CreatePet" route="/createPet" navbar="false">
-        <component type="Form" id="createPetForm">
-            <resource method="POST">/pets</resource>
-            <text>Create New Pet</text>
-            <submit>Add Pet</submit>
-            <result>
-                <component type="Alert" id="createPetFormAlert"/>
-            </result>
-        </component>
-    </page>
-
-    <page name="UpdatePet" route="/updatePet/{id}" navbar="false">
-        <component type="Form" id="updatePetForm">
-            <resource method="PUT">/pets/{id}</resource>
-            <text>Update Pet</text>
-            <submit>Update Pet</submit>
-            <result>
-                <component type="Alert" id="updatePetFormAlert"/>
-            </result>
-        </component>
-    </page>
-
     <page name="UpdateUser" route="/updateUser/{id}" navbar="false">
         <component type="Form" id="updateUserForm">
             <resource method="PUT">/users/{id}</resource>
-            <text>Update User</text>
-            <submit>Update User</submit>
+            <text>Edit User</text>
+            <submit>Save Changes</submit>
             <result>
                 <component type="Alert" id="updateUserFormAlert"/>
             </result>

@@ -1,6 +1,48 @@
+.table-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 10% 0;
+}
+
+.filter-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.react-select {
+    width: 150px;
+    font-size: 0.8rem;
+}
+
+.filter-input {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 150px;
+    font-size: 0.8rem;
+    padding: 11px;
+    box-sizing: border-box;
+}
+
+.filter-input:focus {
+    outline: none;
+}
+
+.filter-input::placeholder {
+    color: #888;
+}
+
 .table-container {
     width: 80%;
-    max-height: 80vh;
+    max-height: 70vh;
     margin: 20px auto 50px;
     overflow-x: auto;
     overflow-y: auto;
@@ -24,28 +66,49 @@
 .custom-table thead {
     position: sticky;
     top: 0;
-    z-index: 2;
     background-color: #f4f4f4;
 }
 
 .custom-table th {
-    padding: 12px 20px;
+    padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     background-color: #787878;
     color: white;
     font-weight: bold;
     white-space: normal;
+    cursor: default;
 }
 
 .custom-table td {
-    padding: 12px 20px;
+    padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     min-width: 20px;
-    max-width: 250px;
-    white-space: normal;
-    word-wrap: break-word;
+    max-width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor:default;
+}
+
+.table-data-list {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor:default;
+    position: relative;
+    padding-left: 10px;
+}
+
+.table-data-list::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
 }
 
 .custom-table tr {

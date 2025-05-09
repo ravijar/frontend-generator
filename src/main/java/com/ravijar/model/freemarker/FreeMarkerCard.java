@@ -13,5 +13,6 @@ public class FreeMarkerCard extends FreeMarkerComponent{
     private String cardTitle;
     private String cardDescription;
     private String cardImage;
+    private String cardHighlight;
     private List<FreeMarkerComponent> subComponents;
 }

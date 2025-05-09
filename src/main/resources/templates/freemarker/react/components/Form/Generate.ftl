@@ -17,26 +17,28 @@ export default function ${component.id?cap_first}({
         <div className="${component.styleId}-container">
             <form onSubmit={${component.id}HandleSubmit} className="form" style={styles.form}>
                 <div className="form-title">${component.title}</div>
-            <#list component.resource.urlParameters as parameter>
-                <InputField
-                    label="${parameter.displayName}"
-                    value={${component.id}${parameter.name?cap_first}}
-                    onChange={${component.id}${parameter.name?cap_first}HandleChange}
-                    placeholder={"Enter " + "${parameter.displayName}"}
-                    error={${component.id}${parameter.name?cap_first}Error}
-                    styles={styles.inputField}
-                />
-            </#list>
-            <#list component.resource.requestProperties as property>
-                <InputField
-                    label="${property.displayName}"
-                    value={${component.id}${property.name?cap_first}}
-                    onChange={${component.id}${property.name?cap_first}HandleChange}
-                    placeholder={"Enter " + "${property.displayName}"}
-                    error={${component.id}${property.name?cap_first}Error}
-                    styles={styles.inputField}
-                />
-            </#list>
+                <div className="form-body">
+                <#list component.resource.urlParameters as parameter>
+                    <InputField
+                        label="${parameter.displayName}"
+                        value={${component.id}${parameter.name?cap_first}}
+                        onChange={${component.id}${parameter.name?cap_first}HandleChange}
+                        placeholder={"Enter " + "${parameter.displayName}"}
+                        error={${component.id}${parameter.name?cap_first}Error}
+                        styles={styles.inputField}
+                    />
+                </#list>
+                <#list component.resource.requestProperties as property>
+                    <InputField
+                        label="${property.displayName}"
+                        value={${component.id}${property.name?cap_first}}
+                        onChange={${component.id}${property.name?cap_first}HandleChange}
+                        placeholder={"Enter " + "${property.displayName}"}
+                        error={${component.id}${property.name?cap_first}Error}
+                        styles={styles.inputField}
+                    />
+                </#list>
+                </div>
                 <button
                     className="form-submit"
                     type="submit"

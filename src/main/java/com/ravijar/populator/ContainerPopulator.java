@@ -16,6 +16,10 @@ public class ContainerPopulator extends ComponentPopulator{
     public void populate(Container source, FreeMarkerContainer target) {
         populateComponent(source, target);
 
+        if(source.getText() != null && !source.getText().getBody().isEmpty()) {
+            target.setTitle(source.getText().getBody());
+        }
+
         if(source.getResource() != null) {
             OpenAPIResource openAPIResource = openAPIParser.getResourceData(source.getResource().getUrl(), source.getResource().getMethod());
 

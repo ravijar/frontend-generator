@@ -20,4 +20,7 @@ public class Assign {
 
     @JacksonXmlProperty(isAttribute = true)
     private String image;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String highlight;
 }

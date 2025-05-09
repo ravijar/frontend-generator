@@ -4,6 +4,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.ravijar.model.xml.LocalStorage;
 import com.ravijar.model.xml.Resource;
 import com.ravijar.model.xml.Result;
+import com.ravijar.model.xml.Text;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +21,9 @@ public class Container extends Component{
 
     @JacksonXmlProperty(localName = "result")
     private Result result;
+
+    @JacksonXmlProperty(localName = "text")
+    private Text text;
 
     public Container() {
         this.setType("Container");

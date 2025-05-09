@@ -15,4 +15,9 @@ public class OpenAPIResource {
     private List<OpenAPIParameter> urlParameters;
     private List<OpenAPISchemaProperty> requestProperties;
     private List<OpenAPIResponse> responses;
+    private List<OpenAPISecurityRequirement> securityRequirements;
+
+    public boolean isSecured() {
+        return securityRequirements != null && !securityRequirements.isEmpty();
+    }
 }

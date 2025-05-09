@@ -23,11 +23,14 @@ public class PagePopulator {
         target.setRoute(source.getRoute());
         target.setUrlParameter(StringHelper.extractUrlParameter(source.getRoute()));
         target.setColonRoute(StringHelper.toColonRoute(source.getRoute()));
+        target.setSecured(false);
+        target.setVisibleInNavBar(source.isNavbar());
+        target.setSecurityScopes(new ArrayList<>());
 
         List<FreeMarkerComponent> freeMarkerComponents = new ArrayList<>();
 
         for(Component component : source.getComponents()) {
-            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser).switchComponent(component, null);
+            FreeMarkerComponent freeMarkerComponent = new PopulatorHelper(openAPIParser, target).switchComponent(component, null);
             freeMarkerComponent.setRole("root");
             freeMarkerComponents.add(freeMarkerComponent);
         }

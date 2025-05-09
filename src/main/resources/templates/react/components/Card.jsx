@@ -4,10 +4,12 @@ import {Children, cloneElement, isValidElement} from "react";
 
 const Card = ({ item, displayNames, styles = {}, children }) => {
     return (
-        <div className="detailed-card" style={styles.detailedCard}>
-            <div className="detailed-card-img" style={styles.detailedCardImg}>
-                <img src={item.image} alt={item.title}></img>
-            </div>
+        <div className={`detailed-card ${!item.image ? "no-image" : ""}`} style={styles.detailedCard}>
+            {item.image && (
+                <div className="detailed-card-img" style={styles.detailedCardImg}>
+                    <img src={item.image} alt={item.title}></img>
+                </div>
+            )}
             <div className="content-container" style={styles.contentContainer}>
                 <div className="detailed-card-info" style={styles.detailedCardInfo}>
                     <p className="detailed-card-title" style={styles.detailedCardTitle}>{item.title}</p>
@@ -16,6 +18,11 @@ const Card = ({ item, displayNames, styles = {}, children }) => {
                 <div className="key-value-pairs-container" style={styles.keyValuePairsContainer}>
                     <RecursiveKeyValuePair data={item.data} displayNames={displayNames}/>
                 </div>
+                {item.highlight && (
+                    <div className="card-highlight-text" style={styles.highlightText}>
+                        {item.highlight}
+                    </div>
+                )}
                 <div className="children-container" style={styles.childrenContainer}>
                     {Children.map(children, (child) =>
                         isValidElement(child)

@@ -16,7 +16,11 @@ ${indent}       onClick={() => saveTo${component.localStorageKey?cap_first}(${re
 ${indent}       onClick={(id) => removeFrom${component.localStorageKey?cap_first}(id)}
                 <#break>
             <#case "resource">
+        <#if component.modelProperties?has_content>
+${indent}       onClick={() => ${component.id}Fetch(${component.id}PopulateModel())}
+        <#else>
 ${indent}       onClick={(id) => ${component.id}Fetch(id)}
+        </#if>
                 <#break>
         </#switch>
 ${indent}       styles={styles.${component.id}}

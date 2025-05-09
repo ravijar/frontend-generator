@@ -15,4 +15,7 @@ public class FreeMarkerPage {
     private String colonRoute;
     private String urlParameter;
     private List<FreeMarkerComponent> components;
+    private boolean secured;
+    private boolean visibleInNavBar;
+    private List<String> securityScopes;
 }

@@ -29,6 +29,7 @@ public class CommandHandler {
 
     private void runProcessBuilder(ProcessBuilder processBuilder) {
         try {
+            processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
             BufferedReader reader = new BufferedReader(
@@ -82,7 +83,7 @@ public class CommandHandler {
             processBuilder.directory(dir);
             runProcessBuilder(processBuilder);
         }
-        logger.info("✔ App Started on localHost!");
+        logger.info("App Started on localHost!");
     }
 
     public void installNpmPackage(String baseDir, String packageName) {

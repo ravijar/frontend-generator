@@ -1,12 +1,7 @@
 package com.ravijar.parser;
 
 import com.ravijar.helper.OpenAPIConverter;
-import com.ravijar.model.PageDTO;
-import com.ravijar.model.openapi.OpenAPIParameter;
-import com.ravijar.model.openapi.OpenAPIResource;
-import com.ravijar.model.openapi.OpenAPIResponse;
-import com.ravijar.model.openapi.OpenAPISchemaProperty;
-import com.ravijar.model.xml.Resource;
+import com.ravijar.model.openapi.*;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -14,7 +9,6 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
-import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.apache.logging.log4j.LogManager;
@@ -250,6 +244,47 @@ public class OpenAPIParser {
         return schemas;
     }
 
+    public Map<String, OpenAPISecurityScheme> getSecuritySchemes() {
+        if (openAPIData == null || openAPIData.getComponents() == null || openAPIData.getComponents().getSecuritySchemes() == null) {
+            logger.error("No security schemes found in OpenAPI specification.");
+            return Collections.emptyMap();
+        }
+
+        Map<String, OpenAPISecurityScheme> securitySchemes = new HashMap<>();
+
+        openAPIData.getComponents().getSecuritySchemes().forEach((name, securityScheme) -> {
+            if ("oauth2".equalsIgnoreCase(securityScheme.getType().toString())) {
+                OpenAPISecurityScheme scheme = new OpenAPISecurityScheme(
+                        securityScheme.getType().toString(),
+                        securityScheme.getFlows().getAuthorizationCode().getAuthorizationUrl(),
+                        securityScheme.getFlows().getAuthorizationCode().getTokenUrl(),
+                        securityScheme.getFlows().getAuthorizationCode().getScopes()
+                );
+                securitySchemes.put(name, scheme);
+            }
+        });
+
+        return securitySchemes;
+    }
+
+    public List<OpenAPISecurityRequirement> getSecurityRequirementsForOperation(String path, PathItem.HttpMethod method) {
+        Operation operation = getOperation(path, method);
+        if (operation == null || operation.getSecurity() == null) {
+            logger.info("No security requirements found for path: {} {}", method, path);
+            return Collections.emptyList();
+        }
+
+        List<OpenAPISecurityRequirement> securityRequirements = new ArrayList<>();
+
+        operation.getSecurity().forEach(securityRequirement -> {
+            securityRequirement.forEach((schemeName, scopes) -> {
+                securityRequirements.add(new OpenAPISecurityRequirement(schemeName, scopes));
+            });
+        });
+
+        return securityRequirements;
+    }
+
     public String getOperationId(String path, PathItem.HttpMethod method) {
         Operation operation = getOperation(path, method);
         if (operation == null) {
@@ -276,14 +311,16 @@ public class OpenAPIParser {
         return responses.keySet();
     }
 
-    public OpenAPIResource getResourceData(Resource resource) {
-        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(resource.getMethod());
-        String url = resource.getUrl();
+    public OpenAPIResource getResourceData(String url, String method) {
+        PathItem.HttpMethod httpMethod = OpenAPIConverter.getHttpMethod(method);
 
         String apiFunctionName = getOperationId(url, httpMethod);
+        if (apiFunctionName == null) return null;
+
         List<OpenAPIParameter> urlParameters = getParameters(url, httpMethod);
         String requestSchema = getRequestSchema(url, httpMethod);
         Set<String> responseCodes = getResponseCodes(url, httpMethod);
+        List<OpenAPISecurityRequirement> securityRequirements = getSecurityRequirementsForOperation(url, httpMethod);
 
         List<OpenAPISchemaProperty> requestParameters;
         requestParameters = getSchemas().get(requestSchema);
@@ -303,87 +340,6 @@ public class OpenAPIParser {
             responses.add(new OpenAPIResponse(code, schemaName, type, description, getSchemas().get(schemaName)));
         }
 
-        return new OpenAPIResource(resource.getMethod(), apiFunctionName, urlParameters, requestParameters, responses);
+        return new OpenAPIResource(method, apiFunctionName, urlParameters, requestParameters, responses, securityRequirements);
     }
-
-    @Deprecated
-    private String getBaseUrl() {
-        List<Server> servers = openAPIData.getServers();
-        if (servers != null && !servers.isEmpty()) {
-            return servers.get(0).getUrl();
-        } else {
-            logger.error("No servers found in OpenAPI specification.");
-            return "";
-        }
-    }
-
-    @Deprecated
-    public String getUrlEndpoint(String resourceUrl) {
-        if (openAPIData == null) {
-            logger.error("OpenAPI data is not initialized.");
-            return null;
-        }
-
-        Map<String, PathItem> paths = openAPIData.getPaths();
-        if (paths == null) {
-            logger.error("No paths found in OpenAPI specification.");
-            return null;
-        }
-
-        for (String path : paths.keySet()) {
-            if (path.startsWith(resourceUrl)) {
-                int paramIndex = path.indexOf("{");
-                String basePath = paramIndex == -1 ? path : path.substring(0, paramIndex);
-                String baseUrl = getBaseUrl();
-                return baseUrl + basePath;
-            }
-        }
-
-        logger.error("Resource URL not found in OpenAPI specification: {}", resourceUrl);
-        return null;
-    }
-
-    @Deprecated
-    public List<String> getNextPages(String path, PathItem.HttpMethod method, String responseType) {
-        Operation operation = getOperation(path, method);
-
-        if (operation == null) {
-            return Collections.emptyList();
-        }
-
-        Map<String, ApiResponse> responses = operation.getResponses();
-        if (responses == null || !responses.containsKey(responseType)) {
-            logger.error("Response type not found for path and method in OpenAPI specification: {} {} {}", responseType, method, path);
-            return Collections.emptyList();
-        }
-
-        ApiResponse apiResponse = responses.get(responseType);
-        Map<String, Object> extensions = apiResponse.getExtensions();
-
-        if (extensions == null || !extensions.containsKey("x-nextPages")) {
-            logger.debug("No next pages found for path and method in OpenAPI specification: {} {} {}", method, path, responseType);
-            return Collections.emptyList();
-        }
-
-        Object nextPagesObject = extensions.get("x-nextPages");
-        if (nextPagesObject instanceof List) {
-            List<?> nextPagesList = (List<?>) nextPagesObject;
-            List<String> nextPages = new ArrayList<>();
-            for (Object nextPage : nextPagesList) {
-                if (nextPage instanceof String) {
-                    nextPages.add((String) nextPage);
-                }
-            }
-            return nextPages;
-        }
-
-        return Collections.emptyList();
-    }
-
-    @Deprecated
-    public void getPageExtensions(PageDTO pageDTO) {
-        Operation operation = getOperation(pageDTO.getResourceUrl(), pageDTO.getResourceMethod());
-        pageDTO.setPageTitle(getExtentionString(operation.getExtensions(), "x-pageTitle"));
-    }
-
 }

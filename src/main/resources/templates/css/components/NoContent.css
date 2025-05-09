@@ -1,0 +1,23 @@
+.no-content {
+    width: 100%;
+    border-radius: 8px;
+    padding: 40px 0;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    text-align: center;
+}
+
+.no-content-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #999;
+}
+
+.no-content-message {
+    margin: 0;
+    font-size: 1.1rem;
+}

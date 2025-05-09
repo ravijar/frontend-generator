@@ -49,29 +49,4 @@ class OpenAPISchemaPropertyTest {
         assertEquals(openAPISchemaProperty1, openAPISchemaProperty2);
         assertEquals(openAPISchemaProperty1.hashCode(), openAPISchemaProperty2.hashCode());
     }
-
-    @Deprecated
-    @Test
-    void testGetTypeScriptType() {
-        OpenAPISchemaProperty integerType = new OpenAPISchemaProperty("id", "integer", "ID");
-        assertEquals("number", integerType.getTypeScriptType());
-
-        OpenAPISchemaProperty numberType = new OpenAPISchemaProperty("price", "number", "Price");
-        assertEquals("number", numberType.getTypeScriptType());
-
-        OpenAPISchemaProperty stringType = new OpenAPISchemaProperty("name", "string", "Name");
-        assertEquals("string", stringType.getTypeScriptType());
-
-        OpenAPISchemaProperty booleanType = new OpenAPISchemaProperty("isActive", "boolean", "Active");
-        assertEquals("boolean", booleanType.getTypeScriptType());
-
-        OpenAPISchemaProperty objectType = new OpenAPISchemaProperty("details", "object", "Details");
-        assertEquals("{}", objectType.getTypeScriptType());
-
-        OpenAPISchemaProperty arrayType = new OpenAPISchemaProperty("items", "array", "Items");
-        assertEquals("any[]", arrayType.getTypeScriptType());
-
-        OpenAPISchemaProperty unknownType = new OpenAPISchemaProperty("custom", "customType", "Custom");
-        assertEquals("any", unknownType.getTypeScriptType());
-    }
 }

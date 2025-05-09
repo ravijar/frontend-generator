@@ -13,4 +13,5 @@ public class FreeMarkerForm extends FreeMarkerComponent{
     private String action;
     private OpenAPIResource resource;
     private FreeMarkerComponent resultComponent;
+    private OpenAPIResource fetchResource;
 }

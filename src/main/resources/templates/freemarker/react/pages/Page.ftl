@@ -8,23 +8,27 @@
 <#assign setUrlParamEffect = "/react/hooks/useEffect/SetUrlParam.ftl">
 
 <#assign fetchHeader = "/react/logic/fetch/parts/FetchHeader.ftl">
-<#assign fetchHeaderParam = "/react/logic/fetch/parts/FetchHeaderParam.ftl">
-<#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
+<#assign fetchHeaderIdParam = "/react/logic/fetch/parts/FetchHeaderIdParam.ftl">
+<#assign fetchHeaderReqParam = "/react/logic/fetch/parts/FetchHeaderReqParam.ftl">
 <#assign fetchBody = "/react/logic/fetch/parts/FetchBody.ftl">
-<#assign fetchBodyParam = "/react/logic/fetch/parts/FetchBodyParam.ftl">
-<#assign fetchBodyUrlParam = "/react/logic/fetch/parts/FetchBodyUrlParam.ftl">
+<#assign fetchBodyIdParam = "/react/logic/fetch/parts/FetchBodyIdParam.ftl">
+<#assign fetchBodyUrlIdParam = "/react/logic/fetch/parts/FetchBodyUrlIdParam.ftl">
+<#assign fetchBodyReqParamAuth = "/react/logic/fetch/parts/FetchBodyReqParamAuth.ftl">
+<#assign fetchFooter = "/react/logic/fetch/parts/FetchFooter.ftl">
 
 <#assign fetch = "/react/logic/fetch/Fetch.ftl">
-<#assign fetchParam = "/react/logic/fetch/FetchParam.ftl">
-<#assign fetchUrlParam = "/react/logic/fetch/FetchUrlParam.ftl">
+<#assign fetchIdParam = "/react/logic/fetch/FetchIdParam.ftl">
+<#assign fetchUrlIdParam = "/react/logic/fetch/FetchUrlIdParam.ftl">
+<#assign fetchReqParamAuth = "/react/logic/fetch/FetchReqParamAuth.ftl">
 
 <#assign saveLocalStorage = "/react/logic/localStorage/SaveLocalStorage.ftl">
 <#assign loadLocalStorage = "/react/logic/localStorage/LoadLocalStorage.ftl">
 <#assign removeLocalStorage = "/react/logic/localStorage/RemoveLocalStorage.ftl">
 
-<#assign navigate = "/react/logic/Navigate.ftl">
 <#assign handleChange = "/react/logic/HandleChange.ftl">
 <#assign handleSubmit = "/react/logic/HandleSubmit.ftl">
+<#assign navigate = "/react/logic/Navigate.ftl">
+<#assign populateModel = "/react/logic/PopulateModel.ftl">
 
 <#assign alertCall = "/react/components/Alert/Call.ftl">
 <#assign alertLogic = "/react/components/Alert/Logic.ftl">
@@ -73,7 +77,8 @@
 <#assign nestState = "/react/components/common/nest/State.ftl">
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createConfiguration, DefaultApi } from "../client_api";
+import { createApiClient } from "../common/ClientAPIWrapper.js";
+import { useAuth } from "../auth/AuthProvider.jsx";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
@@ -81,6 +86,7 @@ import Card from "../components/Card";
 import CardSection from "../components/CardSection";
 import Alert from "../components/Alert";
 import Table from "../components/Table";
+import LoadingModal from "../components/LoadingModal";
 <#list page.components as component>
     <#switch component.type>
         <#case "Form">
@@ -101,9 +107,10 @@ export default function ${page.name?cap_first}() {
     const navigate = useNavigate();
     <#if page.urlParameter??>const { ${page.urlParameter} } = useParams();</#if>
 
-    const configuration = createConfiguration();
-    const clientApi = new DefaultApi(configuration);
+    const { token } = useAuth();
+    const clientApi = createApiClient(token);
 
+    const [loading, setLoading] = useState(false);
     <#-- Creating Component UseStates -->
     <#assign indentValue = 1>
     <#list page.components as rootComponent>
@@ -120,6 +127,9 @@ export default function ${page.name?cap_first}() {
                 <#break>
             <#case "Container">
                 <#include containerState>
+                <#break>
+            <#case "Button">
+                <#include buttonState>
                 <#break>
         </#switch>
     </#list>
@@ -166,6 +176,7 @@ export default function ${page.name?cap_first}() {
 
     return (
         <div className = "page-container">
+            <LoadingModal show={loading}/>
             <#-- Calling Components -->
             <#assign indentValue = 3>
             <#list page.components as rootComponent>

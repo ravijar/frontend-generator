@@ -1,137 +1,626 @@
 openapi: 3.1.0
 info:
   title: Pet Store API
-  description: API for managing pets in a pet store
   version: 1.0.0
+
 servers:
-  - url: https://petstore-dev.up.railway.app/
-    description: Local development server
+  - url: http://localhost:8080
 
 paths:
-  /pets:
+  /items:
     get:
-      summary: Get all pets
-      operationId: getAllPets
+      summary: Get all items
+      operationId: getAllItems
+      security: [ ]
       responses:
-        '200':
-          description: A list of pets
+        "200":
+          description: Items fetched!
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pet'
+                  $ref: "#/components/schemas/Item"
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Items not found!
+        "500":
+          description: Server error!
 
     post:
-      summary: Create a new pet
-      operationId: createPet
+      summary: Create a new item
+      operationId: createItem
+      security:
+        - googleOAuth: [ admin ]
       requestBody:
-        description: Pet object that needs to be added to the store
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: "#/components/schemas/Item"
       responses:
-        '201':
-          description: Pet created successfully
+        "201":
+          description: Item created successfully!
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
 
-  /pets/{id}:
+  /items/{id}:
     get:
-      summary: Get a pet by ID
-      operationId: getPetById
+      summary: Get an item by ID
+      operationId: getItemById
+      security: [ ]
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the pet to return
           schema:
-            type: integer
-            format: int64
+            type: string
           x-displayName: ID
       responses:
-        '200':
-          description: Pet found
+        "200":
+          description: Item fetched!
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
-        '404':
-          description: Pet not found
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Item not found!
+        "500":
+          description: Server error!
 
     put:
-      summary: Update a pet by ID
-      operationId: updatePet
+      summary: Update an item by ID
+      operationId: updateItem
+      security:
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the pet to update
           schema:
-            type: integer
-            format: int64
+            type: string
           x-displayName: ID
       requestBody:
-        description: Updated pet object
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: "#/components/schemas/Item"
       responses:
-        '200':
-          description: Pet updated successfully
+        "200":
+          description: Item updated successfully!
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
-        '404':
-          description: Pet not found
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Item not found!
+        "500":
+          description: Server error!
 
     delete:
-      summary: Delete a pet by ID
-      operationId: deletePet
+      summary: Delete an item by ID
+      operationId: deleteItem
+      security:
+        - googleOAuth: [ admin ]
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the pet to delete
           schema:
-            type: integer
-            format: int64
+            type: string
+          x-displayName: ID
+      responses:
+        "204":
+          description: Item deleted successfully!
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Item not found!
+        "500":
+          description: Server error!
+
+  /auth/login:
+    post:
+      summary: Authenticate and register user if not present
+      operationId: login
+      security: [ ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User authenticated successfully!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
+
+  /users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      security: [ ]
+      responses:
+        '200':
+          description: Users fetched!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Users not found!
+        "500":
+          description: Server error!
+
+    post:
+      summary: Create a new user
+      operationId: createUser
+      security:
+        - googleOAuth: [ admin ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      operationId: getUserById
+      security:
+        - googleOAuth: [ admin ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          x-displayName: ID
+      responses:
+        '200':
+          description: User fetched!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: User not found!
+        "500":
+          description: Server error!
+
+    put:
+      summary: Update a user by ID
+      operationId: updateUser
+      security:
+        - googleOAuth: [ admin ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          x-displayName: ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: User not found!
+        "500":
+          description: Server error!
+
+    delete:
+      summary: Delete a user by ID
+      operationId: deleteUser
+      security:
+        - googleOAuth: [ admin ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
           x-displayName: ID
       responses:
         '204':
-          description: Pet deleted successfully
-        '404':
-          description: Pet not found
+          description: User deleted successfully!
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: User not found!
+        "500":
+          description: Server error!
+
+  /cart:
+    get:
+      summary: Get items in the current user's cart
+      operationId: getCart
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cart fetched!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartItemView'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Cart not found!
+        "500":
+          description: Server error!
+
+    post:
+      summary: Add an item to the current user's cart
+      operationId: addToCart
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItemPost'
+      responses:
+        '200':
+          description: Item added to cart!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItem'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
+
+  /cart/{cartItemId}:
+    delete:
+      summary: Remove an item from the current user's cart
+      operationId: removeFromCart
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: cartItemId
+          in: path
+          required: true
+          schema:
+            type: string
+          x-displayName: Cart Item ID
+      responses:
+        '204':
+          description: Item removed from cart successfully!
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Cart item not found!
+        "500":
+          description: Server error!
+
+  /orders:
+    get:
+      summary: Get all orders for the current user
+      operationId: getOrders
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Orders fetched!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderView'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "404":
+          description: Orders not found!
+        "500":
+          description: Server error!
+
+  /orders/place:
+    post:
+      summary: Place a new order using current cart
+      operationId: placeOrder
+      security:
+        - googleOAuth: [ user ]
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order placed successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "400":
+          description: Bad request!
+        "401":
+          description: Authentication required!
+        "403":
+          description: Permission denied!
+        "409":
+          description: Conflict occurred!
+        "500":
+          description: Server error!
 
 components:
   schemas:
-    Pet:
+    Item:
       type: object
       properties:
         id:
-          type: integer
-          description: ID of the pet
+          type: string
           x-displayName: ID
         name:
           type: string
-          description: Name of the pet
           x-displayName: Name
-        species:
-          type: string
-          description: Species of the pet
-          x-displayName: Species
         description:
           type: string
-          description: Description of the pet
           x-displayName: Description
+        category:
+          type: string
+          x-displayName: Category
         imageURL:
           type: string
-          description: Image of the pet
           x-displayName: Image URL
+        price:
+          type: number
+          format: double
+          x-displayName: Price
+        stock:
+          type: integer
+          x-displayName: Stock
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          x-displayName: ID
+        email:
+          type: string
+          x-displayName: Email
+        name:
+          type: string
+          x-displayName: Name
+        role:
+          type: string
+          x-displayName: Role
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+          x-displayName: ID
+        userId:
+          type: string
+          x-displayName: User ID
+        itemId:
+          type: string
+          x-displayName: Item ID
+
+    CartItemPost:
+      type: object
+      properties:
+        itemId:
+          type: string
+          x-displayName: Item ID
+
+    CartItemView:
+      type: object
+      properties:
+        id:
+          type: string
+          x-displayName: ID
+        itemName:
+          type: string
+          x-displayName: Name
+        quantity:
+          type: integer
+          x-displayName: Quantity
+        total:
+          type: number
+          format: double
+          x-displayName: Total
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          x-displayName: ID
+        userId:
+          type: string
+          x-displayName: User ID
+        itemIds:
+          type: array
+          items:
+            type: string
+          x-displayName: Item Ids
+        orderTime:
+          type: string
+          x-displayName: Order Time
+        status:
+          type: string
+          x-displayName: Order Status
+
+    OrderView:
+      type: object
+      properties:
+        id:
+          type: string
+          x-displayName: ID
+        orderTime:
+          type: string
+          x-displayName: Order Time
+        itemSummary:
+          type: array
+          items:
+            type: string
+          x-displayName: Items
+        status:
+          type: string
+          x-displayName: Order Status
+        total:
+          type: number
+          format: double
+          x-displayName: Total
+
+  securitySchemes:
+    googleOAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.google.com/o/oauth2/auth
+          tokenUrl: https://oauth2.googleapis.com/token
+          scopes:
+            user: "Registered user access"
+            admin: "Administrator access"

@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.mvnrepository.com/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ravijar</groupId>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>io.swagger.parser.v3</groupId>
             <artifactId>swagger-parser</artifactId>
-            <version>2.1.22</version>
+            <version>2.1.26</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
@@ -61,14 +61,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Deprecated dependency: Use 'openapi-generator' instead -->
-        <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen-cli -->
-        <dependency>
-            <groupId>io.swagger.codegen.v3</groupId>
-            <artifactId>swagger-codegen-cli</artifactId>
-            <version>3.0.59</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.openapitools/openapi-generator -->
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -80,7 +72,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.15.2</version>
+            <version>2.19.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/info.picocli/picocli -->

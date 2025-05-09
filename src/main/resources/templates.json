@@ -15,7 +15,9 @@
         "Button",
         "CardSection",
         "Card",
-        "Table"
+        "Table",
+        "LoadingModal",
+        "NoContent"
       ]
     },
     {
@@ -24,7 +26,8 @@
       "destinationFolder": "/build/src/common/",
       "extension": ".js",
       "templates": [
-        "Utils"
+        "Utils",
+        "ClientAPIWrapper"
       ]
     },
     {
@@ -43,7 +46,9 @@
         "NavBar",
         "Form",
         "Card",
-        "Table"
+        "Table",
+        "LoadingModal",
+        "NoContent"
       ]
     },
     {
@@ -63,7 +68,48 @@
       "extension": "",
       "templates": [
         "openapi.yaml",
-        "pages.xml"
+        "pages.xml",
+        ".env"
+      ]
+    },
+    {
+      "name": "React Auth",
+      "sourceFolder": "/react/auth/",
+      "destinationFolder": "/build/src/auth/",
+      "extension": ".jsx",
+      "templates": [
+        "AuthProvider",
+        "RequireAuth",
+        "RoleBasedAccess"
+      ]
+    },
+    {
+      "name": "React Pages",
+      "sourceFolder": "/react/pages/",
+      "destinationFolder": "/build/src/pages/",
+      "extension": ".jsx",
+      "templates": [
+        "Login",
+        "Unauthorized"
+      ]
+    },
+    {
+      "name": "CSS Pages",
+      "sourceFolder": "/css/pages/",
+      "destinationFolder": "/styles/pages/",
+      "extension": ".css",
+      "templates": [
+        "Login",
+        "Unauthorized"
+      ]
+    },
+    {
+      "name": "Assets",
+      "sourceFolder": "/assets/",
+      "destinationFolder": "/build/src/assets/",
+      "extension": "",
+      "templates": [
+        "google-logo.png"
       ]
     }
   ]
